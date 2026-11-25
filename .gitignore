@@ -1,0 +1,11 @@
+# claude plugin eval 的測試結果
+evals/results/
+
+# 打包出來的安裝檔
+*.skill
+
+# 系統與工具產生的檔案
+node_modules/
+.DS_Store
+Thumbs.db
+desktop.ini
