@@ -83,7 +83,8 @@ const T = {
     sep: '，',
     stop: '。',
     cam: (c) => (/^鏡頭/.test(c) ? c : `鏡頭${c}`),
-    says: (who, text, lang) => `${who}${lang ? `用${lang}` : ''}說：“${text}”`, // 各家工具都以雙引號辨識台詞
+    // 各家工具都以雙引號辨識台詞；語氣用敘述帶出（可靈、Seedance、Google 的官方範例都是這樣寫）
+    says: (who, text, lang, tone) => `${who}${tone ? `以${tone}的語氣` : ''}${lang ? `用${lang}` : ''}說：“${text}”`,
     sound: (s) => `聲音：${s}`,
     lastFrame: (end, cam) =>
       `以這一鏡的首幀圖為底圖做圖像編輯，沒有提到的部分保持不變。結束時的畫面：${end}${cam ? `。構圖依運鏡調整（${cam}）` : ''}`,
@@ -101,7 +102,7 @@ const T = {
     sep: ', ',
     stop: '. ',
     cam: (c) => c,
-    says: (who, text, lang) => `${who} says${lang ? ` in ${lang}` : ''}: "${text}"`,
+    says: (who, text, lang, tone) => `${who} says${lang ? ` in ${lang}` : ''}${tone ? `, ${tone}` : ''}: "${text}"`,
     sound: (s) => `Audio: ${s}`,
     lastFrame: (end, cam) =>
       `Edit the first-frame image of this shot and keep everything not mentioned here unchanged. End state: ${end}${cam ? `. Adjust the framing for the camera move (${cam})` : ''}`,
@@ -115,21 +116,79 @@ const T = {
     prop: 'a single object centred in frame, plain light grey background, soft even lighting',
   },
 };
-const SIZE_EN = {
-  大遠景: 'extreme wide shot', 遠景: 'wide shot', 全景: 'full shot', 中景: 'medium shot',
-  中近景: 'medium close-up', 近景: 'close shot', 特寫: 'close-up', 大特寫: 'extreme close-up',
-  過肩: 'over-the-shoulder shot', 主觀: 'first-person POV shot', 背影: 'shot from behind',
-  空鏡: 'scenery shot', 物件特寫: 'close-up of the object',
+// ---------- 用詞表（定義與用法見 references/fields.md 的「用詞」） ----------
+// 景別（size）只管取景範圍。「中景」「近景」這些詞各地用法不同，生成工具也各自解讀，
+// 所以畫面裡有完整入鏡的人物時，腳本會把取景範圍一起寫進提示詞（zhBody／enBody）。
+const SIZES = {
+  大遠景: { en: 'extreme wide shot' },
+  遠景: { en: 'wide shot' },
+  全景: { en: 'full shot', zhBody: '人物全身入鏡', enBody: 'full body in frame' },
+  中全景: { en: 'medium full shot', zhBody: '膝蓋以上入鏡', enBody: 'framed from the knees up' },
+  中景: { en: 'medium shot', zhBody: '腰部以上入鏡', enBody: 'framed from the waist up' },
+  近景: { en: 'medium close-up', zhBody: '胸部以上入鏡', enBody: 'framed from the chest up' },
+  特寫: { en: 'close-up', zhBody: '肩部以上入鏡', enBody: 'framed from the shoulders up' },
+  大特寫: { en: 'extreme close-up' },
 };
-// 幾個鏡別單獨放進中文提示詞會有歧義，換成說得清楚的寫法
-const SIZE_ZH = { 過肩: '過肩鏡頭', 主觀: '第一人稱主觀視角', 背影: '從人物背後拍攝' };
-const CAM_EN = {
-  固定: 'static camera', 緩慢推近: 'slow, slight push-in', 緩慢拉遠: 'slow, slight pull-out',
-  輕微橫移: 'slight lateral move', 輕微跟拍: 'gentle follow shot', 輕微手持: 'subtle handheld sway',
-  輕微上搖: 'slight tilt up', 輕微下搖: 'slight tilt down',
+const SIZE_ALIAS = { 中近景: '近景', 中特寫: '近景', 中遠景: '中全景' };
+// 舊寫法把鏡頭類型寫在 size 裡；照樣能跑，腳本會拆回兩個欄位並提示
+const LEGACY_SIZE = {
+  過肩: { type: '過肩' }, 主觀: { type: '主觀' }, 背影: { type: '背後' },
+  空鏡: { type: '空鏡' }, 物件特寫: { size: '特寫', type: '插入' },
 };
-const WIDE = new Set(['大遠景', '遠景', '全景', '空鏡']);
-const CLOSE = new Set(['中近景', '近景', '特寫', '大特寫']);
+// 鏡頭類型（type）：誰入鏡、從哪個關係拍。單人是預設，不會寫進提示詞
+const TYPES = {
+  單人: { zh: '', en: '' },
+  雙人: { zh: '雙人鏡頭', en: 'two-shot' },
+  群像: { zh: '多人群像', en: 'group shot' },
+  過肩: { zh: '過肩鏡頭', en: 'over-the-shoulder shot' },
+  主觀: { zh: '第一人稱主觀視角', en: 'first-person POV shot' },
+  背後: { zh: '從人物背後拍攝', en: 'shot from behind' },
+  空鏡: { zh: '純場景空鏡', en: 'scenery only, unoccupied' },
+  插入: { zh: '細節鏡頭', en: 'detail shot' },
+};
+// 角度（angle）：鏡頭的高低與傾斜
+const ANGLES = {
+  平視: { zh: '平視角度', en: 'eye-level shot' },
+  微俯: { zh: '略為俯視', en: 'slightly high angle' },
+  俯拍: { zh: '俯拍角度', en: 'high-angle shot' },
+  頂拍: { zh: '從正上方垂直俯視', en: 'top-down overhead shot' },
+  微仰: { zh: '略為仰視', en: 'slightly low angle' },
+  仰拍: { zh: '仰拍角度', en: 'low-angle shot' },
+  傾斜: { zh: '畫面水平線傾斜', en: 'Dutch angle' },
+};
+// 運鏡（camera）：前面可加「緩慢」「輕微」。帶方向的動作一定要寫方向，否則生成工具只能猜
+const MOVES = {
+  固定: { zh: '固定', en: 'static camera' },
+  推近: { zh: '推近', en: 'push-in' },
+  拉遠: { zh: '拉遠', en: 'pull-out' },
+  左搖: { zh: '向左搖', en: 'pan left' },
+  右搖: { zh: '向右搖', en: 'pan right' },
+  上搖: { zh: '向上搖', en: 'tilt up' },
+  下搖: { zh: '向下搖', en: 'tilt down' },
+  左移: { zh: '向左平移', en: 'truck left' },
+  右移: { zh: '向右平移', en: 'truck right' },
+  上升: { zh: '垂直上升', en: 'pedestal up' },
+  下降: { zh: '垂直下降', en: 'pedestal down' },
+  跟拍: { zh: '跟拍主體', en: 'follow shot' },
+  左環繞: { zh: '向左環繞主體', en: 'arc shot to the left' },
+  右環繞: { zh: '向右環繞主體', en: 'arc shot to the right' },
+  變焦推近: { zh: '變焦推近', en: 'zoom in' },
+  變焦拉遠: { zh: '變焦拉遠', en: 'zoom out' },
+  手持: { zh: '手持晃動', en: 'handheld sway' },
+};
+const MOVE_VAGUE = {
+  橫移: { zh: '橫移', en: 'lateral move', fix: '「左移」或「右移」' },
+  平移: { zh: '平移', en: 'lateral move', fix: '「左移」或「右移」' },
+  搖: { zh: '搖鏡', en: 'pan', fix: '「左搖」「右搖」「上搖」或「下搖」' },
+  升降: { zh: '升降', en: 'pedestal move', fix: '「上升」或「下降」' },
+  環繞: { zh: '環繞主體', en: 'arc shot', fix: '「左環繞」或「右環繞」' },
+};
+const MOVE_PREFIX = { 緩慢: 'slow', 輕微: 'gentle' };
+const WIDE = new Set(['大遠景', '遠景', '全景']);
+const CLOSE = new Set(['近景', '特寫', '大特寫']);
+const UPPER_BODY = new Set(['中景', ...CLOSE]); // 腰部以上：看不到下半身的服裝
+// 台詞類型：VO、OS 是舊檔的寫法，照收
+const LINE_TYPES = ['對白', '畫外音', '旁白', '內心獨白', 'VO', 'OS'];
 const CJK = /[㐀-鿿぀-ヿ]/;
 const CJK_G = /[㐀-鿿぀-ヿ]/g;
 
@@ -159,16 +218,62 @@ const joinS = (parts, l) => {
   if (l === 'en') s = s.map((x) => x.charAt(0).toUpperCase() + x.slice(1));
   return s.length ? s.join(T[l].stop) + T[l].stop.trim() : '';
 };
-const term = (v, map, l) => {
-  if (v && typeof v === 'object') return pick(v, l);
-  const s = pick(v, l);
-  if (l === 'en' && map[s]) return map[s];
-  if (l === 'zh' && map === SIZE_EN && SIZE_ZH[s]) return SIZE_ZH[s];
-  return s;
-};
 /** 表格顯示用：多語言時兩種都列出。 */
 const show = (v) => [...new Set(langs.map((l) => pick(v, l)).filter(Boolean))].join('<br>');
 const zhOf = (v) => pick(v, 'zh');
+
+/** 把一鏡的景別、鏡頭類型、角度整理成標準用詞；舊寫法（類型寫在 size 裡）在這裡拆開。 */
+function spec(shot) {
+  let size = zhOf(shot.size);
+  let type = zhOf(shot.type);
+  let legacy = false;
+  if (LEGACY_SIZE[size]) {
+    type = type || LEGACY_SIZE[size].type;
+    size = LEGACY_SIZE[size].size || '';
+    legacy = true;
+  }
+  size = SIZE_ALIAS[size] || size;
+  return { size, type: type || '單人', angle: zhOf(shot.angle), legacy };
+}
+/** 有沒有完整入鏡的人物（不是背影、前景虛焦或只露一部分）。 */
+const hasFullCast = (shot) => (shot.cast || []).some((e) => !e.partial);
+/** 景別＋取景範圍＋鏡頭類型＋角度＋構圖，組成提示詞裡的「怎麼拍」那一段。 */
+function framing(shot, l, withFrame = true) {
+  const sp = spec(shot);
+  const parts = [];
+  const def = SIZES[sp.size];
+  if (def) {
+    parts.push(l === 'en' ? def.en : sp.size);
+    if (hasFullCast(shot) && sp.type !== '插入' && def[`${l}Body`]) parts.push(def[`${l}Body`]);
+  } else if (sp.size) parts.push(pick(shot.size, l)); // 用詞表以外的寫法原樣放
+  if (TYPES[sp.type]) parts.push(TYPES[sp.type][l]);
+  else parts.push(pick(shot.type, l));
+  if (sp.angle) parts.push(ANGLES[sp.angle] ? ANGLES[sp.angle][l] : pick(shot.angle, l));
+  if (withFrame) parts.push(pick(shot.frame, l));
+  return joinC(parts, l);
+}
+/** 表格顯示用：「過肩・近景（微俯）」。 */
+function sizeLabel(shot, withAngle = false) {
+  const sp = spec(shot);
+  const s = [sp.type !== '單人' ? sp.type : '', sp.size].filter(Boolean).join('・') || zhOf(shot.size);
+  return withAngle && sp.angle && sp.angle !== '平視' ? `${s}（${sp.angle}）` : s;
+}
+/** 拆開運鏡：前綴（緩慢、輕微）＋動作。寫成 {"zh","en"} 或用詞表以外的字串時當成自訂片段。 */
+function parseCam(shot) {
+  const raw = zhOf(shot.camera);
+  if (shot.camera && typeof shot.camera === 'object') return { raw, custom: true, pre: [] };
+  let base = raw;
+  const pre = [];
+  for (;;) {
+    const k = Object.keys(MOVE_PREFIX).find((p) => base.startsWith(p) && base.length > p.length);
+    if (!k) break;
+    pre.push(k);
+    base = base.slice(k.length);
+  }
+  const def = MOVES[base] || MOVE_VAGUE[base];
+  return { raw, pre, base, def, vague: !MOVES[base] && !!MOVE_VAGUE[base], custom: !def };
+}
+const isStatic = (shot) => !zhOf(shot.camera) || parseCam(shot).base === '固定';
 
 const REF_RE = /同上|同前|如前|same as above|as before|as above/i;
 const TEXT_RE = /寫著|寫有|字樣|上面的字|that (says|reads)|text reading|with the words/i;
@@ -205,6 +310,7 @@ checkFrag('project.style_lock', P.style_lock);
 checkFrag('project.negative_global', P.negative_global);
 checkFrag('project.speech_lang', P.speech_lang);
 checkFrag('project.audio_suffix', P.audio_suffix);
+checkFrag('project.video_suffix', P.video_suffix);
 for (const p of propDefs.values()) checkFrag(`${p.id}.desc`, p.desc, true);
 
 const chars = new Map(); // 角色編號或造型變體編號 -> { c, v }
@@ -246,14 +352,26 @@ for (const s of bible.scenes || []) {
   }
 }
 
+// 機位（分鏡檔的 setups）：同一場戲裡反覆使用的拍攝位置。背景寫一次，同機位的鏡頭共用
+const setups = new Map();
+for (const u of (ep && Array.isArray(ep.setups) ? ep.setups : [])) {
+  if (!u.id) { err('setups', '有機位缺少 id'); continue; }
+  if (setups.has(u.id)) err(u.id, '機位編號重複');
+  setups.set(u.id, u);
+  if (!scenes.has(u.scene)) err(u.id, `機位的場景編號 ${u.scene ?? '（空）'} 不在設定檔裡`);
+  if (!u.desc) warn(u.id, '機位缺少 desc（鏡頭在哪裡、朝哪裡拍、拍到誰的正面）；沒有它就看不出軸線有沒有守住');
+  checkFrag(`${u.id}.bg`, u.bg, true);
+  checkFrag(`${u.id}.light`, u.light);
+}
+
 // ---------- 提示詞組合 ----------
 const isPartialText = (e) => e.partial && e.partial !== true;
 function subject(entry, shot, l, withBlocking = true) {
   const hit = chars.get(entry.char);
   if (!hit) return '';
   const { c, v } = hit;
-  // 近景看不到下半身：有填 outfit_top 就用它
-  const outfit = CLOSE.has(zhOf(shot.size)) && pick(v.outfit_top, l) ? pick(v.outfit_top, l) : pick(v.outfit, l);
+  // 中景以內（腰部以上）看不到下半身：有填 outfit_top 就用它，免得提示詞裡的褲子鞋子把鏡頭拉遠
+  const outfit = UPPER_BODY.has(spec(shot).size) && pick(v.outfit_top, l) ? pick(v.outfit_top, l) : pick(v.outfit, l);
   let base;
   if (isPartialText(entry)) base = [pick(entry.partial, l)]; // 只入鏡一部分：直接寫看得到的那一部分
   else if (entry.partial === true) base = [pick(c.tag, l), outfit]; // 背影、前景虛焦：不寫臉部細節與狀態
@@ -261,26 +379,33 @@ function subject(entry, shot, l, withBlocking = true) {
   const block = withBlocking ? [pick(entry.pos, l), pick(entry.gaze, l), pick(entry.hands, l), pick(entry.face, l)] : [];
   return joinC([...base, ...block], l);
 }
-/** 光線：這一鏡有自己的 light 就用它，否則用場景的光線與時間。 */
-const lightOf = (shot, sc, l) => pick(shot.light, l) || joinC([pick(sc.light, l), pick(sc.time, l)], l);
+const setupOf = (shot) => (shot.setup ? setups.get(shot.setup) : null) || {};
+/** 光線：這一鏡的 light → 機位的 light → 場景的光線與時間。 */
+const lightOf = (shot, sc, l) => pick(shot.light, l) || pick(setupOf(shot).light, l) || joinC([pick(sc.light, l), pick(sc.time, l)], l);
+/** 背景：這一鏡的 bg → 機位的 bg → 整段場景描述（只適合全景以上）。 */
+const bgOf = (shot, sc, l) => pick(shot.bg, l) || pick(setupOf(shot).bg, l) || pick(sc.space, l);
 function imagePrompt(shot, l) {
   const sc = scenes.get(shot.scene) || {};
   const subs = (shot.cast || []).map((e) => subject(e, shot, l));
   return joinS([
     ...subs,
     pick(shot.props, l),
-    pick(shot.bg, l) || pick(sc.space, l), // 近景只寫看得到的背景；沒寫 bg 才用整段場景描述
+    bgOf(shot, sc, l),
     lightOf(shot, sc, l),
-    joinC([term(shot.size, SIZE_EN, l), pick(shot.frame, l)], l),
+    framing(shot, l),
     pick(P.style_lock, l),
   ], l);
 }
-const camTerm = (shot, l) => term(shot.camera, CAM_EN, l);
+function camTerm(shot, l) {
+  const c = parseCam(shot);
+  if (c.custom) return pick(shot.camera, l);
+  if (l === 'en') return [...c.pre.map((p) => MOVE_PREFIX[p]), c.def.en].join(' ');
+  return c.pre.join('') + c.def.zh;
+}
 function lastFramePrompt(shot, l) {
   const end = strip(pick(shot.end, l));
   if (!end) return '';
-  const moving = zhOf(shot.camera) && zhOf(shot.camera) !== '固定';
-  return T[l].lastFrame(end, moving ? camTerm(shot, l) : '') + T[l].stop.trim();
+  return T[l].lastFrame(end, isStatic(shot) ? '' : camTerm(shot, l)) + T[l].stop.trim();
 }
 function audioParts(shot, l) {
   if (!NATIVE_AUDIO) return [];
@@ -289,7 +414,7 @@ function audioParts(shot, l) {
   if (ln && ln.text && ln.type === '對白') {
     const hit = chars.get(ln.who);
     const who = hit ? pick(hit.c.tag, l) || hit.c.name : ln.who || '';
-    out.push(T[l].says(who, strip(pick(ln.text, langs[0])), pick(P.speech_lang, l)));
+    out.push(T[l].says(who, strip(pick(ln.text, langs[0])), pick(P.speech_lang, l), strip(pick(ln.tone, l))));
   }
   if (shot.sound) out.push(T[l].sound(pick(shot.sound, l)));
   if (P.audio_suffix) out.push(pick(P.audio_suffix, l));
@@ -299,7 +424,7 @@ function videoPrompt(shot, l) {
   const cam = T[l].cam(camTerm(shot, l));
   if (MODE === 'i2v') {
     // 圖生影片：首幀圖已經決定了外貌與場景，這裡只寫「怎麼動」
-    return joinS([pick(shot.motion, l), cam, ...audioParts(shot, l)], l);
+    return joinS([pick(shot.motion, l), cam, pick(P.video_suffix, l), ...audioParts(shot, l)], l);
   }
   const sc = scenes.get(shot.scene) || {};
   const subs = (shot.cast || []).map((e) => subject(e, shot, l));
@@ -307,10 +432,11 @@ function videoPrompt(shot, l) {
     ...subs,
     pick(shot.props, l),
     pick(shot.motion, l),
-    pick(shot.bg, l) || pick(sc.space, l),
+    bgOf(shot, sc, l),
     lightOf(shot, sc, l),
-    joinC([term(shot.size, SIZE_EN, l), cam], l),
+    joinC([framing(shot, l, false), cam], l),
     pick(P.style_lock, l),
+    pick(P.video_suffix, l),
     ...audioParts(shot, l),
   ], l);
 }
@@ -372,7 +498,18 @@ for (const p of propDefs.values()) {
 // ---------- 檢查分鏡 ----------
 const shots = ep && Array.isArray(ep.shots) ? ep.shots : [];
 const castKey = (s) => (s.cast || []).map((e) => e.char).sort().join('+');
-const sizeKey = (s) => zhOf(s.size);
+// 主體是誰、誰只是前景：過肩正反打的兩鏡角色相同，但正面入鏡的人不同
+const subjectKey = (s) => (s.cast || []).map((e) => `${e.char}${e.partial ? '~' : ''}`).sort().join('+');
+const hasCJK = (v, l) => CJK.test(pick(v, l));
+/** 用詞表以外的寫法：出英文提示詞時不能夾中文。 */
+function checkTerm(id, field, v, known, list) {
+  if (!zhOf(v) || known) return;
+  if (langs.includes('en') && hasCJK(v, 'en')) {
+    warn(id, `${field}「${zhOf(v)}」不在用詞表裡，英文提示詞會夾著中文；改用用詞表（${list}），或寫成 {"zh": "…", "en": "…"}`);
+  } else if (typeof v === 'string') {
+    hint(id, `${field}「${zhOf(v)}」不在用詞表裡（${list}），腳本會原樣放進提示詞，也無法替它做相關檢查`);
+  }
+}
 function speakSeconds(text) {
   const t = rawPick(text, langs[0]);
   const cjk = (t.match(CJK_G) || []).length;
@@ -384,8 +521,15 @@ if (ep) {
   const seenIds = new Set();
   const seenScenes = new Set();
   let slow = 0;
+  let legacySize = 0;
+  if (shots.length && !(Array.isArray(ep.plan) && ep.plan.length)) {
+    hint('plan', '分鏡檔沒有 plan（場次設計）；拆鏡前先寫每場戲的目的、視點、節拍與高點，鏡頭才有依據，見 references/shot-craft.md');
+  }
   shots.forEach((s, i) => {
     const id = s.id || `第 ${i + 1} 鏡`;
+    const sp = spec(s);
+    const cam = parseCam(s);
+    const su = s.setup ? setups.get(s.setup) : null;
     if (!s.id) err(id, '缺少鏡號 id');
     else if (seenIds.has(s.id)) err(id, '鏡號重複');
     seenIds.add(s.id);
@@ -398,16 +542,37 @@ if (ep) {
     if (!scenes.has(s.scene)) err(id, `場景編號 ${s.scene ?? '（空）'} 不在設定檔裡`);
     else if (!seenScenes.has(s.scene)) {
       seenScenes.add(s.scene);
-      // 漫劇的第一鏡常是鉤子（特寫或細節），不提示
-      const hook = P.format === '漫劇' && i === 0;
-      if (!WIDE.has(sizeKey(s)) && !hook) hint(id, `場景 ${s.scene} 第一次出現，考慮在前後兩三鏡內給一個全景或遠景交代環境（目前是${sizeKey(s)}）`);
+      // 建立鏡頭不一定要是第一鏡（漫劇常先給鉤子），頭三鏡內有就好
+      const opening = shots.slice(i, i + 3).filter((x) => x.scene === s.scene);
+      if (!opening.some((x) => WIDE.has(spec(x).size))) {
+        hint(id, `場景 ${s.scene} 出現後的頭三鏡沒有遠景或全景，觀眾不知道人在哪裡；補一個建立鏡頭交代空間`);
+      }
+    }
+
+    // 景別、鏡頭類型、角度、運鏡的用詞
+    if (sp.legacy) legacySize++;
+    checkTerm(id, '景別', s.size, sp.legacy || !!SIZES[sp.size], Object.keys(SIZES).join('、'));
+    checkTerm(id, '鏡頭類型', s.type, !!TYPES[sp.type], Object.keys(TYPES).join('、'));
+    checkTerm(id, '角度', s.angle, !!ANGLES[sp.angle], Object.keys(ANGLES).join('、'));
+    if (cam.vague) warn(id, `運鏡「${cam.raw}」沒有方向，生成工具只能猜；改成${cam.def.fix}`);
+    else if (typeof s.camera === 'string') checkTerm(id, '運鏡', s.camera, !cam.custom, `${Object.keys(MOVES).join('、')}；前面可加「緩慢」「輕微」`);
+    else checkFrag(`${id}.camera`, s.camera);
+
+    // 機位
+    if (s.setup) {
+      if (!su) err(id, `機位編號 ${s.setup} 不在這一集的 setups 裡`);
+      else if (su.scene !== s.scene) err(id, `機位 ${s.setup} 屬於場景 ${su.scene}，但這一鏡的場景是 ${s.scene}`);
+    }
+    if (CLOSE.has(sp.size) && !zhOf(s.bg) && !zhOf(su?.bg)) {
+      warn(id, `${sp.size}沒有寫 bg，也沒有機位的 bg；腳本會放整段場景描述，生成工具可能把整個房間塞進畫面。寫這一鏡實際看得到的背景`);
     }
 
     // 角色與走位
     const cast = Array.isArray(s.cast) ? s.cast : [];
     cast.forEach((e) => {
       if (!chars.has(e.char)) { err(id, `角色編號 ${e.char ?? '（空）'} 不在設定檔裡`); return; }
-      const miss = ['pos', 'gaze', 'hands'].filter((k) => !e[k]);
+      // 只入鏡身體一部分（partial 寫成片段）時，那段文字已經說明看得到什麼，視線與手部不必再寫
+      const miss = (isPartialText(e) ? [] : ['pos', 'gaze', 'hands']).filter((k) => !e[k]);
       if (miss.length) warn(id, `${e.char} 沒寫 ${miss.join('、')}；沒寫的地方生成工具會自己猜`);
       for (const k of ['pos', 'gaze', 'hands', 'face']) checkFrag(`${id} ${e.char}.${k}`, e[k]);
       if (isPartialText(e)) checkFrag(`${id} ${e.char}.partial`, e.partial);
@@ -440,6 +605,18 @@ if (ep) {
       else {
         if (prev.scene !== s.scene) warn(id, '「接續」表示沿用上一鏡的最後一幀，但場景和上一鏡不同；應該是「切」');
         if (castKey(prev) !== castKey(s)) warn(id, '「接續」表示沿用上一鏡的最後一幀，但畫面中的角色和上一鏡不同；應該是「切」');
+        if (prev.setup && s.setup && prev.setup !== s.setup) warn(id, '「接續」表示沿用上一鏡的最後一幀，但機位和上一鏡不同；應該是「切」');
+      }
+      if (s.transition) warn(id, `「接續」是同一個鏡頭延續下去，中間沒有剪接點，不會有轉場（目前填了「${s.transition}」）；要轉場就改成「切」`);
+    } else if (i > 0) {
+      // 跳接：主體、景別、類型、角度、機位都和上一鏡一樣，卻切了一刀
+      const prev = shots[i - 1];
+      const ps = spec(prev);
+      const same = prev.scene === s.scene && hasFullCast(s) && subjectKey(prev) === subjectKey(s)
+        && sp.size && ps.size === sp.size && ps.type === sp.type && (ps.angle || '平視') === (sp.angle || '平視')
+        && (prev.setup || '') === (s.setup || '');
+      if (same && !/跳接/.test(s.transition || '')) {
+        warn(id, `和上一鏡的主體、景別（${sizeLabel(s)}）、角度都一樣，直接切會像跳接；景別差一級以上、換角度或機位，或中間插一個反應／插入鏡頭。真的是同一個鏡頭延續就用「接續」，刻意要跳接就在 transition 寫「跳接」`);
       }
     }
 
@@ -448,8 +625,13 @@ if (ep) {
     if (s.line && s.line.text) {
       const need = speakSeconds(s.line.text) + 0.3;
       if (need > d) warn(id, `對白／旁白約需 ${need.toFixed(1)} 秒（字數 ÷ ${RATE} + 0.3），但這一鏡只有 ${d} 秒；請拆成兩鏡、縮短句子，或把句子分到相鄰兩鏡的 line`);
-      if (!['VO', 'OS', '對白'].includes(s.line.type)) hint(id, 'line.type 建議用 VO（旁白或畫外音）、OS（內心獨白）或 對白');
-      if (P.audio_plan === '旁白' && s.line.type === '對白') hint(id, '聲音方案是「旁白」，這句卻是對白；角色的台詞要當畫外音時，type 用 VO、who 填角色編號');
+      if (!LINE_TYPES.includes(s.line.type)) hint(id, 'line.type 請用「對白」（說話的人在畫面裡）、「畫外音」（人在現場但這一鏡沒拍到他說話）、「旁白」或「內心獨白」');
+      if (s.line.type === '對白' && chars.has(s.line.who)) {
+        const speaker = chars.get(s.line.who).c.id;
+        const onScreen = cast.some((e) => chars.get(e.char)?.c.id === speaker && !e.partial);
+        if (!onScreen) hint(id, `這句是「對白」，但說話的 ${speaker} 沒有正面入鏡；說話的人不在畫面裡（或只有背影）時 type 用「畫外音」，原生音訊也不會替這一鏡生成他的聲音`);
+      }
+      checkFrag(`${id}.line.tone`, s.line.tone);
     }
     if (HAS_CLIP && genLength(d) === null) {
       warn(id, `成片 ${d} 秒加上裁頭尾 ${TRIM} 秒，超過工具單次可生成的 ${MAX_CLIP} 秒；請拆鏡`);
@@ -462,12 +644,17 @@ if (ep) {
     }
   });
 
-  // 連續相同鏡別
+  if (legacySize) {
+    hint('整體', `${legacySize} 鏡把鏡頭類型寫在 size 裡（過肩、主觀、背影、空鏡、物件特寫）；腳本照舊處理，但這些鏡頭沒有景別。建議改成 size 填景別、type 填鏡頭類型`);
+  }
+
+  // 景別一直不變：正反打用成對的景別很正常，所以只在連續四鏡以上才提示
+  const sizeOf = (s) => spec(s).size;
   let run = 1;
   for (let i = 1; i <= shots.length; i++) {
-    if (i < shots.length && sizeKey(shots[i]) === sizeKey(shots[i - 1]) && shots[i].scene === shots[i - 1].scene) run++;
+    if (i < shots.length && sizeOf(shots[i]) && sizeOf(shots[i]) === sizeOf(shots[i - 1]) && shots[i].scene === shots[i - 1].scene) run++;
     else {
-      if (run >= 3) warn(shots[i - run].id, `從這一鏡起連續 ${run} 鏡都是${sizeKey(shots[i - 1])}，畫面會平；穿插不同鏡別或反應鏡頭`);
+      if (run >= 4) hint(shots[i - run].id, `從這一鏡起連續 ${run} 鏡都是${sizeOf(shots[i - 1])}；情緒有轉折的地方推近一級，或插一個插入鏡頭、空鏡換氣`);
       run = 1;
     }
   }
@@ -572,7 +759,7 @@ if (ep) {
     if (!ln || !ln.text) return '';
     const hit = chars.get(ln.who);
     const name = hit ? hit.c.name || ln.who : ln.who || '';
-    return `${ln.type || ''}${name ? ` ${name}` : ''}：「${rawPick(ln.text, langs[0])}」`;
+    return `${ln.type || ''}${name && name !== ln.type ? ` ${name}` : ''}：「${rawPick(ln.text, langs[0])}」`; // 旁白的 who 也是「旁白」，不重複寫
   };
   const note = (s) => [s.risk ? `風險：${s.risk}` : '', s.continuity ? `連戲：${s.continuity}` : ''].filter(Boolean).join('；');
   const firstFrame = (s, i, l) => (s.link === '接續' && shots[i - 1] ? T[l].reuse(shots[i - 1].id) : imagePrompt(s, l));
@@ -600,10 +787,30 @@ if (ep) {
     for (const c of ep.changes) L.push(`- ${c}`);
     L.push('');
   }
+  const plan = Array.isArray(ep.plan) ? ep.plan : [];
+  if (plan.length) {
+    L.push('## 場次設計', '', '拆鏡的依據：每場戲要達成什麼、從誰的角度看、分成哪些節拍、高點在哪裡。', '');
+    L.push(table(
+      ['場次', '場景', '這場戲的目的', '視點', '節拍', '高點', '影像基調'],
+      plan.map((p, i) => [
+        p.id || i + 1, p.scene || '', p.purpose || '', chars.get(p.pov)?.c.name || p.pov || '',
+        (Array.isArray(p.beats) ? p.beats : []).map((b, j) => `${j + 1}. ${b}`).join('<br>'), p.peak || '', p.mood || '',
+      ]),
+    ), '');
+  }
+  if (setups.size) {
+    const usedBy = (id) => shots.filter((s) => s.setup === id).map((s) => s.id.replace(`${epId}-`, '')).join('、');
+    L.push('## 機位', '', '同一場戲裡反覆使用的拍攝位置。同機位的鏡頭共用背景描述，首幀也可以從同機位的前一張首幀圖改出來。', '');
+    L.push(table(
+      ['機位', '場景', '鏡頭在哪裡、拍到什麼', '背景', '用到的鏡頭'],
+      [...setups.values()].map((u) => [u.id, u.scene || '', u.desc || '', show(u.bg), usedBy(u.id) || '—']),
+    ), '');
+  }
+  const linkText = (s) => `${s.link || ''}${s.transition ? `（${s.transition}）` : ''}`;
   L.push('## 精簡表', '', '貼到對話裡用這一張。「累計」是播到這一鏡結束的時間；有 ✂ 的鏡頭後面適合切開。', '');
   L.push(table(
-    ['鏡號', '秒', '累計', '鏡別', '動作', '對白／旁白', '切點'],
-    shots.map((s, i) => [s.id, s.duration, tc(ends[i]), zhOf(s.size), zhOf(s.action), lineText(s), cutOf(s, i)]),
+    ['鏡號', '秒', '累計', '景別', '動作', '對白／旁白', '切點'],
+    shots.map((s, i) => [s.id, s.duration, tc(ends[i]), sizeLabel(s), zhOf(s.action), lineText(s), cutOf(s, i)]),
   ), '');
   if (cuts.length) {
     L.push('## 建議切點', '', '想切成較短的片段時，從這些位置挑。時間是播到該鏡結束的累計時間。', '');
@@ -611,8 +818,8 @@ if (ep) {
   }
   L.push('## 導演表', '');
   L.push(table(
-    ['鏡號', '原文對應', '場景', '角色', '秒', '累計', '鏡別', '運鏡', '銜接', '動作', '對白／旁白', '聲音', '備註', '切點'],
-    shots.map((s, i) => [s.id, s.source || '', s.scene, who(s), s.duration, tc(ends[i]), zhOf(s.size), zhOf(s.camera), s.link, zhOf(s.action), lineText(s), zhOf(s.sound), note(s), cutOf(s, i)]),
+    ['鏡號', '原文對應', '場景', '機位', '角色', '秒', '累計', '景別', '運鏡', '銜接', '動作', '對白／旁白', '聲音', '備註', '切點'],
+    shots.map((s, i) => [s.id, s.source || '', s.scene, s.setup || '—', who(s), s.duration, tc(ends[i]), sizeLabel(s, true), zhOf(s.camera), linkText(s), zhOf(s.action), lineText(s), zhOf(s.sound), note(s), cutOf(s, i)]),
   ), '');
   L.push('## 各鏡生成資料', '');
   shots.forEach((s, i) => {
@@ -621,8 +828,18 @@ if (ep) {
       L.push(`- ${e.char}${e.partial ? '（局部入鏡）' : ''}　位置：${zhOf(e.pos) || '—'}｜視線：${zhOf(e.gaze) || '—'}｜手部／道具：${zhOf(e.hands) || '—'}${e.face ? `｜表情：${zhOf(e.face)}` : ''}`);
     }
     if (s.props) L.push(`- 場上道具：${zhOf(s.props)}`);
+    const su = s.setup ? setups.get(s.setup) : null;
+    if (su) {
+      // 同機位、而且是各自生成首幀的前一鏡：拿它的首幀圖來改，背景和光線最不會跑掉
+      const earlier = shots.slice(0, i).filter((x) => x.setup === s.setup && x.link !== '接續').pop();
+      const tip = earlier && s.link !== '接續' ? `；${earlier.id} 用過這個機位，這一鏡的首幀可以拿它的首幀圖做圖像編輯，背景才會一致` : '';
+      L.push(`- 機位：${su.id}${su.desc ? `（${su.desc}）` : ''}${tip}`);
+    }
     if (s.bg) L.push(`- 看得到的背景：${zhOf(s.bg)}`);
+    else if (su?.bg) L.push(`- 看得到的背景（來自機位）：${zhOf(su.bg)}`);
     if (s.light) L.push(`- 這一鏡的光線：${zhOf(s.light)}`);
+    if (s.transition) L.push(`- 轉場（從上一鏡進來的方式，剪接時做）：${s.transition}`);
+    if (s.line?.tone) L.push(`- 台詞語氣：${zhOf(s.line.tone)}`);
     if (Array.isArray(s.refs) && s.refs.length) L.push(`- 參考圖：${s.refs.join('＋')}`);
     const g = genLength(Number(s.duration) || 0);
     if (g) L.push(`- 成片 ${s.duration} 秒，建議生成 ${g} 秒段再裁頭尾`);
@@ -637,7 +854,7 @@ if (ep) {
   L.push('## 檢查結果', '', issueTable(), '');
   written.push(write(`${epId}-storyboard.md`, L.join('\n')));
 
-  const head = ['鏡號', '原文對應', '場景', '角色', '成片秒數', '累計', '建議生成秒數', '鏡別', '運鏡', '銜接', '動作', '對白／旁白', '聲音', '建議切點'];
+  const head = ['鏡號', '原文對應', '場景', '機位', '角色', '成片秒數', '累計', '建議生成秒數', '景別', '鏡頭類型', '角度', '運鏡', '銜接', '轉場', '動作', '對白／旁白', '台詞語氣', '聲音', '建議切點'];
   for (const l of langs) {
     head.push(`首幀圖像提示詞${langLabel(l)}`);
     if (USE_LAST) head.push(`尾幀提示詞（拿首幀圖做圖像編輯）${langLabel(l)}`);
@@ -645,7 +862,8 @@ if (ep) {
   }
   head.push('參考圖', '風險', '連戲備註', '模型', 'seed', '抽卡次數', '採用版本', '備註');
   const rows = shots.map((s, i) => {
-    const r = [s.id, s.source || '', s.scene, who(s), s.duration, tc(ends[i]), genLength(Number(s.duration) || 0) ?? '', zhOf(s.size), zhOf(s.camera), s.link, zhOf(s.action), lineText(s), zhOf(s.sound), cutOf(s, i)];
+    const sp = spec(s);
+    const r = [s.id, s.source || '', s.scene, s.setup || '', who(s), s.duration, tc(ends[i]), genLength(Number(s.duration) || 0) ?? '', sp.size || zhOf(s.size), sp.type, sp.angle || '', zhOf(s.camera), s.link, s.transition || '', zhOf(s.action), lineText(s), zhOf(s.line?.tone), zhOf(s.sound), cutOf(s, i)];
     for (const l of langs) {
       r.push(firstFrame(s, i, l));
       if (USE_LAST) r.push(lastFramePrompt(s, l));
