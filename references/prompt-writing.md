@@ -48,6 +48,7 @@
 - 角色之間的短稱要一眼分得出來，最好用不同種類的特徵（一個靠髮型、一個靠眼鏡、一個靠體型）。
 - 不要放會隨造型改變的東西。服裝會換，短稱寫了「穿紅衣的」，換裝之後就錯了。
 - `motion` 和 `end` 裡每次都用一模一樣的字串，腳本會檢查。
+- 長得一樣的幾個人（兩個手下、一群路人）：要各自有動作，就登記成不同角色、短稱靠一個看得見的差別分開（「左臉有疤的黑衣人」「矮壯的黑衣人」）；只是一起出現，就登記成一個角色，短稱寫成複數（「兩個蒙面黑衣人」、`two masked men in black`）。用單數的短稱寫「站在他兩側」，工具只會畫一個人。兩個角色短稱相同、或同一個角色在一鏡出現兩次，腳本會警告。
 
 ### `outfit`、`outfit_top`、`state`：造型
 
@@ -168,7 +169,9 @@ backlighting、side lighting、rim light、high-key、low-key、volumetric light
 
 十五字（英文十個詞）以內的名詞短語：材質、顏色、形狀、新舊，挑兩三個最能辨認的。「一把磨得發亮的舊銅鑰匙」。狀態（拆了沒、亮不亮）寫在鏡頭裡。太長或有逗號腳本會提醒。
 
-它會被代入句子中間（「右手握著{P01}」），所以寫成一個不含逗號的短語。`a square pale-blue biscuit tin, paint worn at the corners` 代進去之後句子會斷掉；寫成 `a square pale-blue biscuit tin with worn corners`。英文尤其要短：`a square wooden storm lantern with oiled-paper panels and a top handle` 代進「the panel of {P02} glowing」之後，glowing 會黏到 handle 上。寫完把幾個用到它的片段代進去唸一遍。
+它會被代入句子中間（「右手握著{P01}」），所以寫成一個不含逗號的短語。`a square pale-blue biscuit tin, paint worn at the corners` 代進去之後句子會斷掉。
+
+英文還要避開 with 片語：特徵放在名詞前面當形容詞，寫成 `a battered square pale-blue biscuit tin`、`a plain-guarded steel sword`。with 片語在描述的尾端，代進句子後，後面接的位置或動作會黏到 with 後面的名詞上：`a sword with a round guard` 代進「holding {P01} by the hilt」，讀起來是護手在劍柄旁；`a lantern with oiled-paper panels and a top handle` 代進「{P02} glowing」，glowing 黏到 handle 上。腳本看到英文道具描述有 with 會提示。寫完把幾個用到它的片段代進去唸一遍。
 
 ## 四、分鏡檔的片段
 
@@ -259,7 +262,7 @@ backlighting、side lighting、rim light、high-key、low-key、volumetric light
 `project.ref_mode` 填 `參考圖`，腳本就這樣組合首幀：
 
 - **角色**：「圖1中的黑髮及肩的年輕女子」＋走位（`pos`、`gaze`、`hands`、`face`）。`look`、服裝、`state`、`marks` 不進提示詞，它們已經在那張造型設定圖上。所以造型變體的設定圖一定要先定稿，受傷、換裝的樣子要畫在圖上。
-- **局部入鏡**（`partial` 寫成片段）：片段照寫，後面註明（圖2），袖口和鞋子才會對。
+- **局部入鏡**（`partial` 寫成片段）：片段照寫，後面接「（顏色與質感參照圖2）」。只借袖口、鞋子、毛色的顏色和質感，袖口才會對，工具也不會照整張設定圖畫出整個人。
 - **背景**：「背景參照圖3：＋這一鏡的 `bg`」。有機位用機位背景圖，沒有就用場景定稿圖。`bg` 仍然要寫，它說的是這一鏡看得到哪一部分、清楚還是虛化。
 - **道具與特效**：描述照寫，後面註明（圖4）。
 - 光線、色彩、怎麼拍、風格鎖定句不變。

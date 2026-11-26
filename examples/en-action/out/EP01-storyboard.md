@@ -123,7 +123,7 @@ Rain falls steadily through the light of the bulbs, the canvas awnings ripple in
 首幀圖像提示詞
 
 ```text
-A pair of white canvas sneakers and bare shins in mid-stride, entering from the left edge of the frame (image 1), low in the left third of the frame, moving toward frame right. Background as in image 2: wet asphalt with red and blue neon reflections, cart wheels out of focus in the background. Low warm light from the left, neon colours reflected in the puddle, saturated red and blue neon accents against deep blue-grey shadows. Close-up, detail shot, ground-level camera, a shallow puddle in the centre of the frame, shallow depth of field. Hand-painted anime film style, clean ink outlines, cel shading with a single shadow tone, high saturation with strong contrast, soft film grain.
+A pair of white canvas sneakers and bare shins in mid-stride, entering from the left edge of the frame (colours and textures as in image 1), low in the left third of the frame, moving toward frame right. Background as in image 2: wet asphalt with red and blue neon reflections, cart wheels out of focus in the background. Low warm light from the left, neon colours reflected in the puddle, saturated red and blue neon accents against deep blue-grey shadows. Close-up, detail shot, ground-level camera, a shallow puddle in the centre of the frame, shallow depth of field. Hand-painted anime film style, clean ink outlines, cel shading with a single shadow tone, high saturation with strong contrast, soft film grain.
 ```
 
 尾幀提示詞（拿首幀圖做圖像編輯）
@@ -140,7 +140,7 @@ The sneakers land in the puddle one after the other and carry on out of the righ
 
 ### EP01-003
 
-- C01-a（局部入鏡）　位置：seen from behind in the centre of the frame, mid-stride, moving away from the camera down the lane｜視線：facing down the lane｜手部／道具：both arms wrapped around a square pale-blue biscuit tin with worn corners in front of her, elbows showing at her sides
+- C01-a（局部入鏡）　位置：seen from behind in the centre of the frame, mid-stride, moving away from the camera down the lane｜視線：facing down the lane｜手部／道具：both arms wrapped around a battered square pale-blue biscuit tin in front of her, elbows showing at her sides
 - 機位：S01-A（巷子入口，沿著巷子朝磚牆方向拍：兩排攤車的縱深。人物朝遠離鏡頭的方向跑）；EP01-001 用過這個機位，這一鏡的首幀可以拿它的首幀圖做圖像編輯，背景才會一致
 - 看得到的背景（來自機位）：two rows of food carts with canvas awnings receding down the lane toward a brick wall, strings of bare bulbs overhead, wet asphalt
 - 參考圖（依這個順序上傳，提示詞裡的「image N」就是第 N 張）：1. C01-a 設定圖；2. S01-A 機位背景圖；3. P01 道具圖；4. EP01-001 的尾幀圖
@@ -150,7 +150,7 @@ The sneakers land in the puddle one after the other and carry on out of the righ
 首幀圖像提示詞
 
 ```text
-The girl with the short black bob from image 1, seen from behind in the centre of the frame, mid-stride, moving away from the camera down the lane, facing down the lane, both arms wrapped around a square pale-blue biscuit tin with worn corners (image 3) in front of her, elbows showing at her sides. Background as in image 2: two rows of food carts with canvas awnings receding down the lane toward a brick wall, strings of bare bulbs overhead, wet asphalt. Warm bulbs overhead, red and blue neon tubes reflected on the wet ground, deep shadows between the carts, night, steady rain, saturated red and blue neon accents against deep blue-grey shadows. Full shot, shot from behind, eye-level shot, the girl is small in the middle of the frame, the two rows of carts lead the eye toward her. Hand-painted anime film style, clean ink outlines, cel shading with a single shadow tone, high saturation with strong contrast, soft film grain.
+The girl with the short black bob from image 1, seen from behind in the centre of the frame, mid-stride, moving away from the camera down the lane, facing down the lane, both arms wrapped around a battered square pale-blue biscuit tin (image 3) in front of her, elbows showing at her sides. Background as in image 2: two rows of food carts with canvas awnings receding down the lane toward a brick wall, strings of bare bulbs overhead, wet asphalt. Warm bulbs overhead, red and blue neon tubes reflected on the wet ground, deep shadows between the carts, night, steady rain, saturated red and blue neon accents against deep blue-grey shadows. Full shot, shot from behind, eye-level shot, the girl is small in the middle of the frame, the two rows of carts lead the eye toward her. Hand-painted anime film style, clean ink outlines, cel shading with a single shadow tone, high saturation with strong contrast, soft film grain.
 ```
 
 尾幀提示詞（拿首幀圖做圖像編輯）
@@ -167,7 +167,7 @@ The girl with the short black bob jogs away from the camera down the lane at a s
 
 ### EP01-004
 
-- C01-a　位置：in the right half of the frame, body in profile facing frame right, leaning forward mid-step｜視線：looking ahead toward frame right｜手部／道具：both arms hugging a square pale-blue biscuit tin with worn corners to her chest｜表情：lips parted, breathing hard, brows drawn together
+- C01-a　位置：in the right half of the frame, body in profile facing frame right, leaning forward mid-step｜視線：looking ahead toward frame right｜手部／道具：both arms hugging a battered square pale-blue biscuit tin to her chest｜表情：lips parted, breathing hard, brows drawn together
 - C02-a（局部入鏡）　位置：at shoulder height in the left third of the frame｜視線：—｜手部／道具：—
 - 機位：S01-B（兩台攤車之間，側面拍：男人在畫面左、小滿在畫面右。軸線在兩人之間，鏡頭在靠巷子入口的一側）
 - 看得到的背景（來自機位）：the side of a food cart with a canvas awning, out-of-focus warm bulbs behind
@@ -178,7 +178,7 @@ The girl with the short black bob jogs away from the camera down the lane at a s
 首幀圖像提示詞
 
 ```text
-The girl with the short black bob from image 1, in the right half of the frame, body in profile facing frame right, leaning forward mid-step, looking ahead toward frame right, both arms hugging a square pale-blue biscuit tin with worn corners (image 4) to her chest, lips parted, breathing hard, brows drawn together. A large hand in a dark green rubber raincoat sleeve reaching in from the left edge of the frame toward the girl's hood, fingers open (image 2), at shoulder height in the left third of the frame. Background as in image 3: the side of a food cart with a canvas awning, out-of-focus warm bulbs behind. Warm bulbs overhead, red and blue neon tubes reflected on the wet ground, deep shadows between the carts, night, steady rain, saturated red and blue neon accents against deep blue-grey shadows. Medium shot, framed from the waist up, eye-level shot, the girl's head in the upper right third of the frame, open space behind her on the left for the hand to enter. Hand-painted anime film style, clean ink outlines, cel shading with a single shadow tone, high saturation with strong contrast, soft film grain.
+The girl with the short black bob from image 1, in the right half of the frame, body in profile facing frame right, leaning forward mid-step, looking ahead toward frame right, both arms hugging a battered square pale-blue biscuit tin (image 4) to her chest, lips parted, breathing hard, brows drawn together. A large hand in a dark green rubber raincoat sleeve reaching in from the left edge of the frame toward the girl's hood, fingers open (colours and textures as in image 2), at shoulder height in the left third of the frame. Background as in image 3: the side of a food cart with a canvas awning, out-of-focus warm bulbs behind. Warm bulbs overhead, red and blue neon tubes reflected on the wet ground, deep shadows between the carts, night, steady rain, saturated red and blue neon accents against deep blue-grey shadows. Medium shot, framed from the waist up, eye-level shot, the girl's head in the upper right third of the frame, open space behind her on the left for the hand to enter. Hand-painted anime film style, clean ink outlines, cel shading with a single shadow tone, high saturation with strong contrast, soft film grain.
 ```
 
 尾幀提示詞（拿首幀圖做圖像編輯）
@@ -223,7 +223,7 @@ The tall man in the green raincoat tilts his head down a little further and spea
 
 ### EP01-006
 
-- 場上道具：a square pale-blue biscuit tin with worn corners in mid-air at the top of the frame, falling
+- 場上道具：a battered square pale-blue biscuit tin in mid-air at the top of the frame, falling
 - 機位：S01-C（地面高度，朝攤車底下拍：鐵盒掉落的位置）
 - 看得到的背景（來自機位）：the dark underside of a food cart, one wheel at the left edge of the frame, wet asphalt with neon reflections
 - 參考圖（依這個順序上傳，提示詞裡的「image N」就是第 N 張）：1. S01-C 機位背景圖；2. P01 道具圖
@@ -233,19 +233,19 @@ The tall man in the green raincoat tilts his head down a little further and spea
 首幀圖像提示詞
 
 ```text
-A square pale-blue biscuit tin with worn corners (image 2) in mid-air at the top of the frame, falling. Background as in image 1: the dark underside of a food cart, one wheel at the left edge of the frame, wet asphalt with neon reflections. A strip of red neon reflected on the asphalt in the foreground, the underside of the cart in deep shadow, saturated red and blue neon accents against deep blue-grey shadows. Close-up, detail shot, ground-level camera, the gap under the cart in the right half of the frame. Hand-painted anime film style, clean ink outlines, cel shading with a single shadow tone, high saturation with strong contrast, soft film grain.
+A battered square pale-blue biscuit tin (image 2) in mid-air at the top of the frame, falling. Background as in image 1: the dark underside of a food cart, one wheel at the left edge of the frame, wet asphalt with neon reflections. A strip of red neon reflected on the asphalt in the foreground, the underside of the cart in deep shadow, saturated red and blue neon accents against deep blue-grey shadows. Close-up, detail shot, ground-level camera, the gap under the cart in the right half of the frame. Hand-painted anime film style, clean ink outlines, cel shading with a single shadow tone, high saturation with strong contrast, soft film grain.
 ```
 
 尾幀提示詞（拿首幀圖做圖像編輯）
 
 ```text
-Edit the first-frame image of this shot and keep everything not mentioned here unchanged. End state: a square pale-blue biscuit tin with worn corners lies flat on the wet asphalt in the shadow under the cart.
+Edit the first-frame image of this shot and keep everything not mentioned here unchanged. End state: a battered square pale-blue biscuit tin lies flat on the wet asphalt in the shadow under the cart.
 ```
 
 影片提示詞
 
 ```text
-A square pale-blue biscuit tin with worn corners drops in from the top of the frame, lands on its edge on the wet asphalt, rolls under the cart and tips over flat, water rippling around it. Static camera. Audio: fabric tearing, then the tin clanging on asphalt and rattling to a stop.
+A battered square pale-blue biscuit tin drops in from the top of the frame, lands on its edge on the wet asphalt, rolls under the cart and tips over flat, water rippling around it. Static camera. Audio: fabric tearing, then the tin clanging on asphalt and rattling to a stop.
 ```
 
 ### EP01-007
@@ -278,7 +278,7 @@ The tall man in the green raincoat and the girl with the short black bob both st
 
 ### EP01-008
 
-- 場上道具：a square pale-blue biscuit tin with worn corners lying flat on the wet asphalt in the shadow under the cart
+- 場上道具：a battered square pale-blue biscuit tin lying flat on the wet asphalt in the shadow under the cart
 - 機位：S01-C（地面高度，朝攤車底下拍：鐵盒掉落的位置）；EP01-006 用過這個機位，這一鏡的首幀可以拿它的首幀圖做圖像編輯，背景才會一致
 - 看得到的背景（來自機位）：the dark underside of a food cart, one wheel at the left edge of the frame, wet asphalt with neon reflections
 - 轉場（從上一鏡進來的方式，剪接時做）：視線剪輯
@@ -290,7 +290,7 @@ The tall man in the green raincoat and the girl with the short black bob both st
 首幀圖像提示詞
 
 ```text
-A square pale-blue biscuit tin with worn corners (image 2) lying flat on the wet asphalt in the shadow under the cart. Background as in image 1: the dark underside of a food cart, one wheel at the left edge of the frame, wet asphalt with neon reflections. A strip of red neon reflected on the asphalt in the foreground, the underside of the cart in deep shadow, saturated red and blue neon accents against deep blue-grey shadows. Close-up, detail shot, ground-level camera, the tin in the centre of the frame. Hand-painted anime film style, clean ink outlines, cel shading with a single shadow tone, high saturation with strong contrast, soft film grain.
+A battered square pale-blue biscuit tin (image 2) lying flat on the wet asphalt in the shadow under the cart. Background as in image 1: the dark underside of a food cart, one wheel at the left edge of the frame, wet asphalt with neon reflections. A strip of red neon reflected on the asphalt in the foreground, the underside of the cart in deep shadow, saturated red and blue neon accents against deep blue-grey shadows. Close-up, detail shot, ground-level camera, the tin in the centre of the frame. Hand-painted anime film style, clean ink outlines, cel shading with a single shadow tone, high saturation with strong contrast, soft film grain.
 ```
 
 尾幀提示詞（拿首幀圖做圖像編輯）
@@ -335,7 +335,7 @@ The tall man in the green raincoat glances toward frame left, then takes two unh
 
 ### EP01-010
 
-- C01-b　位置：kneeling in the centre of the frame beside a cart wheel, upper body facing the camera, shoulders hunched｜視線：looking down at the lid of the tin in her hands｜手部／道具：both hands holding a square pale-blue biscuit tin with worn corners in front of her chest, right thumb resting on a fresh dent across its lid｜表情：brows pinched, lower lip caught between her teeth
+- C01-b　位置：kneeling in the centre of the frame beside a cart wheel, upper body facing the camera, shoulders hunched｜視線：looking down at the lid of the tin in her hands｜手部／道具：both hands holding a battered square pale-blue biscuit tin in front of her chest, right thumb resting on a fresh dent across its lid｜表情：brows pinched, lower lip caught between her teeth
 - 看得到的背景：a cart wheel and wet asphalt beside her, blurred warm bulbs far behind
 - 參考圖（依這個順序上傳，提示詞裡的「image N」就是第 N 張）：1. C01-b 設定圖；2. S01 場景定稿圖；3. P01 道具圖
 - 成片 4 秒，建議生成 5 秒段再裁頭尾
@@ -344,7 +344,7 @@ The tall man in the green raincoat glances toward frame left, then takes two unh
 首幀圖像提示詞
 
 ```text
-The girl with the short black bob from image 1, kneeling in the centre of the frame beside a cart wheel, upper body facing the camera, shoulders hunched, looking down at the lid of the tin in her hands, both hands holding a square pale-blue biscuit tin with worn corners (image 3) in front of her chest, right thumb resting on a fresh dent across its lid, brows pinched, lower lip caught between her teeth. Background as in image 2: a cart wheel and wet asphalt beside her, blurred warm bulbs far behind. Warm bulbs overhead, red and blue neon tubes reflected on the wet ground, deep shadows between the carts, night, steady rain, saturated red and blue neon accents against deep blue-grey shadows. Medium close-up, framed from the chest up, slightly high angle, her face in the upper middle of the frame, the tin just below it. Hand-painted anime film style, clean ink outlines, cel shading with a single shadow tone, high saturation with strong contrast, soft film grain.
+The girl with the short black bob from image 1, kneeling in the centre of the frame beside a cart wheel, upper body facing the camera, shoulders hunched, looking down at the lid of the tin in her hands, both hands holding a battered square pale-blue biscuit tin (image 3) in front of her chest, right thumb resting on a fresh dent across its lid, brows pinched, lower lip caught between her teeth. Background as in image 2: a cart wheel and wet asphalt beside her, blurred warm bulbs far behind. Warm bulbs overhead, red and blue neon tubes reflected on the wet ground, deep shadows between the carts, night, steady rain, saturated red and blue neon accents against deep blue-grey shadows. Medium close-up, framed from the chest up, slightly high angle, her face in the upper middle of the frame, the tin just below it. Hand-painted anime film style, clean ink outlines, cel shading with a single shadow tone, high saturation with strong contrast, soft film grain.
 ```
 
 尾幀提示詞（拿首幀圖做圖像編輯）

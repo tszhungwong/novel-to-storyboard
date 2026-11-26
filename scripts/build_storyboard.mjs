@@ -152,6 +152,7 @@ const T = {
     refDefault: '圖{n}',
     refWho: (t, tag) => `${t}中的${tag}`,
     refTag: (t) => `（${t}）`,
+    refPart: (t) => `（顏色與質感參照${t}）`,
     refBg: (t, bg) => `背景參照${t}${bg ? `：${bg}` : ''}`,
   },
   en: {
@@ -178,6 +179,7 @@ const T = {
     refDefault: 'image {n}',
     refWho: (t, tag) => `${tag} from ${t}`,
     refTag: (t) => ` (${t})`,
+    refPart: (t) => ` (colours and textures as in ${t})`,
     refBg: (t, bg) => `background as in ${t}${bg ? `: ${bg}` : ''}`,
   },
 };
@@ -474,6 +476,8 @@ function checkPropPhrase(where, v, isState) {
     const n = l === 'zh' ? [...s.replace(/[\s、，,。；;：:「」]/g, '')].length : (s.match(/\S+/g) || []).length;
     const max = l === 'zh' ? 15 : 10;
     if (n > max) hint(where, `道具描述（${l}）有 ${n} ${l === 'zh' ? '字' : '個詞'}，超過 ${max}；代入句子後容易斷句或讀不通（「a lantern with paper panels and a top handle glowing」）。留下兩三個最能辨認的特徵`);
+    // 英文的 with 片語在句尾：代入後後面再接位置或動作，就會黏到 with 後面那個名詞上
+    if (l === 'en' && /\bwith\b/i.test(s)) hint(where, `道具描述（en）用了 with 片語；代入句子後，後面接的位置或動作會黏到錯的名詞上（「a sword with a round guard by the hilt」讀起來是護手在劍柄旁）。把特徵改成放在名詞前面的形容詞（「a battered square biscuit tin」「a plain-guarded steel sword」）`);
   }
 }
 
@@ -567,6 +571,19 @@ for (const c of bible.characters || []) {
     hint(c.id, `${kind}角色沒有寫 expressions，預設的「平靜、微笑、難過、生氣」不適用，所以不產出表情組圖；寫成這個角色會用到的狀態（耳朵往後貼、尾巴膨起、燈光變亮），或設 minor`);
   }
 }
+// 不同角色用了同一個短稱：影片提示詞與參考圖模式都靠短稱分辨人，兩個人會被當成同一個
+for (const l of langs) {
+  const byTag = new Map();
+  for (const { c, vs } of charList) {
+    for (const t of new Set([tagOf(c, null, l), ...vs.map((v) => tagOf(c, v, l))].filter(Boolean))) {
+      if (!byTag.has(t)) byTag.set(t, new Set());
+      byTag.get(t).add(c.id);
+    }
+  }
+  for (const [t, ids] of byTag) {
+    if (ids.size > 1) warn([...ids].join('、'), `短稱（${l}）都是「${t}」；提示詞靠短稱分辨人，兩個角色會被當成同一個。給每個人一個看得出差別的短稱（「左臉有疤的黑衣人」「矮壯的黑衣人」）`);
+  }
+}
 
 const scenes = new Map();
 for (const s of bible.scenes || []) {
@@ -616,7 +633,8 @@ function subject(entry, shot, l, withBlocking = true, tok = null) {
   const outfit = UPPER_BODY.has(spec(shot).size) && pick(v.outfit_top, l) ? pick(v.outfit_top, l) : pick(v.outfit, l);
   const t = tok && tok.get(v.id);
   let base;
-  if (isPartialText(entry)) base = [strip(pick(entry.partial, l, tok)) + (t ? T[l].refTag(t) : '')]; // 只入鏡一部分：直接寫看得到的那一部分
+  // 只入鏡一部分：直接寫看得到的那一部分。參考圖只借顏色與質感，免得工具照整張設定圖畫出整個人
+  if (isPartialText(entry)) base = [strip(pick(entry.partial, l, tok)) + (t ? T[l].refPart(t) : '')];
   else if (t) base = [T[l].refWho(t, tagOf(c, v, l) || lookOf(c, v, l))];
   else if (entry.partial === true) base = [tagOf(c, v, l), outfit]; // 背影、前景虛焦：不寫臉部細節與狀態
   else base = [lookOf(c, v, l), outfit, pick(v.state, l), pick(c.marks, l)];
@@ -693,19 +711,13 @@ function refTokens(s, l) {
   refPlan(s).forEach((r, i) => { if (r.key && !tok.has(r.key)) tok.set(r.key, refToken(i + 1, l)); });
   return tok;
 }
-/** 給人看的參考圖清單：參考圖模式下要照這個順序上傳。文字模式是 refs 加上機位背景圖。 */
+/**
+ * 給人看的參考圖清單。兩種模式都由腳本列出角色設定圖、背景圖、道具圖、特效參考圖，refs 只寫額外的；
+ * 參考圖模式要照這個順序上傳，文字模式是一份不要漏掛的清單。
+ */
 function refLabels(s) {
-  if (REF_MODE) return refPlan(s).map((r) => r.label);
-  if (s.link === '接續') return (Array.isArray(s.refs) ? s.refs : []).map(String); // 首幀沿用上一鏡，不另外生成，不用背景圖
-  const list = userRefs(s);
-  const plate = `${s.setup} 機位背景圖`;
-  if (s.setup && setups.has(s.setup) && !list.includes(plate)) {
-    // 放在原本場景定稿圖的位置；refs 沒寫場景定稿圖就接在最後
-    const k = (Array.isArray(s.refs) ? s.refs : []).map(String).indexOf(`${s.scene} 場景定稿圖`);
-    if (k >= 0 && k <= list.length) list.splice(k, 0, plate);
-    else list.push(plate);
-  }
-  return list;
+  if (!REF_MODE && s.link === '接續') return (Array.isArray(s.refs) ? s.refs : []).map(String); // 首幀沿用上一鏡，不另外生成
+  return refPlan(s).map((r) => r.label);
 }
 
 function imagePrompt(shot, l) {
@@ -1012,6 +1024,11 @@ if (ep) {
 
     // 角色與走位
     const cast = Array.isArray(s.cast) ? s.cast : [];
+    const baseIds = cast.map((e) => chars.get(e.char)?.c.id).filter(Boolean);
+    const twice = [...new Set(baseIds.filter((x, k) => baseIds.indexOf(x) !== k))];
+    if (twice.length) {
+      warn(id, `${twice.join('、')} 在這一鏡出現兩次；一個角色編號只代表一個人，提示詞會用同一個短稱寫兩次。長得一樣的兩個手下要登記成兩個角色、短稱分得出來；當成一群人時登記成一個角色，tag 與 look 寫成複數（「兩個蒙面黑衣人」），cast 只放一次`);
+    }
     cast.forEach((e) => {
       if (!chars.has(e.char)) { err(id, `角色編號 ${e.char ?? '（空）'} 不在設定檔裡`); return; }
       // 只入鏡身體一部分（partial 寫成片段）時，那段文字已經說明看得到什麼，視線與手部不必再寫。
@@ -1240,6 +1257,7 @@ if (series) {
     for (const [k, name] of [['hook', 'hook（鉤子：前三秒的畫面）'], ['payoff', 'payoff（爽點或核心事件）'], ['cliff', 'cliff（卡點：結尾留給觀眾的問題）']]) {
       if (!e[k]) warn(id, `缺少 ${name}；每一集都要回答這一題，見 references/outline-to-episodes.md`);
     }
+    if (e.cliff && !/[？?]/.test(e.cliff)) hint(id, 'cliff 只寫了最後發生什麼，沒有寫出觀眾心裡的問題；在最後一個畫面後面接一句問題（「外婆為什麼要押她的記憶？」），寫劇本和拆鏡時才知道要停在誰的反應上');
     if (e.cliff_type && !CLIFF_TYPES.includes(e.cliff_type)) hint(id, `cliff_type「${e.cliff_type}」不在分類裡（${CLIFF_TYPES.join('、')}）`);
     const cast = Array.isArray(e.cast) ? e.cast : [];
     if (!cast.length) warn(id, '缺少 cast（出場角色的編號）');

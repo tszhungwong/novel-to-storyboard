@@ -42,7 +42,7 @@
 
 | 編號 | 名稱 | 固定描述 |
 |---|---|---|
-| P01 | 鐵盒 | a square pale-blue biscuit tin with worn corners |
+| P01 | 鐵盒 | a battered square pale-blue biscuit tin |
 
 ## 風格鎖定句
 
@@ -87,7 +87,7 @@ A narrow night-market lane between two rows of wheeled food carts with canvas aw
 ### P01　道具圖
 
 ```text
-A square pale-blue biscuit tin with worn corners. A single object centred in frame, plain light grey background, soft even lighting. Hand-painted anime film style, clean ink outlines, cel shading with a single shadow tone, high saturation with strong contrast, soft film grain.
+A battered square pale-blue biscuit tin. A single object centred in frame, plain light grey background, soft even lighting. Hand-painted anime film style, clean ink outlines, cel shading with a single shadow tone, high saturation with strong contrast, soft film grain.
 ```
 
 ## 進度紀錄
