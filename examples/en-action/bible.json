@@ -28,6 +28,7 @@
       "name": "小滿",
       "tag": "the girl with the short black bob",
       "look": "a girl of about sixteen, round face, chin-length black bob with blunt bangs, large dark eyes, small slim build",
+      "stature": "about 155 cm tall",
       "marks": "a small adhesive bandage on her left cheek",
       "expressions": "calm, frightened, out of breath, relieved",
       "variants": [
@@ -52,6 +53,7 @@
       "name": "雨衣男",
       "tag": "the tall man in the green raincoat",
       "look": "a man in his forties, square jaw, short grey-flecked stubble, heavy brows, tall build with broad shoulders",
+      "stature": "about 185 cm tall, over a head taller than the girl with the short black bob",
       "marks": "",
       "voice": "a low, gravelly male voice",
       "minor": true,

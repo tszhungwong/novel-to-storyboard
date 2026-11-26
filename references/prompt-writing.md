@@ -4,6 +4,8 @@
 
 各工具官方對提示詞的要求不一樣，見 `tool-capabilities.md` 的「各工具官方的提示詞寫法」。
 
+目錄：一、六條通則｜二、腳本怎麼組合｜三、設定檔的片段（外貌與頭身比、短稱、造型、場景、光線與布光、色彩、風格鎖定句、道具）｜四、分鏡檔的片段（走位與朝向、情緒對照表、背景與構圖、動作、聲線與聲音）｜五、英文片段｜六、提示詞太長的時候｜七、參考圖模式
+
 ## 一、六條通則
 
 1. **寫看得見的東西。** 生成工具畫的是畫面，不是概念。「氣質清冷」「眼神堅毅」「很有故事感」沒有對應的畫面，每次生成都會不一樣。改寫成造成那個印象的具體特徵：「眼尾微微下垂，薄唇，很少笑」。
@@ -39,6 +41,8 @@
 - **髮型最能鎖住辨識度**，寫到長度（及肩、及腰）、直或捲、瀏海、顏色、怎麼綁。
 - 年齡寫「二十歲出頭」這樣的範圍，不要只寫「年輕」。
 - 表情、姿勢、服裝各有自己的欄位，不要寫進來。
+- **頭身比**（頭的高度佔身高幾分之一）決定畫風的比例。整部片都一樣時寫在 `style_lock`：寫實是七到八頭身（`realistic proportions, about seven heads tall`），日系動畫常見六到七頭身，Q 版是二到三頭身（`chibi proportions, about three heads tall`）。同一部片裡只有某個角色不同（小孩、Q 版的吉祥物），寫在那個角色的 `look`。
+- **身高**寫在角色的 `stature`：絕對加相對，「身高約一百八十公分，比黑髮及肩的年輕女子高一個頭」。腳本會把它放進角色設定圖，以及兩人以上同框、看得到身體的鏡頭（中景以外）；單人鏡頭不寫，免得佔字數。不寫，生成工具常把同框的人畫成一樣高，腳本會提示。相對的那一半用對方的短稱，讀起來才對得上。
 - 不要用真人或既有作品角色的名字代替描述。不同工具對同一個名字的反應不一樣，有些會直接擋下；寫特徵才穩，也沒有肖像與著作權的問題。
 
 ### `tag`：短稱
@@ -162,6 +166,7 @@ backlighting、side lighting、rim light、high-key、low-key、volumetric light
 
 - 不寫背景、人物、天氣、光線方向，也不寫冷暖與主色（那歸各場景的 `palette`）。它會被加到每一張圖上，包含純色背景的角色設定圖、夜戲和回憶。懸疑片想要整體偏冷，就讓每個場景的 `palette` 都偏冷，個別場景（溫暖的回憶）才有辦法例外。
 - 用特徵描述風格，不要只丟作品名、畫師名或工作室名。理由和 `look` 不寫名人一樣。
+- 整部片共用的頭身比也寫在這裡（「寫實比例，約七頭身」「Q 版二頭身」），它是畫風的一部分。
 - 定了就不要改。一改，所有資產圖和首幀都要重出。
 - 工具支援風格參考圖時，鎖定句照寫，參考圖是加強，不是取代。
 
@@ -179,7 +184,8 @@ backlighting、side lighting、rim light、high-key、low-key、volumetric light
 
 | 欄位 | 要寫到 | 例 |
 |---|---|---|
-| `pos` | 在畫面哪裡（左右、上下、前中後景）＋身體朝向＋姿勢 | 坐在畫面右側中景的桌前，上半身朝向畫面左側 |
+| `facing` | 朝向，用用詞表的詞：正面、半側朝左、半側朝右、側面朝左、側面朝右、背面。左右指臉朝畫面哪一邊 | 半側朝左 |
+| `pos` | 在畫面哪裡（左右、上下、前中後景）＋姿勢。填了 `facing` 就不用再寫朝向 | 坐在畫面右側中景的桌前，上半身前傾 |
 | `gaze` | 看誰或看什麼＋方向 | 抬頭看向畫面左上方的前景男子 |
 | `hands` | 兩隻手各自的位置、動作、拿著什麼；看不到也要說 | 右手握著門把，左手自然下垂 |
 | `face` | 具體的肌肉變化，一個主表情加一個不完美的細節 | 眉頭微皺，嘴唇抿成一線，視線有點飄 |
@@ -188,6 +194,31 @@ backlighting、side lighting、rim light、high-key、low-key、volumetric light
 |---|---|
 | 站在旁邊，很生氣 | 站在畫面左側中景，身體朝向畫面右側，雙臂交叉抱在胸前；眉頭緊鎖，下顎繃緊 |
 | 拿著杯子 | 右手握著白色馬克杯的把手，杯子舉在胸前；左手扶著杯底 |
+
+**朝向用 `facing` 填，不寫在 `pos` 的自由文字裡。** 用詞固定，正反打的兩個人才看得出方向是不是相對（甲半側朝右、乙半側朝左）；同一個機位裡同一個人上一鏡朝左、下一鏡朝右，腳本會提示，多半是越軸。背對鏡頭的人除了 `facing` 填「背面」，還要設 `partial: true`，否則提示詞會寫一整段看不到的臉。
+
+**情緒要寫成看得見的表現。** `face` 只寫「難過」，工具會給一張標準的難過臉；寫出眉、眼、嘴與呼吸，才有表演。只寫一個情緒詞時腳本會提示。下面是常見情緒的寫法，一次挑兩三個部位，不要全部堆上去：
+
+| 情緒 | 眉與眼 | 嘴與下巴 | 身體與呼吸 | 英文 |
+|---|---|---|---|---|
+| 驚訝 | 眉毛上揚，眼睛睜大 | 嘴微微張開 | 身體往後一縮，屏住呼吸 | brows raised, eyes wide, lips parted, a sharp intake of breath |
+| 壓抑的怒氣 | 眉頭壓低，眼神直盯不移 | 下顎繃緊，嘴唇抿成一線 | 鼻翼微張，手指慢慢收緊 | brows drawn low, jaw clenched, lips pressed thin, fingers slowly tightening |
+| 強忍淚水 | 眼眶泛紅，視線往上或往旁邊移開 | 嘴角往下壓，下巴輕輕發抖 | 用力吞嚥，呼吸變淺 | eyes red-rimmed and glistening, gaze sliding away, chin trembling, swallowing hard |
+| 心虛 | 視線游移，不敢對上 | 抿嘴，或擠出一個太快的笑 | 摸後頸、整理袖口，肩膀微縮 | eyes darting away, a quick strained smile, rubbing the back of the neck |
+| 冷笑 | 眼睛沒有笑意，微微瞇起 | 一邊嘴角上揚 | 下巴略抬，身體不動 | one corner of the mouth lifted, eyes cold and slightly narrowed, chin raised |
+| 恐懼 | 眉頭往上往中間擠，眼白露得多 | 嘴唇發白、微張 | 往後退半步，雙臂收向身體，呼吸急促 | brows pulled up and together, whites of the eyes showing, shallow rapid breathing |
+| 釋然 | 眉頭鬆開，眼睛半閉 | 長長吐一口氣，嘴角放鬆 | 肩膀垂下來 | brows relaxing, eyes half closing, a long slow exhale, shoulders dropping |
+| 尷尬 | 視線落向地面或旁邊 | 嘴角僵著，笑得不自然 | 耳朵或臉頰泛紅，手不知道放哪裡 | a stiff awkward smile, flushed cheeks, eyes on the floor, hands fidgeting |
+| 失望 | 眼神暗下來，視線垂下 | 嘴角往下，輕輕嘆氣 | 肩膀垮下，手垂下來 | eyes dimming and dropping, corners of the mouth falling, a quiet sigh, shoulders sagging |
+| 決心 | 眉頭微壓，眼神定住 | 嘴唇閉緊，下巴收 | 深吸一口氣，站直 | steady narrowed gaze, lips firmly closed, a deep breath, straightening up |
+| 疲憊 | 眼皮半垂，眼下發暗 | 嘴唇乾，微微張著 | 動作慢，肩膀下沉，靠著東西 | heavy-lidded eyes with dark circles, slow movements, slumped shoulders |
+| 懷疑 | 一邊眉毛挑起，眼睛微瞇 | 嘴角一邊往內收 | 頭微側，身體往後靠 | one brow raised, eyes narrowed, head tilted slightly, leaning back |
+| 羞怯 | 視線往下，偶爾抬眼又移開 | 抿著嘴笑 | 頭微低，手指絞在一起 | glancing up then quickly away, a small closed-mouth smile, fingers intertwined |
+| 悲傷 | 眉頭內側上揚，眼神空 | 嘴角往下 | 呼吸沉，動作停住 | inner brows raised, eyes unfocused, corners of the mouth turned down, motionless |
+
+- 「不完美的細節」比完整的標準表情更像真人：嘴上在笑、眼睛沒笑；強忍時下巴的那一下抖動。一個主表情配一個細節就夠。
+- 情緒強的時刻，身體比臉更好拍、也更穩：背影的肩膀在抖、手把杯子握得指節發白。特寫的臉是生成工具最容易做僵的地方。
+- 上表是寫法的起點，不是標準答案。角色的個性會改變表現：同樣是生氣，有人會笑，有人會安靜下來。
 
 兩個人都完整入鏡時，髮色和服裝顏色容易互相串。能避就避：讓其中一人用 `partial`（背影、前景虛焦）；避不掉時，每個人的 `pos` 都以畫面位置開頭（「畫面左側的…」），並確認兩人的描述在顏色上差得夠遠。
 

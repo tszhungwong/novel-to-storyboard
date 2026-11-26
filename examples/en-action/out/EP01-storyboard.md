@@ -167,18 +167,18 @@ The girl with the short black bob jogs away from the camera down the lane at a s
 
 ### EP01-004
 
-- C01-a　位置：in the right half of the frame, body in profile facing frame right, leaning forward mid-step｜視線：looking ahead toward frame right｜手部／道具：both arms hugging a battered square pale-blue biscuit tin to her chest｜表情：lips parted, breathing hard, brows drawn together
+- C01-a　位置：in the right half of the frame, leaning forward mid-step｜視線：looking ahead toward frame right｜手部／道具：both arms hugging a battered square pale-blue biscuit tin to her chest｜表情：lips parted, breathing hard, brows drawn together
 - C02-a（局部入鏡）　位置：at shoulder height in the left third of the frame｜視線：—｜手部／道具：—
 - 機位：S01-B（兩台攤車之間，側面拍：男人在畫面左、小滿在畫面右。軸線在兩人之間，鏡頭在靠巷子入口的一側）
 - 看得到的背景（來自機位）：the side of a food cart with a canvas awning, out-of-focus warm bulbs behind
 - 參考圖（依這個順序上傳，提示詞裡的「image N」就是第 N 張）：1. C01-a 設定圖；2. C02-a 設定圖；3. S01-B 機位背景圖；4. P01 道具圖
 - 成片 2 秒，建議生成 3 秒段再裁頭尾
-- 驗收重點：手指數量，手上拿的東西沒有變形；人物在畫面的左右位置和分鏡一致（軸線）；背景和 S01-B 機位背景圖一致；風險項見備註，不行就照備案換拍法
+- 驗收重點：手指數量，手上拿的東西沒有變形；背景和 S01-B 機位背景圖一致；風險項見備註，不行就照備案換拍法
 
 首幀圖像提示詞
 
 ```text
-The girl with the short black bob from image 1, in the right half of the frame, body in profile facing frame right, leaning forward mid-step, looking ahead toward frame right, both arms hugging a battered square pale-blue biscuit tin (image 4) to her chest, lips parted, breathing hard, brows drawn together. A large hand in a dark green rubber raincoat sleeve reaching in from the left edge of the frame toward the girl's hood, fingers open (colours and textures as in image 2), at shoulder height in the left third of the frame. Background as in image 3: the side of a food cart with a canvas awning, out-of-focus warm bulbs behind. Warm bulbs overhead, red and blue neon tubes reflected on the wet ground, deep shadows between the carts, night, steady rain, saturated red and blue neon accents against deep blue-grey shadows. Medium shot, framed from the waist up, eye-level shot, the girl's head in the upper right third of the frame, open space behind her on the left for the hand to enter. Hand-painted anime film style, clean ink outlines, cel shading with a single shadow tone, high saturation with strong contrast, soft film grain.
+The girl with the short black bob from image 1, in profile, facing frame right, in the right half of the frame, leaning forward mid-step, looking ahead toward frame right, both arms hugging a battered square pale-blue biscuit tin (image 4) to her chest, lips parted, breathing hard, brows drawn together. A large hand in a dark green rubber raincoat sleeve reaching in from the left edge of the frame toward the girl's hood, fingers open (colours and textures as in image 2), at shoulder height in the left third of the frame. Background as in image 3: the side of a food cart with a canvas awning, out-of-focus warm bulbs behind. Warm bulbs overhead, red and blue neon tubes reflected on the wet ground, deep shadows between the carts, night, steady rain, saturated red and blue neon accents against deep blue-grey shadows. Medium shot, framed from the waist up, eye-level shot, the girl's head in the upper right third of the frame, open space behind her on the left for the hand to enter. Hand-painted anime film style, clean ink outlines, cel shading with a single shadow tone, high saturation with strong contrast, soft film grain.
 ```
 
 尾幀提示詞（拿首幀圖做圖像編輯）
@@ -195,7 +195,7 @@ The girl with the short black bob takes one more step toward frame right, should
 
 ### EP01-005
 
-- C02-a　位置：filling the centre of the frame, facing the camera, head tilted down｜視線：looking down toward the lower right of the frame｜手部／道具：right fist closed around a bunch of brick-red sweatshirt fabric at the lower right edge of the frame, left arm down at his side below the frame｜表情：jaw set, eyes narrowed, rainwater dripping from the brim of the hood
+- C02-a　位置：filling the centre of the frame, head tilted down｜視線：looking down toward the lower right of the frame｜手部／道具：right fist closed around a bunch of brick-red sweatshirt fabric at the lower right edge of the frame, left arm down at his side below the frame｜表情：jaw set, eyes narrowed, rainwater dripping from the brim of the hood
 - 看得到的背景：a dark canvas awning overhead and blurred warm bulbs behind his hood
 - 這一鏡的光線：warm bulbs behind him as a rim light on the hood, his face lit from below by red neon reflected off the wet ground
 - 台詞語氣：flatly, barely above the rain
@@ -207,7 +207,7 @@ The girl with the short black bob takes one more step toward frame right, should
 首幀圖像提示詞
 
 ```text
-The tall man in the green raincoat from image 1, filling the centre of the frame, facing the camera, head tilted down, looking down toward the lower right of the frame, right fist closed around a bunch of brick-red sweatshirt fabric at the lower right edge of the frame, left arm down at his side below the frame, jaw set, eyes narrowed, rainwater dripping from the brim of the hood. Background as in image 2: a dark canvas awning overhead and blurred warm bulbs behind his hood. Warm bulbs behind him as a rim light on the hood, his face lit from below by red neon reflected off the wet ground, saturated red and blue neon accents against deep blue-grey shadows. Medium close-up, framed from the chest up, low-angle shot, his face in the upper half of the frame, shallow depth of field. Hand-painted anime film style, clean ink outlines, cel shading with a single shadow tone, high saturation with strong contrast, soft film grain.
+The tall man in the green raincoat from image 1, facing the camera, filling the centre of the frame, head tilted down, looking down toward the lower right of the frame, right fist closed around a bunch of brick-red sweatshirt fabric at the lower right edge of the frame, left arm down at his side below the frame, jaw set, eyes narrowed, rainwater dripping from the brim of the hood. Background as in image 2: a dark canvas awning overhead and blurred warm bulbs behind his hood. Warm bulbs behind him as a rim light on the hood, his face lit from below by red neon reflected off the wet ground, saturated red and blue neon accents against deep blue-grey shadows. Medium close-up, framed from the chest up, low-angle shot, his face in the upper half of the frame, shallow depth of field. Hand-painted anime film style, clean ink outlines, cel shading with a single shadow tone, high saturation with strong contrast, soft film grain.
 ```
 
 尾幀提示詞（拿首幀圖做圖像編輯）
@@ -251,7 +251,7 @@ A battered square pale-blue biscuit tin drops in from the top of the frame, land
 
 ### EP01-007
 
-- C02-a　位置：in the left half of the frame, body in profile facing frame right, right arm still half raised｜視線：head turned down toward the lower right of the frame｜手部／道具：right hand open and empty in front of him, left hand at his side｜表情：brows raised, mouth a hard line
+- C02-a　位置：in the left half of the frame, right arm still half raised｜視線：head turned down toward the lower right of the frame｜手部／道具：right hand open and empty in front of him, left hand at his side｜表情：brows raised, mouth a hard line
 - C01-b　位置：in the right half of the frame, half turned back toward frame left, one step away from the man｜視線：head turned down toward the lower right of the frame｜手部／道具：both hands open and empty in front of her chest｜表情：eyes wide, lips parted
 - 機位：S01-B（兩台攤車之間，側面拍：男人在畫面左、小滿在畫面右。軸線在兩人之間，鏡頭在靠巷子入口的一側）；EP01-004 用過這個機位，這一鏡的首幀可以拿它的首幀圖做圖像編輯，背景才會一致
 - 看得到的背景（來自機位）：the side of a food cart with a canvas awning, out-of-focus warm bulbs behind
@@ -262,7 +262,7 @@ A battered square pale-blue biscuit tin drops in from the top of the frame, land
 首幀圖像提示詞
 
 ```text
-The tall man in the green raincoat from image 1, in the left half of the frame, body in profile facing frame right, right arm still half raised, head turned down toward the lower right of the frame, right hand open and empty in front of him, left hand at his side, brows raised, mouth a hard line. The girl with the short black bob from image 2, in the right half of the frame, half turned back toward frame left, one step away from the man, head turned down toward the lower right of the frame, both hands open and empty in front of her chest, eyes wide, lips parted. Background as in image 3: the side of a food cart with a canvas awning, out-of-focus warm bulbs behind. Warm bulbs overhead, red and blue neon tubes reflected on the wet ground, deep shadows between the carts, night, steady rain, saturated red and blue neon accents against deep blue-grey shadows. Medium shot, framed from the waist up, two-shot, eye-level shot, a clear gap of empty space between the two figures in the centre of the frame. Hand-painted anime film style, clean ink outlines, cel shading with a single shadow tone, high saturation with strong contrast, soft film grain.
+The tall man in the green raincoat from image 1, about 185 cm tall, over a head taller than the girl with the short black bob, in profile, facing frame right, in the left half of the frame, right arm still half raised, head turned down toward the lower right of the frame, right hand open and empty in front of him, left hand at his side, brows raised, mouth a hard line. The girl with the short black bob from image 2, about 155 cm tall, in the right half of the frame, half turned back toward frame left, one step away from the man, head turned down toward the lower right of the frame, both hands open and empty in front of her chest, eyes wide, lips parted. Background as in image 3: the side of a food cart with a canvas awning, out-of-focus warm bulbs behind. Warm bulbs overhead, red and blue neon tubes reflected on the wet ground, deep shadows between the carts, night, steady rain, saturated red and blue neon accents against deep blue-grey shadows. Medium shot, framed from the waist up, two-shot, eye-level shot, a clear gap of empty space between the two figures in the centre of the frame. Hand-painted anime film style, clean ink outlines, cel shading with a single shadow tone, high saturation with strong contrast, soft film grain.
 ```
 
 尾幀提示詞（拿首幀圖做圖像編輯）

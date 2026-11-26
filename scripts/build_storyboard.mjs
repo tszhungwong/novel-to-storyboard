@@ -101,6 +101,10 @@ const RATE = Number(P.speech_rate) > 0 ? Number(P.speech_rate) : 4.5; // 中文�
 // 參考圖模式：角色、背景、道具改用「圖1中的…」指向參考圖，不再把整段外貌寫進每一鏡
 const REF_MODE = P.ref_mode === '參考圖';
 const REF_MAX = Number(P.ref_max) > 0 ? Number(P.ref_max) : 0; // 工具一次最多能掛幾張參考圖
+// 寫在提示詞最後的工具參數：Midjourney 的畫幅、版本、負面詞都寫在提示詞裡（--ar 9:16 --no text）
+const IMAGE_SUFFIX = String(P.image_suffix ?? "").trim(); // 每一鏡的首幀、尾幀與機位背景圖
+const ASSET_SUFFIX = String(P.asset_suffix ?? "").trim(); // 角色設定圖、場景定稿圖、道具圖等資產
+const withSuffix = (p, sfx) => (sfx && p ? `${p.trim()} ${sfx}` : p);
 // ---------- 問題收集 ----------
 const issues = []; // {level: '錯誤'|'警告'|'提示', where, msg}
 const report = (level, where, msg) => {
@@ -292,6 +296,17 @@ const SPEEDS = {
   變速: { post: '變速：照正常速度生成，剪接時在動作的關鍵處放慢再恢復' },
   定格: { post: '定格：最後一幀停住，停的時間算在成片秒數裡' },
 };
+// 人物朝向（cast[].facing）：身體與臉朝哪裡。左右指臉朝向畫面的哪一邊；正反打的兩個人方向相反
+const FACINGS = {
+  正面: { zh: '正面朝向鏡頭', en: 'facing the camera', dir: '' },
+  半側朝左: { zh: '半側面朝畫面左', en: 'three-quarter view, facing frame left', dir: '左' },
+  半側朝右: { zh: '半側面朝畫面右', en: 'three-quarter view, facing frame right', dir: '右' },
+  側面朝左: { zh: '正側面朝畫面左', en: 'in profile, facing frame left', dir: '左' },
+  側面朝右: { zh: '正側面朝畫面右', en: 'in profile, facing frame right', dir: '右' },
+  背面: { zh: '背對鏡頭', en: 'with their back to the camera', dir: '' },
+};
+// face 只寫了一個情緒詞：工具會給一張標準的「難過臉」，寫成看得見的眉、眼、嘴才有表演
+const ABSTRACT_FACE_RE = /^(很|非常|有點|有些|略微|略顯|十分|一臉)?(難過|悲傷|傷心|生氣|憤怒|開心|高興|快樂|害怕|恐懼|驚訝|吃驚|緊張|焦慮|尷尬|心虛|失望|絕望|平靜|溫柔|冷漠|害羞|疲憊|痛苦|興奮|得意|委屈)(的樣子|的表情|的神情)?$|^(very |a bit |slightly )?(sad|angry|happy|scared|afraid|surprised|nervous|anxious|embarrassed|calm|tired|shy|upset|worried)( expression| look| face)?$/i;
 // 生成方式（render）：靜幀只出首幀圖、不跑影片；靜幀運鏡是剪接時在那張圖上推拉或搖移
 const RENDERS = ['影片', '靜幀運鏡', '靜幀'];
 const STILL_MOVES = new Set(['固定', '推近', '拉遠', '左搖', '右搖', '上搖', '下搖', '左移', '右移', '變焦推近', '變焦拉遠', '手持']);
@@ -579,6 +594,7 @@ for (const c of bible.characters || []) {
   checkFrag(`${c.id}.marks`, c.marks);
   checkFrag(`${c.id}.expressions`, c.expressions);
   checkFrag(`${c.id}.voice`, c.voice);
+  checkFrag(`${c.id}.stature`, c.stature);
   if (!c.tag) warn(`${c.id}.tag`, '缺少短稱（tag）；影片提示詞要用它來指這個角色');
   else checkFrag(`${c.id}.tag`, c.tag);
   if (NONHUMAN.has(kind) && !c.minor && !c.expressions) {
@@ -635,6 +651,9 @@ for (const u of (ep && Array.isArray(ep.setups) ? ep.setups : [])) {
 
 // ---------- 提示詞組合 ----------
 const isPartialText = (e) => e.partial && e.partial !== true;
+/** 這一鏡要不要寫身高：兩個以上完整入鏡的角色，而且景別寬到看得到身體（中景以外）。 */
+const showStature = (shot) => (shot.cast || []).filter((e) => !e.partial && chars.has(e.char)).length >= 2
+  && (SIZE_RANK[spec(shot).size] ?? Infinity) <= SIZE_RANK['中景'];
 /**
  * 一個入鏡角色：外貌與造型 ＋ 走位。
  * 參考圖模式（tok 有這個造型的設定圖）：外貌改成「圖1中的＋短稱」，長相交給參考圖，文字不再重複，免得兩邊互相拉扯。
@@ -646,13 +665,16 @@ function subject(entry, shot, l, withBlocking = true, tok = null) {
   // 中景以內（腰部以上）看不到下半身：有填 outfit_top 就用它，免得提示詞裡的褲子鞋子把鏡頭拉遠
   const outfit = UPPER_BODY.has(spec(shot).size) && pick(v.outfit_top, l) ? pick(v.outfit_top, l) : pick(v.outfit, l);
   const t = tok && tok.get(v.id);
+  // 兩個人以上同框、而且看得到身體時才寫身高，生成工具才不會把所有人畫得一樣高
+  const tall = !isPartialText(entry) && entry.partial !== true && showStature(shot) ? pick(c.stature, l) : '';
   let base;
   // 只入鏡一部分：直接寫看得到的那一部分。參考圖只借顏色與質感，免得工具照整張設定圖畫出整個人
   if (isPartialText(entry)) base = [strip(pick(entry.partial, l, tok)) + (t ? T[l].refPart(t) : '')];
-  else if (t) base = [T[l].refWho(t, tagOf(c, v, l) || lookOf(c, v, l))];
+  else if (t) base = [T[l].refWho(t, tagOf(c, v, l) || lookOf(c, v, l)), tall];
   else if (entry.partial === true) base = [tagOf(c, v, l), outfit]; // 背影、前景虛焦：不寫臉部細節與狀態
-  else base = [lookOf(c, v, l), outfit, pick(v.state, l), pick(c.marks, l)];
-  const block = withBlocking ? [pick(entry.pos, l, tok), pick(entry.gaze, l, tok), pick(entry.hands, l, tok), pick(entry.face, l, tok)] : [];
+  else base = [lookOf(c, v, l), tall, outfit, pick(v.state, l), pick(c.marks, l)];
+  const facing = isPartialText(entry) ? '' : (FACINGS[zhOf(entry.facing)]?.[l] || pick(entry.facing, l));
+  const block = withBlocking ? [facing, pick(entry.pos, l, tok), pick(entry.gaze, l, tok), pick(entry.hands, l, tok), pick(entry.face, l, tok)] : [];
   return joinC([...base, ...block], l);
 }
 const setupOf = (shot) => (shot.setup ? setups.get(shot.setup) : null) || {};
@@ -738,7 +760,7 @@ function imagePrompt(shot, l) {
   const sc = scenes.get(shot.scene) || {};
   const tok = refTokens(shot, l);
   const subs = (shot.cast || []).map((e) => subject(e, shot, l, true, tok));
-  return joinS([
+  return withSuffix(joinS([
     ...subs,
     pick(shot.props, l, tok),
     ...fxLooks(shot, l, tok),
@@ -746,7 +768,7 @@ function imagePrompt(shot, l) {
     joinC([lightOf(shot, sc, l), ...fxLights(shot, l), paletteOf(shot, sc, l)], l),
     framing(shot, l),
     pick(P.style_lock, l),
-  ], l);
+  ], l), IMAGE_SUFFIX);
 }
 function camTerm(shot, l) {
   const c = parseCam(shot);
@@ -767,7 +789,7 @@ function lastFramePrompt(shot, l) {
     if (g && g !== (now ? fxField(now.e, d, 'light', l) : '')) glow.push(g);
   }
   end = joinC([end, ...glow], l);
-  return T[l].lastFrame(end, isStatic(shot) ? '' : camTerm(shot, l)) + T[l].stop.trim();
+  return withSuffix(T[l].lastFrame(end, isStatic(shot) ? '' : camTerm(shot, l)) + T[l].stop.trim(), IMAGE_SUFFIX);
 }
 function audioParts(shot, l) {
   if (!NATIVE_AUDIO) return [];
@@ -846,7 +868,7 @@ for (const { c, vs } of charList) {
         assets.push({ id: v.id, kind: `設定圖（由 ${vs[0].id} 改）`, lang: l, prompt: T[l].variantEdit(vs[0].id, change) + T[l].stop.trim() });
       } else {
         // 第一個造型，或有自己 look 的形態（原形和人形長得不一樣，不能從人形改）
-        const who = joinC([lookOf(c, v, l), pick(v.outfit, l), pick(v.state, l), pick(c.marks, l)], l);
+        const who = joinC([lookOf(c, v, l), pick(c.stature, l), pick(v.outfit, l), pick(v.state, l), pick(c.marks, l)], l);
         const pose = pick(v.sheet, l) || (kind === '異獸' ? T[l].poseScale : T[l].pose);
         assets.push({ id: v.id, kind: '設定圖', lang: l, prompt: joinS([who, T[l].sheet(pose), pick(P.style_lock, l)], l) });
       }
@@ -904,6 +926,15 @@ for (const f of fxDefs.values()) {
     }
   }
 }
+
+// 工具參數接在每一張圖的提示詞最後
+for (const a of assets) a.prompt = withSuffix(a.prompt, ASSET_SUFFIX);
+for (const a of plateAssets) a.prompt = withSuffix(a.prompt, IMAGE_SUFFIX);
+if (/midjourney/i.test(String(P.image_tool || "")) && !IMAGE_SUFFIX) {
+  hint("project.image_suffix", "Midjourney 的畫幅與參數寫在提示詞最後；填 image_suffix（例如 \"--ar 9:16\"），資產圖另外填 asset_suffix（例如 \"--ar 3:2\"）");
+}
+const arOf = (s) => (/--(?:ar|aspect)\s+(\d+:\d+)/.exec(s) || [])[1];
+if (arOf(IMAGE_SUFFIX) && P.aspect && arOf(IMAGE_SUFFIX) !== P.aspect) warn("project.image_suffix", `image_suffix 的 --ar ${arOf(IMAGE_SUFFIX)} 和畫幅 ${P.aspect} 不一樣；首幀的比例要和影片一致`);
 
 // ---------- 檢查分鏡 ----------
 const shots = ep && Array.isArray(ep.shots) ? ep.shots : [];
@@ -1064,6 +1095,12 @@ if (ep) {
       if (miss.length) warn(id, `${e.char} 沒寫 ${miss.join('、')}；沒寫的地方生成工具會自己猜`);
       for (const k of ['pos', 'gaze', 'hands', 'face']) checkFrag(`${id} ${e.char}.${k}`, e[k]);
       if (isPartialText(e)) checkFrag(`${id} ${e.char}.partial`, e.partial);
+      // 朝向：用詞表裡的詞；背對鏡頭卻沒設 partial，提示詞會寫一整段看不到的臉
+      if (typeof e.facing === 'object' && e.facing) checkFrag(`${id} ${e.char}.facing`, e.facing);
+      else checkTerm(id, `${e.char} 的朝向`, e.facing, !!FACINGS[zhOf(e.facing)], Object.keys(FACINGS).join('、'));
+      if (zhOf(e.facing) === '背面' && !e.partial) hint(id, `${e.char} 背對鏡頭，卻沒有設 partial；背影要設 partial: true，提示詞才不會寫一整段看不到的臉和表情`);
+      const flat = langs.map((l) => pick(e.face, l).replace(/[，,。.\s]+$/u, '')).find((f) => ABSTRACT_FACE_RE.test(f));
+      if (flat) hint(id, `${e.char} 的 face 只寫了情緒「${flat}」；工具會給一張標準的表情。寫成看得見的眉、眼、嘴與呼吸，見 references/prompt-writing.md 的情緒對照表`);
     });
     for (const k of ['props', 'frame', 'bg', 'light', 'palette', 'negative', 'end']) checkFrag(`${id}.${k}`, s[k]);
     // 負面詞裡寫「文字」是對的；其他片段提到後製或數字、文字，會把它們叫進畫面
@@ -1156,10 +1193,43 @@ if (ep) {
 
     // 提示詞長度
     for (const l of langs) {
-      if (s.link !== '接續') checkLimit(id, 'image', imagePrompt(s, l), l);
+      // 工具參數（--ar 9:16）不是提示詞的文字，不算進長度
+      if (s.link !== '接續') checkLimit(id, 'image', IMAGE_SUFFIX ? imagePrompt(s, l).slice(0, -IMAGE_SUFFIX.length).trim() : imagePrompt(s, l), l);
       if (!still) checkLimit(id, 'video', videoPrompt(s, l), l);
     }
   });
+
+  // 朝向的連戲：同一個機位裡，同一個人上一鏡臉朝左、這一鏡朝右，多半是越軸或寫錯
+  {
+    const lastDir = new Map();
+    for (const s of shots) {
+      if (!s.setup) continue;
+      for (const e of s.cast || []) {
+        const dir = FACINGS[zhOf(e.facing)]?.dir;
+        const h = chars.get(e.char);
+        if (!dir || !h) continue;
+        const key = `${s.setup}|${h.c.id}`;
+        const prev = lastDir.get(key);
+        if (prev && prev.dir !== dir) hint(s.id, `${h.c.id} 在機位 ${s.setup} 的 ${prev.id} 臉朝畫面${prev.dir}，這一鏡朝${dir}；同一個機位裡左右對調多半是越軸。人物真的轉身了就在前一鏡的 end 寫出來`);
+        lastDir.set(key, { dir, id: s.id });
+      }
+    }
+  }
+  // 身高：兩個人以上同框、看得到身體時，沒寫身高的角色會被畫成一樣高
+  {
+    const told = new Set();
+    for (const s of shots) {
+      if (!showStature(s)) continue;
+      // 只比人與半人：器物、動物、異獸的大小已經在 look 裡拿人來比
+      const people = [...new Map((s.cast || []).filter((e) => !e.partial && chars.has(e.char) && ['人', '半人'].includes(kindOf(chars.get(e.char).c))).map((e) => [chars.get(e.char).c.id, chars.get(e.char).c])).values()];
+      const missing = people.filter((c) => !pick(c.stature, langs[0]));
+      const key = people.map((c) => c.id).sort().join('+');
+      if (missing.length && people.length >= 2 && !told.has(key)) {
+        told.add(key);
+        hint(s.id, `${people.map((c) => c.id).join('、')} 同框而且看得到身體，${missing.map((c) => c.id).join('、')} 沒有寫 stature（身高）；生成工具常把同框的人畫得一樣高。寫「約一百八十公分，比黑髮及肩的年輕女子高一個頭」這類絕對加相對的身高`);
+      }
+    }
+  }
 
   // 聲線：有台詞的角色與旁白都要先定一個聲線，配音、原生音訊、整季的每一集才會是同一個聲音
   {
@@ -1463,6 +1533,8 @@ if (scriptText == null) {
     ...(P.narration ? [['旁白', P.narration]] : []),
     ...(show(P.narrator_voice) ? [['旁白的聲線', show(P.narrator_voice)]] : []),
     ...(P.music ? [['配樂方向', P.music]] : []),
+    ...(IMAGE_SUFFIX ? [['圖像提示詞最後的參數', `\`${IMAGE_SUFFIX}\`（首幀、尾幀、機位背景圖）`]] : []),
+    ...(ASSET_SUFFIX ? [['資產圖最後的參數', `\`${ASSET_SUFFIX}\``]] : []),
   ]), '');
   if (Array.isArray(bible.pending) && bible.pending.length) {
     L.push('## 待確認設定', '', '以下是原文沒寫、先補上的暫定值。要改請直接說，改一處所有鏡頭會一起更新。', '');

@@ -149,7 +149,8 @@
       "cast": [
         {
           "char": "C01-a",
-          "pos": "in the right half of the frame, body in profile facing frame right, leaning forward mid-step",
+          "facing": "側面朝右",
+          "pos": "in the right half of the frame, leaning forward mid-step",
           "gaze": "looking ahead toward frame right",
           "hands": "both arms hugging {P01} to her chest",
           "face": "lips parted, breathing hard, brows drawn together"
@@ -187,7 +188,8 @@
       "cast": [
         {
           "char": "C02-a",
-          "pos": "filling the centre of the frame, facing the camera, head tilted down",
+          "facing": "正面",
+          "pos": "filling the centre of the frame, head tilted down",
           "gaze": "looking down toward the lower right of the frame",
           "hands": "right fist closed around a bunch of brick-red sweatshirt fabric at the lower right edge of the frame, left arm down at his side below the frame",
           "face": "jaw set, eyes narrowed, rainwater dripping from the brim of the hood"
@@ -242,7 +244,8 @@
       "cast": [
         {
           "char": "C02-a",
-          "pos": "in the left half of the frame, body in profile facing frame right, right arm still half raised",
+          "facing": "側面朝右",
+          "pos": "in the left half of the frame, right arm still half raised",
           "gaze": "head turned down toward the lower right of the frame",
           "hands": "right hand open and empty in front of him, left hand at his side",
           "face": "brows raised, mouth a hard line"
