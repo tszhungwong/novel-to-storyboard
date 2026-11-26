@@ -132,7 +132,11 @@ const T = {
     stop: '。',
     cam: (c) => (/^鏡頭/.test(c) ? c : `鏡頭${c}`),
     // 各家工具都以雙引號辨識台詞；語氣用敘述帶出（可靈、Seedance、Google 的官方範例都是這樣寫）
-    says: (who, text, lang, tone) => `${who}${tone ? `以${tone}的語氣` : ''}${lang ? `用${lang}` : ''}說：“${text}”`,
+    // 聲線（voice）每一鏡都一樣，原生音訊才不會一鏡一個聲音；語氣（tone）是這一句的
+    says: (who, text, lang, tone, voice) => {
+      const how = [voice, tone ? `${tone}的語氣` : ''].filter(Boolean).join('、');
+      return `${who}${how ? `以${how}` : ''}${lang ? `用${lang}` : ''}說：“${text}”`;
+    },
     sound: (s) => `聲音：${s}`,
     lastFrame: (end, cam) =>
       `以這一鏡的首幀圖為底圖做圖像編輯，沒有提到的部分保持不變。結束時的畫面：${end}${cam ? `。構圖依運鏡調整（${cam}）` : ''}`,
@@ -160,7 +164,8 @@ const T = {
     sep: ', ',
     stop: '. ',
     cam: (c) => c,
-    says: (who, text, lang, tone) => `${who} says${lang ? ` in ${lang}` : ''}${tone ? `, ${tone}` : ''}: "${text}"`,
+    // voice 寫成名詞短語（a low, gravelly male voice），tone 寫說法（quietly、flatly）
+    says: (who, text, lang, tone, voice) => `${who} says${lang ? ` in ${lang}` : ''}${voice ? `, in ${voice.replace(/^in\s+/i, '')}` : ''}${tone ? `, ${tone}` : ''}: "${text}"`,
     sound: (s) => `Audio: ${s}`,
     lastFrame: (end, cam) =>
       `Edit the first-frame image of this shot and keep everything not mentioned here unchanged. End state: ${end}${cam ? `. Adjust the framing for the camera move (${cam})` : ''}`,
@@ -421,7 +426,9 @@ const FAST_RE = /快速|迅速|急速|猛烈|劇烈|猛地|猛然|瞬間|飛快|
 const FX_TEXT_RE = /數字|文字|字樣|[大小]字|篆|進度條|\b(digits?|numbers?|text|letters?|words?)\b/i;
 const SLOW_RE = /緩慢|慢慢|緩緩|慢速|\bslow(ly)?\b/i;
 // 替後製留位置時說出空白是給什麼的：「給後製的數字」寫進提示詞，工具會試著把數字畫出來
-const POST_WORD_RE = /後製|後期|數字|文字|字幕|花字|\b(post[- ]?production|in post|captions?|subtitles?|on-screen text|digits?)\b/i;
+// 配樂是畫外聲，只有觀眾聽得到；寫進 sound，原生音訊時會被當成畫內的聲音生成出來
+const MUSIC_RE = /配樂|背景音樂|BGM|\b(background music|score|soundtrack)\b/i;
+const POST_WORD_RE =/後製|後期|數字|文字|字幕|花字|\b(post[- ]?production|in post|captions?|subtitles?|on-screen text|digits?)\b/i;
 // 冷暖與主色：寫在風格鎖定句裡會加到每一張圖，夜戲、回憶、換了光線的鏡頭就會和光線打架
 const HUE_RE = /[暖冷](色|調|光|[黃橘紅棕藍白灰青])|偏[青藍橘黃紅綠紫金暖冷]|[紅橙橘黃綠青藍紫金棕褐]色?[調系]|為主的.{0,4}色調|\b(warm|cool|cold)(er)?\b|\b(teal|amber|orange|golden|blue|red|green|purple|pink|yellow)(-\w+)?\b[^,]{0,25}\b(tones?|palette|tints?|cast|shadows?|grading|accents?)\b/i;
 // 人與人身上的東西：寫進場景或機位的描述，會跑進沒有人物的場景定稿圖與機位背景圖
@@ -539,6 +546,8 @@ const kindOf = (c) => (KINDS.includes(c.kind) ? c.kind : '人');
 // 形態（造型變體）可以有自己的 look 與 tag：人形與原形長得完全不一樣
 const lookOf = (c, v, l) => pick(v?.look, l) || pick(c.look, l);
 const tagOf = (c, v, l) => pick(v?.tag, l) || pick(c.tag, l);
+// 聲線：形態可以有自己的（狐妖的原形和人形聲音不同），沒有就用角色的
+const voiceOf = (c, v, l) => pick(v?.voice, l) || pick(c.voice, l);
 
 const chars = new Map(); // 角色編號或造型變體編號 -> { c, v }
 const charList = [];
@@ -563,11 +572,13 @@ for (const c of bible.characters || []) {
     checkFrag(`${v.id}.sheet`, v.sheet);
     checkFrag(`${v.id}.look`, v.look);
     checkFrag(`${v.id}.tag`, v.tag);
+    checkFrag(`${v.id}.voice`, v.voice);
     if (v.look && !v.tag) warn(v.id, '這個形態有自己的 look，卻沒有自己的 tag；影片提示詞會用第一個形態的短稱指它，指到的樣子不對');
   }
   checkFrag(`${c.id}.look`, c.look, true);
   checkFrag(`${c.id}.marks`, c.marks);
   checkFrag(`${c.id}.expressions`, c.expressions);
+  checkFrag(`${c.id}.voice`, c.voice);
   if (!c.tag) warn(`${c.id}.tag`, '缺少短稱（tag）；影片提示詞要用它來指這個角色');
   else checkFrag(`${c.id}.tag`, c.tag);
   if (NONHUMAN.has(kind) && !c.minor && !c.expressions) {
@@ -767,7 +778,8 @@ function audioParts(shot, l) {
     // 說話的人在這一鏡是哪個形態，就用那個形態的短稱
     const inShot = hit && (shot.cast || []).map((e) => chars.get(e.char)).find((h) => h && h.c.id === hit.c.id);
     const who = hit ? tagOf(hit.c, (inShot || hit).v, l) || hit.c.name : ln.who || '';
-    out.push(T[l].says(who, strip(pick(ln.text, langs[0])), pick(P.speech_lang, l), strip(pick(ln.tone, l))));
+    const voice = hit ? voiceOf(hit.c, (inShot || hit).v, l) : '';
+    out.push(T[l].says(who, strip(pick(ln.text, langs[0])), pick(P.speech_lang, l), strip(pick(ln.tone, l)), strip(voice)));
   }
   if (shot.sound) out.push(T[l].sound(pick(shot.sound, l)));
   if (P.audio_suffix) out.push(pick(P.audio_suffix, l));
@@ -1078,6 +1090,9 @@ if (ep) {
     });
     checkFrag(`${id}.motion`, s.motion, !still);
     if (NATIVE_AUDIO) checkFrag(`${id}.sound`, s.sound);
+    if (s.sound && langs.some((l) => MUSIC_RE.test(pick(s.sound, l)))) {
+      hint(id, 'sound 寫到了配樂；sound 只寫故事裡聽得到的聲音（原生音訊時它會進影片提示詞），配樂的進出寫在 music');
+    }
     if (USE_LAST && cast.length && !s.end && !still) warn(id, '缺少 end（尾幀與首幀的差別）；有首尾幀控制時動作最穩');
 
     // 動作描述（靜幀不跑影片，motion 不會用到）
@@ -1145,6 +1160,24 @@ if (ep) {
       if (!still) checkLimit(id, 'video', videoPrompt(s, l), l);
     }
   });
+
+  // 聲線：有台詞的角色與旁白都要先定一個聲線，配音、原生音訊、整季的每一集才會是同一個聲音
+  {
+    const speakers = new Map();
+    let narrated = false;
+    for (const s of shots) {
+      const ln = s.line;
+      if (!ln?.text) continue;
+      if (chars.has(ln.who)) { const c = chars.get(ln.who).c; if (!speakers.has(c.id)) speakers.set(c.id, c); } else if (ln.type === '旁白' || ln.who === '旁白') narrated = true;
+    }
+    for (const c of speakers.values()) {
+      const vs = Array.isArray(c.variants) ? c.variants : [];
+      if (!pick(c.voice, langs[0]) && !vs.some((v) => pick(v.voice, langs[0]))) {
+        hint(c.id, `${c.name || c.id} 有台詞，沒有寫 voice（聲線）；配音和生成都要照同一個聲線，每一集才不會換一個聲音。寫性別年齡、音色、語速，例如「二十多歲的女聲，音色偏低，說話慢」`);
+      }
+    }
+    if (narrated && !pick(P.narrator_voice, langs[0])) hint('project.narrator_voice', '有旁白，沒有寫 narrator_voice（旁白的聲線）；整季的旁白要是同一個聲音');
+  }
 
   // 道具連戲：同一個機位、取景沒有變近，前一鏡畫面裡的道具卻沒寫到，中間也沒有一鏡交代它被拿走。
   // 同機位的首幀是從前一張改出來的，沒交代就消失的道具，生成時常常又被畫回來
@@ -1428,6 +1461,8 @@ if (scriptText == null) {
     ['單次可生成秒數', RANGE ? `${RANGE[0]} 到 ${RANGE[1]}` : CLIPS.length ? CLIPS.join(' / ') : '未填'],
     ...(EP_LEN ? [['單集長度', lenText]] : []),
     ...(P.narration ? [['旁白', P.narration]] : []),
+    ...(show(P.narrator_voice) ? [['旁白的聲線', show(P.narrator_voice)]] : []),
+    ...(P.music ? [['配樂方向', P.music]] : []),
   ]), '');
   if (Array.isArray(bible.pending) && bible.pending.length) {
     L.push('## 待確認設定', '', '以下是原文沒寫、先補上的暫定值。要改請直接說，改一處所有鏡頭會一起更新。', '');
@@ -1435,7 +1470,10 @@ if (scriptText == null) {
     L.push('');
   }
   L.push('## 角色', '');
-  L.push(table(['編號', '名稱', '短稱', '固定外貌', '辨識特徵', '造型變體'], charList.map(({ c, vs }) => {
+  // 聲線：角色的、各形態自己的，以及工具裡選定的音色（voice_ref）
+  const voiceCell = (c, vs) => [show(c.voice), ...vs.filter((v) => show(v.voice)).map((v) => `${v.id}：${show(v.voice)}`), c.voice_ref ? `音色：${c.voice_ref}` : ''].filter(Boolean).join('<br>');
+  const hasVoice = charList.some(({ c, vs }) => voiceCell(c, vs));
+  L.push(table(['編號', '名稱', '短稱', '固定外貌', '辨識特徵', '造型變體', ...(hasVoice ? ['聲線'] : [])], charList.map(({ c, vs }) => {
     const extra = [kindOf(c) !== '人' ? kindOf(c) : '', c.mouthless ? '沒有嘴' : ''].filter(Boolean).join('，');
     return [
       c.id, `${c.name || ''}${extra ? `（${extra}）` : ''}`, show(c.tag), show(c.look), show(c.marks),
@@ -1443,6 +1481,7 @@ if (scriptText == null) {
         const desc = [show(v.look) ? `外貌：${show(v.look)}` : '', show(v.tag) ? `短稱：${show(v.tag)}` : '', show(v.outfit), show(v.state)].filter(Boolean).join('；');
         return `${v.id}${v.label ? `（${v.label}）` : ''}${desc ? `：${desc}` : ''}`;
       }).join('<br>'),
+      ...(hasVoice ? [voiceCell(c, vs)] : []),
     ];
   })), '');
   L.push('## 場景', '');
@@ -1563,6 +1602,17 @@ if (ep) {
     const name = hit ? hit.c.name || ln.who : ln.who || '';
     return `${ln.type || ''}${name && name !== ln.type ? ` ${name}` : ''}：「${rawPick(ln.text, langs[0])}」`; // 旁白的 who 也是「旁白」，不重複寫
   };
+  // 這一句台詞用誰的聲線：角色（這一鏡入鏡的形態優先）或旁白
+  const speakerVoice = (s) => {
+    const ln = s.line;
+    if (!ln || !ln.text) return '';
+    const hit = chars.get(ln.who);
+    if (!hit) return ln.type === '旁白' || ln.who === '旁白' ? zhOf(P.narrator_voice) : '';
+    const inShot = (s.cast || []).map((e) => chars.get(e.char)).find((h) => h && h.c.id === hit.c.id);
+    const v = voiceOf(hit.c, (inShot || hit).v, langs[0]);
+    return v ? `${v}${hit.c.voice_ref ? `（音色：${hit.c.voice_ref}）` : ''}` : '';
+  };
+  const soundCell = (s) => [zhOf(s.sound), s.music ? `♪ ${zhOf(s.music)}` : ''].filter(Boolean).join('<br>');
   // 後製的特效不進提示詞，要提醒剪接的人加；生成加後製的要提醒加強
   const fxLabel = ({ e, d }) => `${d.name || d.id}${e.state ? `（${e.state}）` : ''}${zhOf(e.pos) ? `，${zhOf(e.pos)}` : ''}`;
   // 剪接時要做的事：靜幀的推拉、變速與定格、後製的字與漫劇效果、後製的特效
@@ -1633,7 +1683,7 @@ if (ep) {
   if (ep.source_title) L.push(`原文範圍：${ep.source_title}`, '');
   const stills = shots.filter(isStill).length;
   const split = stills ? `（影片 ${shots.length - stills} 鏡、靜幀 ${stills} 鏡）` : '';
-  L.push(`共 ${shots.length} 鏡${split}，成片約 ${Math.round(total)} 秒${lenText ? `（單集長度 ${lenText}）` : ''}${P.aspect ? `，畫幅 ${P.aspect}（在生成工具裡選）` : ''}。設定表與資產提示詞見 settings.md。`, '');
+  L.push(`共 ${shots.length} 鏡${split}，成片約 ${Math.round(total)} 秒${lenText ? `（單集長度 ${lenText}）` : ''}${P.aspect ? `，畫幅 ${P.aspect}（在生成工具裡選）` : ''}。設定表與資產提示詞見 settings.md；首幀出完後，用 ${epId}-animatic.csv 與 ${epId}.srt 排一版動態分鏡，見「動態分鏡」一節。`, '');
   if (epPlan) {
     L.push('## 這一集要做到的事', '', '來自分集表（series.json）。前三秒要看到鉤子，最後一鏡停在卡點上。', '');
     L.push(table(['項目', '內容'], [
@@ -1699,10 +1749,15 @@ if (ep) {
     L.push('## 建議切點', '', '想切成較短的片段時，從這些位置挑。時間是播到該鏡結束的累計時間。', '');
     L.push(table(['切在', '累計', '理由'], cuts.map(({ s, i }) => [`${s.id} 之後`, tc(ends[i]), s.cut === true ? '' : s.cut])), '');
   }
+  const cues = shots.map((s, i) => ({ s, i })).filter(({ s }) => s.music);
+  if (cues.length) {
+    L.push('## 配樂提示', '', '給剪接的人：配樂在哪裡進、轉、停，重拍落在哪一鏡。時間是這一鏡開始的累計時間。', '');
+    L.push(table(['鏡號', '開始', '提示'], cues.map(({ s, i }) => [s.id, tc(i ? ends[i - 1] : 0), zhOf(s.music)])), '');
+  }
   L.push('## 導演表', '');
   L.push(table(
     ['鏡號', '原文對應', '節拍', '場景', '機位', '角色', '秒', '累計', '景別', '運鏡', '銜接', '動作', '對白／旁白', '聲音', '備註', '切點'],
-    shots.map((s, i) => [s.id, s.source || '', beatLabel(s), s.scene, s.setup || '—', who(s), s.duration, tc(ends[i]), sizeLabel(s, true), camLabel(s), linkText(s), zhOf(s.action), lineText(s), zhOf(s.sound), note(s), cutOf(s, i)]),
+    shots.map((s, i) => [s.id, s.source || '', beatLabel(s), s.scene, s.setup || '—', who(s), s.duration, tc(ends[i]), sizeLabel(s, true), camLabel(s), linkText(s), zhOf(s.action), lineText(s), soundCell(s), note(s), cutOf(s, i)]),
   ), '');
   L.push('## 各鏡生成資料', '');
   shots.forEach((s, i) => {
@@ -1732,6 +1787,8 @@ if (ep) {
     else if (speedOf(s)?.post) L.push(`- 速度：${speedOf(s).post}`);
     if (s.post) L.push(`- 後製：${zhOf(s.post)}`);
     if (s.line?.tone) L.push(`- 台詞語氣：${zhOf(s.line.tone)}`);
+    if (speakerVoice(s)) L.push(`- 聲線：${speakerVoice(s)}`);
+    if (s.music) L.push(`- 音樂：${zhOf(s.music)}`);
     const refs = refLabels(s);
     if (REF_MODE && s.link !== '接續' && refs.length) {
       L.push(`- 參考圖（依這個順序上傳，提示詞裡的「${refToken(1, langs[0]).replace(/1/, 'N')}」就是第 N 張）：${refs.map((r, k) => `${k + 1}. ${r}`).join('；')}`);
@@ -1748,10 +1805,14 @@ if (ep) {
       if (pick(s.negative, l)) L.push(`這一鏡額外的負面詞${langLabel(l)}`, '', code(pick(s.negative, l)), '');
     }
   });
+  L.push('## 動態分鏡', '', '首幀圖全部出完、生成影片之前，先用首幀圖排一版粗剪。影片是最貴的一步，節奏、軸線和長度的問題在這裡抓最便宜。', '');
+  L.push(`1. 照 \`${epId}-animatic.csv\` 的順序，把「用哪張圖」放上剪輯軟體的時間線，每張停「秒數」那麼久；「粗剪做法」寫了怎麼模擬動作與運鏡。`);
+  L.push(`2. 匯入 \`${epId}.srt\` 當臨時字幕，照「聲線」錄臨時配音，或先用文字轉語音。`);
+  L.push('3. 從頭看一遍：鏡頭長短和停頓對不對、相鄰兩鏡人物的左右有沒有跳、整集長度合不合。要改就改分鏡檔重跑，再生成影片。', '');
   L.push('## 檢查結果', '', issueTable(), '');
   written.push(write(`${epId}-storyboard.md`, L.join('\n')));
 
-  const head = ['鏡號', '原文對應', '節拍', '場景', '機位', '角色', '成片秒數', '累計', '生成方式', '建議生成秒數', '景別', '鏡頭類型', '角度', '機位高度', '運鏡', '速度', '銜接', '轉場', '動作', '對白／旁白', '台詞語氣', '聲音', '建議切點'];
+  const head = ['鏡號', '原文對應', '節拍', '場景', '機位', '角色', '成片秒數', '累計', '生成方式', '建議生成秒數', '景別', '鏡頭類型', '角度', '機位高度', '運鏡', '速度', '銜接', '轉場', '動作', '對白／旁白', '台詞語氣', '聲線', '聲音', '音樂', '建議切點'];
   for (const l of langs) {
     head.push(`首幀圖像提示詞${langLabel(l)}`);
     if (USE_LAST) head.push(`尾幀提示詞（拿首幀圖做圖像編輯）${langLabel(l)}`);
@@ -1761,7 +1822,7 @@ if (ep) {
   const rows = shots.map((s, i) => {
     const sp = spec(s);
     const gen = isStill(s) ? '' : genLength(Number(s.duration) || 0) ?? '';
-    const r = [s.id, s.source || '', beatLabel(s), s.scene, s.setup || '', who(s), s.duration, tc(ends[i]), renderOf(s), gen, sp.size || zhOf(s.size), sp.type, sp.angle || '', sp.height || '', zhOf(s.camera), zhOf(s.speed), s.link, s.transition || '', zhOf(s.action), lineText(s), zhOf(s.line?.tone), zhOf(s.sound), cutOf(s, i)];
+    const r = [s.id, s.source || '', beatLabel(s), s.scene, s.setup || '', who(s), s.duration, tc(ends[i]), renderOf(s), gen, sp.size || zhOf(s.size), sp.type, sp.angle || '', sp.height || '', zhOf(s.camera), zhOf(s.speed), s.link, s.transition || '', zhOf(s.action), lineText(s), zhOf(s.line?.tone), speakerVoice(s), zhOf(s.sound), zhOf(s.music), cutOf(s, i)];
     for (const l of langs) {
       r.push(firstFrame(s, i, l));
       if (USE_LAST) r.push(lastFramePrompt(s, l));
@@ -1778,6 +1839,36 @@ if (ep) {
       ...plateAssets.map((a) => [a.id, a.kind, T[a.lang].name, a.prompt, '', '', '', '']),
     ])));
   }
+
+  // 動態分鏡：每一鏡用哪張圖、停多久、怎麼模擬動作，配上台詞、聲線與配樂提示
+  const startOf = (i) => (i ? ends[i - 1] : 0);
+  const imageFor = (s, i) => {
+    const prev = shots[i - 1];
+    if (s.link === '接續' && prev) return `${prev.id} 的${USE_LAST && prev.end && !isStill(prev) ? '尾幀圖' : '首幀圖'}`;
+    return `${s.id} 的首幀圖`;
+  };
+  const roughOf = (s) => {
+    if (isStill(s)) return renderOf(s) === '靜幀運鏡' && !isStatic(s) ? `在圖上做${camTerm(s, 'zh')}` : '停住';
+    const how = USE_LAST && s.end ? '首幀疊化到尾幀，代替動作' : '首幀停住';
+    const cam = isStatic(s) ? '' : `，在圖上做${camTerm(s, 'zh')}代替運鏡`;
+    return `${how}${cam}${speedOf(s) ? `（成片是${zhOf(s.speed)}）` : ''}`;
+  };
+  written.push(write(`${epId}-animatic.csv`, csv([
+    ['鏡號', '開始', '結束', '秒數', '用哪張圖', '粗剪做法', '對白／旁白', '聲線', '聲音', '音樂', '轉場', '建議切點'],
+    ...shots.map((s, i) => [s.id, tc(startOf(i)), tc(ends[i]), s.duration, imageFor(s, i), roughOf(s), lineText(s), speakerVoice(s), zhOf(s.sound), zhOf(s.music), s.transition || '', cutOf(s, i)]),
+  ])));
+  // 臨時字幕：每句台詞從鏡頭開始後 0.2 秒起，講完（字數 ÷ 語速）就收，不超過這一鏡
+  const srtTime = (sec) => {
+    const ms = Math.max(0, Math.round(sec * 1000));
+    const p = (n, w = 2) => String(n).padStart(w, '0');
+    return `${p(Math.floor(ms / 3600000))}:${p(Math.floor(ms / 60000) % 60)}:${p(Math.floor(ms / 1000) % 60)},${p(ms % 1000, 3)}`;
+  };
+  const subs = shots.map((s, i) => ({ s, i })).filter(({ s }) => s.line && s.line.text).map(({ s, i }, k) => {
+    const a = startOf(i) + 0.2;
+    const b = Math.max(a + 0.8, Math.min(ends[i], a + speakSeconds(s.line.text) + 0.3));
+    return `${k + 1}\r\n${srtTime(a)} --> ${srtTime(b)}\r\n${rawPick(s.line.text, langs[0])}\r\n`;
+  });
+  written.push(write(`${epId}.srt`, subs.join('\r\n')));
 
   console.log(`${epId}：${shots.length} 鏡，成片約 ${Math.round(total)} 秒`);
 }

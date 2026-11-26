@@ -2,7 +2,7 @@
 
 原文範圍：第一章〈鐵盒〉開頭的追逐
 
-共 10 鏡，成片約 27 秒，畫幅 16:9（在生成工具裡選）。設定表與資產提示詞見 settings.md。
+共 10 鏡，成片約 27 秒，畫幅 16:9（在生成工具裡選）。設定表與資產提示詞見 settings.md；首幀出完後，用 EP01-animatic.csv 與 EP01.srt 排一版動態分鏡，見「動態分鏡」一節。
 
 ## 對原文的改動
 
@@ -198,7 +198,8 @@ The girl with the short black bob takes one more step toward frame right, should
 - C02-a　位置：filling the centre of the frame, facing the camera, head tilted down｜視線：looking down toward the lower right of the frame｜手部／道具：right fist closed around a bunch of brick-red sweatshirt fabric at the lower right edge of the frame, left arm down at his side below the frame｜表情：jaw set, eyes narrowed, rainwater dripping from the brim of the hood
 - 看得到的背景：a dark canvas awning overhead and blurred warm bulbs behind his hood
 - 這一鏡的光線：warm bulbs behind him as a rim light on the hood, his face lit from below by red neon reflected off the wet ground
-- 台詞語氣：in a low, flat voice
+- 台詞語氣：flatly, barely above the rain
+- 聲線：a low, gravelly male voice
 - 參考圖（依這個順序上傳，提示詞裡的「image N」就是第 N 張）：1. C02-a 設定圖；2. S01 場景定稿圖
 - 成片 3 秒，建議生成 4 秒段再裁頭尾
 - 驗收重點：台詞一字不差、嘴型對得上，聲線和這個角色前面的鏡頭一致，沒有自己加字幕或配樂；風險項見備註，不行就照備案換拍法
@@ -218,7 +219,7 @@ Edit the first-frame image of this shot and keep everything not mentioned here u
 影片提示詞
 
 ```text
-The tall man in the green raincoat tilts his head down a little further and speaks, rain dripping steadily from the brim of his hood; his fist stays closed on the red fabric. Static camera. The tall man in the green raincoat says in Mandarin Chinese, in a low, flat voice: "東西給我". Audio: rain pattering on the rubber hood.
+The tall man in the green raincoat tilts his head down a little further and speaks, rain dripping steadily from the brim of his hood; his fist stays closed on the red fabric. Static camera. The tall man in the green raincoat says in Mandarin Chinese, in a low, gravelly male voice, flatly, barely above the rain: "東西給我". Audio: rain pattering on the rubber hood.
 ```
 
 ### EP01-006
@@ -358,6 +359,14 @@ Edit the first-frame image of this shot and keep everything not mentioned here u
 ```text
 The girl with the short black bob runs her right thumb once along the dent in the lid, blinks, and lets out a breath that lowers her shoulders; rain drips from the edge of the awning beside her. Slow pull-out. Audio: the rain easing, water dripping from the awning, her unsteady breathing.
 ```
+
+## 動態分鏡
+
+首幀圖全部出完、生成影片之前，先用首幀圖排一版粗剪。影片是最貴的一步，節奏、軸線和長度的問題在這裡抓最便宜。
+
+1. 照 `EP01-animatic.csv` 的順序，把「用哪張圖」放上剪輯軟體的時間線，每張停「秒數」那麼久；「粗剪做法」寫了怎麼模擬動作與運鏡。
+2. 匯入 `EP01.srt` 當臨時字幕，照「聲線」錄臨時配音，或先用文字轉語音。
+3. 從頭看一遍：鏡頭長短和停頓對不對、相鄰兩鏡人物的左右有沒有跳、整集長度合不合。要改就改分鏡檔重跑，再生成影片。
 
 ## 檢查結果
 

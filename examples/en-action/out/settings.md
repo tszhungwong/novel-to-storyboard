@@ -27,10 +27,10 @@
 
 ## 角色
 
-| 編號 | 名稱 | 短稱 | 固定外貌 | 辨識特徵 | 造型變體 |
-|---|---|---|---|---|---|
-| C01 | 小滿 | the girl with the short black bob | a girl of about sixteen, round face, chin-length black bob with blunt bangs, large dark eyes, small slim build | a small adhesive bandage on her left cheek | C01-a（逃跑中）：an oversized brick-red hooded sweatshirt, dark denim shorts, white canvas sneakers；hair and shoulders damp from rain<br>C01-b（袖子裂開後）：an oversized brick-red hooded sweatshirt, dark denim shorts, white canvas sneakers；hair and shoulders wet from rain, the right sleeve torn open along the shoulder seam |
-| C02 | 雨衣男 | the tall man in the green raincoat | a man in his forties, square jaw, short grey-flecked stubble, heavy brows, tall build with broad shoulders |  | C02-a（雨衣）：a long dark green rubber raincoat with the hood up, black work boots；rain beading on the raincoat |
+| 編號 | 名稱 | 短稱 | 固定外貌 | 辨識特徵 | 造型變體 | 聲線 |
+|---|---|---|---|---|---|---|
+| C01 | 小滿 | the girl with the short black bob | a girl of about sixteen, round face, chin-length black bob with blunt bangs, large dark eyes, small slim build | a small adhesive bandage on her left cheek | C01-a（逃跑中）：an oversized brick-red hooded sweatshirt, dark denim shorts, white canvas sneakers；hair and shoulders damp from rain<br>C01-b（袖子裂開後）：an oversized brick-red hooded sweatshirt, dark denim shorts, white canvas sneakers；hair and shoulders wet from rain, the right sleeve torn open along the shoulder seam |  |
+| C02 | 雨衣男 | the tall man in the green raincoat | a man in his forties, square jaw, short grey-flecked stubble, heavy brows, tall build with broad shoulders |  | C02-a（雨衣）：a long dark green rubber raincoat with the hood up, black work boots；rain beading on the raincoat | a low, gravelly male voice |
 
 ## 場景
 

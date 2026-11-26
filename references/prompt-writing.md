@@ -223,9 +223,10 @@ backlighting、side lighting、rim light、high-key、low-key、volumetric light
 
 - 可靈與 Seedance 的官方指南支援在一段提示詞裡用時間碼或鏡頭編號排好幾個動作（「0–3 秒：…」「鏡頭一：…」）。這個 skill 是一鏡一個動作、各自生成，腳本不會產生這種寫法；使用者想把相鄰幾鏡合成一段生成時，再照該工具的指南手動合併。
 
-### `line.tone`、`sound`：聲音
+### `voice`、`line.tone`、`sound`：聲音
 
-- **`tone`**：音量、語速、情緒，挑兩樣寫。「低沉、遲疑」「壓低聲音，說得很快」。英文寫成接在 says 後面的短語：`in a low, hesitant voice`、`whispering quickly`。
+- **`voice`**（角色的聲線）：這個人的聲音本身，整季不變。性別年齡、音色、語速：「二十多歲的女聲，音色偏低，說話輕而慢」「蒼老的男聲，沙啞」。英文寫成名詞短語 `a low, gravelly male voice`，腳本會寫成 `says in Mandarin Chinese, in a low, gravelly male voice`。原生音訊時它進每一句台詞；不寫，同一個角色每一鏡的聲音都會不一樣。
+- **`tone`**（這一句的語氣）：音量、語速、情緒，挑兩樣寫。「低沉、遲疑」「壓低聲音，說得很快」。音色已經在 `voice`，這裡只寫這一句怎麼說；英文寫成說法 `hesitantly, almost a whisper`、`quickly, under his breath`，不要再寫 `in a … voice`，和 `voice` 疊在一起會重複。
 - **`sound`**：環境音加一兩個具體的音效，寫出聲音的來源：「遠處的車聲，門軸的吱呀聲」。「緊張的氛圍音」沒有來源，生成工具只能自己編。只寫畫內聲（故事裡的人也聽得到的聲音）；配樂與旁白是畫外聲，不寫進影片提示詞。畫內聲、擬音、音橋的區別見 `shot-craft.md` 第十三節。
 - 不想要工具自己加字幕或配樂，寫在 `audio_suffix`（「不要字幕，不要背景音樂」）。這是少數官方認可有效的否定寫法。
 
