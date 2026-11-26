@@ -10,13 +10,16 @@
     ],
     "video_mode": "i2v",
     "use_last_frame": true,
+    "ref_mode": "參考圖",
+    "ref_syntax": "image {n}",
+    "ref_max": 10,
     "audio_plan": "原生音訊",
     "clip_range": [
       3,
       10
     ],
     "speech_lang": "Mandarin Chinese",
-    "style_lock": "hand-painted anime film style, clean ink outlines, cel shading with a single shadow tone, saturated neon accents against deep blue-grey shadows, soft film grain",
+    "style_lock": "hand-painted anime film style, clean ink outlines, cel shading with a single shadow tone, high saturation with strong contrast, soft film grain",
     "negative_global": ""
   },
   "characters": [
@@ -68,7 +71,8 @@
       "name": "夜市巷子",
       "space": "a narrow night-market lane between two rows of wheeled food carts with canvas awnings, strings of bare bulbs hanging overhead along the lane, wet asphalt underfoot, a brick wall closing the far end of the lane",
       "light": "warm bulbs overhead, red and blue neon tubes reflected on the wet ground, deep shadows between the carts",
-      "time": "night, steady rain"
+      "time": "night, steady rain",
+      "palette": "saturated red and blue neon accents against deep blue-grey shadows"
     }
   ],
   "props": [

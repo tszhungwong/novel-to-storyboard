@@ -12,6 +12,7 @@
 | 首尾幀 | 使用 |
 | 聲音方案 | 原生音訊 |
 | 提示詞語言 | English |
+| 參考圖模式 | 參考圖（提示詞用「image 1」這類編號指向參考圖，每一鏡依分鏡表列的順序上傳，一次最多 10 張） |
 | 單次可生成秒數 | 3 到 10 |
 
 ## 待確認設定
@@ -33,9 +34,9 @@
 
 ## 場景
 
-| 編號 | 名稱 | 空間 | 光線 | 時間／天氣 |
-|---|---|---|---|---|
-| S01 | 夜市巷子 | a narrow night-market lane between two rows of wheeled food carts with canvas awnings, strings of bare bulbs hanging overhead along the lane, wet asphalt underfoot, a brick wall closing the far end of the lane | warm bulbs overhead, red and blue neon tubes reflected on the wet ground, deep shadows between the carts | night, steady rain |
+| 編號 | 名稱 | 空間 | 光線 | 時間／天氣 | 色彩 |
+|---|---|---|---|---|---|
+| S01 | 夜市巷子 | a narrow night-market lane between two rows of wheeled food carts with canvas awnings, strings of bare bulbs hanging overhead along the lane, wet asphalt underfoot, a brick wall closing the far end of the lane | warm bulbs overhead, red and blue neon tubes reflected on the wet ground, deep shadows between the carts | night, steady rain | saturated red and blue neon accents against deep blue-grey shadows |
 
 ## 道具
 
@@ -46,7 +47,7 @@
 ## 風格鎖定句
 
 ```text
-hand-painted anime film style, clean ink outlines, cel shading with a single shadow tone, saturated neon accents against deep blue-grey shadows, soft film grain
+hand-painted anime film style, clean ink outlines, cel shading with a single shadow tone, high saturation with strong contrast, soft film grain
 ```
 
 ## 資產提示詞
@@ -56,7 +57,7 @@ hand-painted anime film style, clean ink outlines, cel shading with a single sha
 ### C01-a　設定圖
 
 ```text
-A girl of about sixteen, round face, chin-length black bob with blunt bangs, large dark eyes, small slim build, an oversized brick-red hooded sweatshirt, dark denim shorts, white canvas sneakers, hair and shoulders damp from rain, a small adhesive bandage on her left cheek. Character reference sheet, the same character shown as front, side and back full-body views, natural standing pose, calm expression, plain light grey background, soft even lighting. Hand-painted anime film style, clean ink outlines, cel shading with a single shadow tone, saturated neon accents against deep blue-grey shadows, soft film grain.
+A girl of about sixteen, round face, chin-length black bob with blunt bangs, large dark eyes, small slim build, an oversized brick-red hooded sweatshirt, dark denim shorts, white canvas sneakers, hair and shoulders damp from rain, a small adhesive bandage on her left cheek. Character reference sheet, the same character shown as front, side and back full-body views, natural standing pose, calm expression, plain light grey background, soft even lighting. Hand-painted anime film style, clean ink outlines, cel shading with a single shadow tone, high saturation with strong contrast, soft film grain.
 ```
 
 ### C01-b　設定圖（由 C01-a 改）
@@ -68,25 +69,25 @@ Edit the C01-a character reference sheet: keep the face, hairstyle and build unc
 ### C01　表情組圖
 
 ```text
-A girl of about sixteen, round face, chin-length black bob with blunt bangs, large dark eyes, small slim build, an oversized brick-red hooded sweatshirt, a small adhesive bandage on her left cheek. Expression sheet of the same character, bust view, same angle, expressions in order: calm, frightened, out of breath, relieved, plain light grey background, soft even lighting. Hand-painted anime film style, clean ink outlines, cel shading with a single shadow tone, saturated neon accents against deep blue-grey shadows, soft film grain.
+A girl of about sixteen, round face, chin-length black bob with blunt bangs, large dark eyes, small slim build, an oversized brick-red hooded sweatshirt, a small adhesive bandage on her left cheek. Expression sheet of the same character, bust view, same angle, expressions in order: calm, frightened, out of breath, relieved, plain light grey background, soft even lighting. Hand-painted anime film style, clean ink outlines, cel shading with a single shadow tone, high saturation with strong contrast, soft film grain.
 ```
 
 ### C02-a　設定圖
 
 ```text
-A man in his forties, square jaw, short grey-flecked stubble, heavy brows, tall build with broad shoulders, a long dark green rubber raincoat with the hood up, black work boots, rain beading on the raincoat. Character reference sheet, the same character shown as front, side and back full-body views, natural standing pose, calm expression, plain light grey background, soft even lighting. Hand-painted anime film style, clean ink outlines, cel shading with a single shadow tone, saturated neon accents against deep blue-grey shadows, soft film grain.
+A man in his forties, square jaw, short grey-flecked stubble, heavy brows, tall build with broad shoulders, a long dark green rubber raincoat with the hood up, black work boots, rain beading on the raincoat. Character reference sheet, the same character shown as front, side and back full-body views, natural standing pose, calm expression, plain light grey background, soft even lighting. Hand-painted anime film style, clean ink outlines, cel shading with a single shadow tone, high saturation with strong contrast, soft film grain.
 ```
 
 ### S01　場景定稿圖
 
 ```text
-A narrow night-market lane between two rows of wheeled food carts with canvas awnings, strings of bare bulbs hanging overhead along the lane, wet asphalt underfoot, a brick wall closing the far end of the lane. Warm bulbs overhead, red and blue neon tubes reflected on the wet ground, deep shadows between the carts, night, steady rain. Scenery only, unoccupied, wide shot, eye level. Hand-painted anime film style, clean ink outlines, cel shading with a single shadow tone, saturated neon accents against deep blue-grey shadows, soft film grain.
+A narrow night-market lane between two rows of wheeled food carts with canvas awnings, strings of bare bulbs hanging overhead along the lane, wet asphalt underfoot, a brick wall closing the far end of the lane. Warm bulbs overhead, red and blue neon tubes reflected on the wet ground, deep shadows between the carts, night, steady rain, saturated red and blue neon accents against deep blue-grey shadows. Scenery only, unoccupied, wide shot, eye level. Hand-painted anime film style, clean ink outlines, cel shading with a single shadow tone, high saturation with strong contrast, soft film grain.
 ```
 
 ### P01　道具圖
 
 ```text
-A square pale-blue biscuit tin with worn corners. A single object centred in frame, plain light grey background, soft even lighting. Hand-painted anime film style, clean ink outlines, cel shading with a single shadow tone, saturated neon accents against deep blue-grey shadows, soft film grain.
+A square pale-blue biscuit tin with worn corners. A single object centred in frame, plain light grey background, soft even lighting. Hand-painted anime film style, clean ink outlines, cel shading with a single shadow tone, high saturation with strong contrast, soft film grain.
 ```
 
 ## 進度紀錄

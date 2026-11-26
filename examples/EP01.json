@@ -46,6 +46,7 @@
     {
       "id": "EP01-001",
       "scene": "S01",
+      "beat": "1.1",
       "setup": "S01-A",
       "source": "「那封信在桌上放了三天」",
       "duration": 3.5,
@@ -83,6 +84,7 @@
     {
       "id": "EP01-002",
       "scene": "S01",
+      "beat": "1.1",
       "source": "「她始終沒有拆」",
       "duration": 2.5,
       "size": "近景",
@@ -121,6 +123,7 @@
     {
       "id": "EP01-003",
       "scene": "S01",
+      "beat": "1.1",
       "source": "「信封上沒有寄件人」",
       "duration": 2,
       "size": "特寫",
@@ -150,6 +153,7 @@
     {
       "id": "EP01-004",
       "scene": "S01",
+      "beat": "1.2",
       "setup": "S01-B",
       "source": "「門開了，陳嶼站在門口」",
       "duration": 2.5,
@@ -183,6 +187,7 @@
     {
       "id": "EP01-005",
       "scene": "S01",
+      "beat": "1.2",
       "setup": "S01-C",
       "source": "「你還沒拆？」",
       "duration": 2.5,
@@ -229,6 +234,7 @@
     {
       "id": "EP01-006",
       "scene": "S01",
+      "beat": "1.3",
       "setup": "S01-C",
       "source": "「她搖了搖頭」",
       "duration": 3,
@@ -273,6 +279,7 @@
     {
       "id": "EP01-007",
       "scene": "S01",
+      "beat": "1.3",
       "setup": "S01-B",
       "source": "「過了很久」",
       "duration": 2,
@@ -305,6 +312,7 @@
     {
       "id": "EP01-008",
       "scene": "S01",
+      "beat": "1.4",
       "setup": "S01-C",
       "source": "「她把信推向他」",
       "duration": 4,
