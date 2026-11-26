@@ -4,13 +4,16 @@
  *
  * 把「設定檔 (bible.json)」和「分鏡資料 (EPxx.json)」組合成：
  *   - settings.md           設定表（角色、場景、道具、風格、待確認事項）＋ 資產提示詞
- *   - assets.csv            母圖、場景定稿圖、道具圖的提示詞
+ *   - assets.csv            母圖、場景定稿圖、道具圖、特效參考圖的提示詞
  *   - <集數>-storyboard.md  精簡表、導演表、每鏡可直接複製的提示詞、檢查結果
  *   - <集數>-shots.csv      同樣內容的試算表版本（含生成狀態欄，Excel 可直接開）
+ *   - series.md             分集表（輸入是大綱時，整季每一集演什麼）
  *
  * 用法：
- *   node build_storyboard.mjs <bible.json>                只做設定表與資產提示詞
- *   node build_storyboard.mjs <bible.json> <EPxx.json>    另外做該集分鏡
+ *   node build_storyboard.mjs <bible.json>                   只做設定表與資產提示詞
+ *   node build_storyboard.mjs <bible.json> <EPxx.json>       另外做該集分鏡
+ *   node build_storyboard.mjs <bible.json> <series.json>     另外做分集表 series.md
+ *   node build_storyboard.mjs <bible.json> <EPxx-script.md>  只檢查分集劇本（台詞長度、說話者），不寫檔案
  *   可加 --out <資料夾>（預設是 bible.json 旁邊的 out/）
  *
  * 沒有外部相依，Node 16 以上即可。欄位定義見 references/fields.md。
@@ -21,10 +24,12 @@ import path from 'node:path';
 // ---------- 參數 ----------
 function usage(code) {
   console.log(`用法：
-  node build_storyboard.mjs <bible.json> [<EPxx.json>] [--out <資料夾>]
+  node build_storyboard.mjs <bible.json> [<EPxx.json> | <series.json> | <EPxx-script.md>] [--out <資料夾>]
 
   只給 bible.json：產出 settings.md 與 assets.csv
-  再給分鏡檔　　：另外產出 <集數>-storyboard.md、<集數>-shots.csv 與檢查結果`);
+  再給分鏡檔　　：另外產出 <集數>-storyboard.md、<集數>-shots.csv 與檢查結果
+  再給分集表　　：另外產出 series.md 與檢查結果
+  再給分集劇本　：只檢查台詞長度與說話者，結果印在畫面上，不寫檔案`);
   process.exit(code);
 }
 const argv = process.argv.slice(2);
@@ -45,10 +50,35 @@ function readJson(p) {
     process.exit(2);
   }
 }
+function readText(p) {
+  try {
+    return fs.readFileSync(p, 'utf8').replace(/^﻿/, '');
+  } catch (e) {
+    console.error(`讀不到檔案：${p}\n${e.message}`);
+    process.exit(2);
+  }
+}
 const bible = readJson(files[0]);
-const ep = files[1] ? readJson(files[1]) : null;
+// 第二個檔案可以是分鏡檔（有 shots）、分集表（有 episodes）或分集劇本（.md）
+const second = files[1] || null;
+const scriptText = second && /\.(md|markdown|txt)$/i.test(second) ? readText(second) : null;
+const secondJson = second && scriptText == null ? readJson(second) : null;
+const series = secondJson && Array.isArray(secondJson.episodes) && !Array.isArray(secondJson.shots) ? secondJson : null;
+const ep = secondJson && !series ? secondJson : null;
+// 拆某一集時，bible.json 旁邊有分集表就讀進來，把這一集的鉤子、爽點、卡點列在分鏡表最上面
+let seriesForEp = null;
+let seriesReadError = '';
+if (ep) {
+  const sp = path.join(path.dirname(path.resolve(files[0])), 'series.json');
+  if (fs.existsSync(sp)) {
+    try { seriesForEp = JSON.parse(fs.readFileSync(sp, 'utf8').replace(/^﻿/, '')); } catch (e) { seriesReadError = e.message; }
+  }
+}
+const epPlan = ep && seriesForEp && Array.isArray(seriesForEp.episodes)
+  ? seriesForEp.episodes.find((e) => e && e.episode === ep.episode) || null
+  : null;
 outDir = outDir || path.join(path.dirname(path.resolve(files[0])), 'out');
-fs.mkdirSync(outDir, { recursive: true });
+if (scriptText == null) fs.mkdirSync(outDir, { recursive: true });
 
 // ---------- 專案參數 ----------
 const P = bible.project || {};
@@ -76,6 +106,16 @@ const err = (where, msg) => report('錯誤', where, msg);
 const warn = (where, msg) => report('警告', where, msg);
 const hint = (where, msg) => report('提示', where, msg);
 
+// 單集長度 [最短, 最長]（秒）：使用者或大綱指定了才有。不填就是一章一集、不設上限
+const EP_LEN = Array.isArray(P.episode_length) && P.episode_length.length === 2 && P.episode_length.every((n) => Number(n) > 0)
+  ? P.episode_length.map(Number).sort((a, b) => a - b)
+  : null;
+if (P.episode_length != null && !EP_LEN) {
+  hint('project.episode_length', '要寫成 [最短, 最長] 的秒數，例如 [60, 90]；目前的寫法腳本讀不懂，不會檢查單集長度');
+}
+const SHORT_EP = !!EP_LEN && EP_LEN[1] <= 120; // 兩分鐘以內的短集不用標建議切點
+if (seriesReadError) hint('series.json', `bible.json 旁邊的 series.json 不是合法的 JSON，分鏡表不會列出這一集的鉤子與卡點：${seriesReadError}`);
+
 // ---------- 文字工具 ----------
 const T = {
   zh: {
@@ -91,9 +131,12 @@ const T = {
     reuse: (id) => `沿用 ${id} 的最後一幀當首幀，不另外生成。`,
     sheet: (pose) => `角色設定圖，同一角色的${pose}，純淺灰背景，均勻柔光`,
     pose: '正面、側面、背面全身三視圖，自然站姿，表情平靜',
+    poseScale: '正面、側面、背面全身三視圖，旁邊站著一個灰色的成年人剪影作為比例參考',
+    fx: '特效參考圖，單獨呈現，置於畫面中央，純黑背景',
     variantEdit: (baseId, change) => `以 ${baseId} 的角色設定圖為底圖做圖像編輯，臉、髮型與體型保持不變，造型改成：${change}`,
     faces: (expr) => `同一角色的半身表情組圖，相同角度，表情依序是：${expr}，純淺灰背景，均勻柔光`,
     expr: '平靜、微笑、難過、生氣',
+    states: (expr) => `同一角色的狀態組圖，相同角度，依序是：${expr}，純淺灰背景，均勻柔光`,
     master: '純場景空鏡，全景，平視',
     prop: '單一物件，置於畫面中央，純淺灰背景，均勻柔光',
   },
@@ -109,9 +152,12 @@ const T = {
     reuse: (id) => `Use the last frame of ${id} as the first frame.`,
     sheet: (pose) => `character reference sheet, the same character shown as ${pose}, plain light grey background, soft even lighting`,
     pose: 'front, side and back full-body views, natural standing pose, calm expression',
+    poseScale: 'front, side and back full-body views, with a plain grey adult human silhouette standing beside it for scale',
+    fx: 'visual effect reference, shown on its own, centred in frame, plain black background',
     variantEdit: (baseId, change) => `Edit the ${baseId} character reference sheet: keep the face, hairstyle and build unchanged; change the look to: ${change}`,
     faces: (expr) => `expression sheet of the same character, bust view, same angle, expressions in order: ${expr}, plain light grey background, soft even lighting`,
     expr: 'calm, smiling, sad, angry',
+    states: (expr) => `state sheet of the same character, same angle, in order: ${expr}, plain light grey background, soft even lighting`,
     master: 'scenery only, unoccupied, wide shot, eye level',
     prop: 'a single object centred in frame, plain light grey background, soft even lighting',
   },
@@ -192,14 +238,25 @@ const LINE_TYPES = ['對白', '畫外音', '旁白', '內心獨白', 'VO', 'OS']
 const CJK = /[㐀-鿿぀-ヿ]/;
 const CJK_G = /[㐀-鿿぀-ヿ]/g;
 
-// 道具：片段裡寫 {P01}，會換成設定檔裡那件道具的描述
+// 道具與特效：片段裡寫 {P01}、{F01}，會換成設定檔裡的描述；{F01:上弦} 換成那個狀態的描述
 const propDefs = new Map();
-const PROP_RE = /\{(P[0-9A-Za-z_-]*)\}/g;
+const fxDefs = new Map();
+const PROP_RE = /\{([PF][0-9A-Za-z_-]*)(?:[:：]([^{}]+?))?\}/g;
 for (const p of bible.props || []) {
   if (!p.id) { err('props', '有道具缺少 id'); continue; }
   if (propDefs.has(p.id)) err(p.id, '道具編號重複');
   propDefs.set(p.id, p);
 }
+const MAKES = ['生成', '後製', '生成加後製'];
+const isPost = (d) => (d.make || '生成') === '後製';
+for (const f of Array.isArray(bible.effects) ? bible.effects : []) {
+  if (!f.id) { err('effects', '有特效缺少 id'); continue; }
+  if (!/^F/.test(f.id)) warn(f.id, '特效編號請用 F 開頭（F01、F02…），片段裡才能用 {F01} 引用');
+  if (fxDefs.has(f.id)) err(f.id, '特效編號重複');
+  fxDefs.set(f.id, f);
+}
+const defOf = (id) => (id[0] === 'F' ? fxDefs.get(id) : propDefs.get(id));
+const hasState = (d, st) => !!d && !!d.states && typeof d.states === 'object' && d.states[st] != null;
 
 function rawPick(v, l) {
   if (v == null) return '';
@@ -207,10 +264,17 @@ function rawPick(v, l) {
   if (typeof v === 'object') return String(v[l] ?? v.zh ?? v.en ?? '').trim();
   return String(v);
 }
-/** 取出某個語言的文字，並把 {P01} 換成道具描述。欄位可以是字串，或 {"zh": "…", "en": "…"}。 */
+/** 取出某個語言的文字，並把 {P01}、{F01}、{F01:狀態} 換成描述。欄位可以是字串，或 {"zh": "…", "en": "…"}。 */
 function pick(v, l) {
-  return rawPick(v, l).replace(PROP_RE, (m, id) => (propDefs.has(id) ? rawPick(propDefs.get(id).desc, l) : m));
+  return rawPick(v, l).replace(PROP_RE, (m, id, st) => {
+    const d = defOf(id);
+    if (!d) return m;
+    if (!st) return rawPick(d.desc, l);
+    return hasState(d, st.trim()) ? rawPick(d.states[st.trim()], l) : m;
+  });
 }
+/** 特效或道具在某個狀態下的描述；沒指定狀態就是 desc。 */
+const looksOf = (d, st, l) => (st && hasState(d, st) ? pick(d.states[st], l) : pick(d.desc, l));
 const strip = (s) => String(s || '').trim().replace(/[，,。.；;、\s]+$/u, '');
 const joinC = (parts, l) => parts.map(strip).filter(Boolean).join(T[l].sep);
 const joinS = (parts, l) => {
@@ -237,6 +301,8 @@ function spec(shot) {
 }
 /** 有沒有完整入鏡的人物（不是背影、前景虛焦或只露一部分）。 */
 const hasFullCast = (shot) => (shot.cast || []).some((e) => !e.partial);
+/** 有完整入鏡、而且是人的身體（人或半人）的角色。 */
+const hasBodyCast = (shot) => (shot.cast || []).some((e) => !e.partial && ['人', '半人'].includes(kindOf(chars.get(e.char)?.c || {})));
 /** 景別＋取景範圍＋鏡頭類型＋角度＋構圖，組成提示詞裡的「怎麼拍」那一段。 */
 function framing(shot, l, withFrame = true) {
   const sp = spec(shot);
@@ -244,7 +310,8 @@ function framing(shot, l, withFrame = true) {
   const def = SIZES[sp.size];
   if (def) {
     parts.push(l === 'en' ? def.en : sp.size);
-    if (hasFullCast(shot) && sp.type !== '插入' && def[`${l}Body`]) parts.push(def[`${l}Body`]);
+    // 「腰部以上入鏡」這類範圍是照人的身體說的：畫面裡只有器物、動物或異獸時不寫
+    if (hasBodyCast(shot) && sp.type !== '插入' && def[`${l}Body`]) parts.push(def[`${l}Body`]);
   } else if (sp.size) parts.push(pick(shot.size, l)); // 用詞表以外的寫法原樣放
   if (TYPES[sp.type]) parts.push(TYPES[sp.type][l]);
   else parts.push(pick(shot.type, l));
@@ -278,7 +345,9 @@ const isStatic = (shot) => !zhOf(shot.camera) || parseCam(shot).base === '固定
 const REF_RE = /同上|同前|如前|same as above|as before|as above/i;
 const TEXT_RE = /寫著|寫有|字樣|上面的字|that (says|reads)|text reading|with the words/i;
 const SCREEN_RE = /畫面(的)?[左右]|鏡頭(的)?[左右]|螢幕[左右]|screen[- ](left|right)|frame[- ](left|right)|(left|right) of (the )?(frame|screen)/i;
-const FAST_RE = /快速|迅速|急速|猛烈|劇烈|猛地|猛然|瞬間|飛快|狂奔|飛撲|暴衝|大幅|\b(rapid(ly)?|violent(ly)?|sudden(ly)?|quick(ly)?|fast|dramatic(ally)?|bursts?|lunges?|dash(es)?|sprints?|slams?|whips?)\b/i;
+const FAST_RE = /快速|迅速|急速|猛烈|劇烈|猛地|猛然|瞬間|飛快|狂奔|飛撲|暴衝|大幅|爆發|炸開|爆炸|噴發|\b(rapid(ly)?|violent(ly)?|sudden(ly)?|quick(ly)?|fast|dramatic(ally)?|bursts?|lunges?|dash(es)?|sprints?|slams?|whips?|explod(e|es|ing)|explosions?|erupts?)\b/i;
+// 看起來是文字或數字的特效：工具寫不好，應該後製
+const FX_TEXT_RE = /數字|文字|字樣|[大小]字|篆|進度條|\b(digits?|numbers?|text|letters?|words?)\b/i;
 const SLOW_RE = /緩慢|慢慢|緩緩|慢速|\bslow(ly)?\b/i;
 
 /** 檢查一段提示詞片段：語言是否齊全、有沒有指代、未知道具或要求可讀文字。 */
@@ -298,7 +367,11 @@ function checkFrag(where, v, required = false) {
       warn(where, '提示詞語言包含 en，但這一段只有中文；請寫成 {"zh": "…", "en": "…"}');
     }
     const unknown = s.match(PROP_RE);
-    if (unknown) err(where, `用了設定檔 props 裡沒有的道具編號：${[...new Set(unknown)].join('、')}`);
+    if (unknown) err(where, `用了設定檔裡沒有的道具或特效編號，或沒有登記的狀態：${[...new Set(unknown)].join('、')}`);
+    for (const m of rawPick(v, l).matchAll(PROP_RE)) {
+      const d = m[1][0] === 'F' ? fxDefs.get(m[1]) : null;
+      if (d && isPost(d)) warn(where, `${m[1]}（${d.name || '特效'}）是後製做的特效，不要寫進提示詞；在畫面上替它留位置，並寫在 continuity`);
+    }
     if (REF_RE.test(s)) warn(where, '用了「同上／如前」之類的指代；每一鏡都要能單獨看懂，請直接寫出內容');
     if (TEXT_RE.test(s)) warn(where, '看起來要求畫面出現可讀文字；多數生成工具寫不好字，請改成後製加字');
   }
@@ -311,13 +384,40 @@ checkFrag('project.negative_global', P.negative_global);
 checkFrag('project.speech_lang', P.speech_lang);
 checkFrag('project.audio_suffix', P.audio_suffix);
 checkFrag('project.video_suffix', P.video_suffix);
-for (const p of propDefs.values()) checkFrag(`${p.id}.desc`, p.desc, true);
+for (const p of propDefs.values()) {
+  checkFrag(`${p.id}.desc`, p.desc, true);
+  for (const [k, sv] of Object.entries(p.states && typeof p.states === 'object' ? p.states : {})) checkFrag(`${p.id}.states.${k}`, sv, true);
+}
+for (const f of fxDefs.values()) {
+  checkFrag(`${f.id}.desc`, f.desc, true);
+  checkFrag(`${f.id}.motion`, f.motion);
+  checkFrag(`${f.id}.light`, f.light);
+  for (const [k, sv] of Object.entries(f.states && typeof f.states === 'object' ? f.states : {})) checkFrag(`${f.id}.states.${k}`, sv, true);
+  if (f.make && !MAKES.includes(f.make)) hint(f.id, `make 請填 ${MAKES.join('、')} 其中一個；目前當成「生成」`);
+  if (langs.some((l) => FAST_RE.test(pick(f.motion, l)))) {
+    warn(`${f.id}.motion`, '特效的動態用了「爆發／炸開／瞬間」這類字眼，生成工具容易做壞；寫成慢慢擴散、漂浮、明暗起伏，快速的爆發留給後製，或用閃白和反應鏡頭代替');
+  }
+  const texts = [f.desc, ...Object.values(f.states || {})];
+  if (!isPost(f) && langs.some((l) => texts.some((t) => FX_TEXT_RE.test(pick(t, l))))) {
+    warn(f.id, '這個特效看起來包含數字或文字，生成工具寫不好；make 改成「後製」，或把文字的部分拆成另一個後製特效');
+  }
+}
+
+// 角色類型：非人角色不一定穿衣服，也不一定有人的表情
+const KINDS = ['人', '半人', '動物', '器物', '異獸'];
+const NONHUMAN = new Set(['動物', '器物', '異獸']);
+const kindOf = (c) => (KINDS.includes(c.kind) ? c.kind : '人');
+// 形態（造型變體）可以有自己的 look 與 tag：人形與原形長得完全不一樣
+const lookOf = (c, v, l) => pick(v?.look, l) || pick(c.look, l);
+const tagOf = (c, v, l) => pick(v?.tag, l) || pick(c.tag, l);
 
 const chars = new Map(); // 角色編號或造型變體編號 -> { c, v }
 const charList = [];
 for (const c of bible.characters || []) {
   if (!c.id) { err('characters', '有角色缺少 id'); continue; }
   if (chars.has(c.id)) err(c.id, '角色編號重複');
+  if (c.kind != null && !KINDS.includes(c.kind)) hint(c.id, `kind「${c.kind}」不在分類裡（${KINDS.join('、')}），當成「人」處理`);
+  const kind = kindOf(c);
   const vs = Array.isArray(c.variants) && c.variants.length
     ? c.variants
     : [{ id: c.id, label: '', outfit: c.outfit || '', state: '' }];
@@ -327,16 +427,23 @@ for (const c of bible.characters || []) {
     if (!v.id) { err(c.id, '有造型變體缺少 id'); continue; }
     if (v.id !== c.id && chars.has(v.id)) err(v.id, '造型變體編號重複');
     chars.set(v.id, { c, v });
-    checkFrag(`${v.id}.outfit`, v.outfit, true);
+    // 人與半人一定要寫服裝；動物、器物、異獸，或有自己 look 的形態，可以沒有
+    checkFrag(`${v.id}.outfit`, v.outfit, !v.look && !NONHUMAN.has(kind));
     checkFrag(`${v.id}.outfit_top`, v.outfit_top);
     checkFrag(`${v.id}.state`, v.state);
     checkFrag(`${v.id}.sheet`, v.sheet);
+    checkFrag(`${v.id}.look`, v.look);
+    checkFrag(`${v.id}.tag`, v.tag);
+    if (v.look && !v.tag) warn(v.id, '這個形態有自己的 look，卻沒有自己的 tag；影片提示詞會用第一個形態的短稱指它，指到的樣子不對');
   }
   checkFrag(`${c.id}.look`, c.look, true);
   checkFrag(`${c.id}.marks`, c.marks);
   checkFrag(`${c.id}.expressions`, c.expressions);
   if (!c.tag) warn(`${c.id}.tag`, '缺少短稱（tag）；影片提示詞要用它來指這個角色');
   else checkFrag(`${c.id}.tag`, c.tag);
+  if (NONHUMAN.has(kind) && !c.minor && !c.expressions) {
+    hint(c.id, `${kind}角色沒有寫 expressions，預設的「平靜、微笑、難過、生氣」不適用，所以不產出表情組圖；寫成這個角色會用到的狀態（耳朵往後貼、尾巴膨起、燈光變亮），或設 minor`);
+  }
 }
 
 const scenes = new Map();
@@ -374,8 +481,8 @@ function subject(entry, shot, l, withBlocking = true) {
   const outfit = UPPER_BODY.has(spec(shot).size) && pick(v.outfit_top, l) ? pick(v.outfit_top, l) : pick(v.outfit, l);
   let base;
   if (isPartialText(entry)) base = [pick(entry.partial, l)]; // 只入鏡一部分：直接寫看得到的那一部分
-  else if (entry.partial === true) base = [pick(c.tag, l), outfit]; // 背影、前景虛焦：不寫臉部細節與狀態
-  else base = [pick(c.look, l), outfit, pick(v.state, l), pick(c.marks, l)];
+  else if (entry.partial === true) base = [tagOf(c, v, l), outfit]; // 背影、前景虛焦：不寫臉部細節與狀態
+  else base = [lookOf(c, v, l), outfit, pick(v.state, l), pick(c.marks, l)];
   const block = withBlocking ? [pick(entry.pos, l), pick(entry.gaze, l), pick(entry.hands, l), pick(entry.face, l)] : [];
   return joinC([...base, ...block], l);
 }
@@ -384,14 +491,24 @@ const setupOf = (shot) => (shot.setup ? setups.get(shot.setup) : null) || {};
 const lightOf = (shot, sc, l) => pick(shot.light, l) || pick(setupOf(shot).light, l) || joinC([pick(sc.light, l), pick(sc.time, l)], l);
 /** 背景：這一鏡的 bg → 機位的 bg → 整段場景描述（只適合全景以上）。 */
 const bgOf = (shot, sc, l) => pick(shot.bg, l) || pick(setupOf(shot).bg, l) || pick(sc.space, l);
+// 這一鏡的特效（shot.fx）：後製的特效不進提示詞，只列在備註裡
+const fxIn = (shot) => (Array.isArray(shot.fx) ? shot.fx : []).map((e) => ({ e, d: fxDefs.get(e?.id) })).filter((x) => x.d);
+const fxGen = (shot) => fxIn(shot).filter((x) => !isPost(x.d));
+/** 特效的樣子：外觀（或那個狀態的外觀）＋ 在畫面哪裡。 */
+const fxLooks = (shot, l) => fxGen(shot).map(({ e, d }) => joinC([looksOf(d, e.state, l), pick(e.pos, l)], l));
+/** 會發光的特效照亮周圍：接在這一鏡的光線後面。 */
+const fxLights = (shot, l) => fxGen(shot).map(({ d }) => pick(d.light, l));
+/** 特效怎麼動：這一鏡的 fx[].motion，沒有就用設定檔的；寫 false 表示這一鏡不加。 */
+const fxMotions = (shot, l) => fxGen(shot).map(({ e, d }) => (e.motion === false ? '' : pick(e.motion, l) || pick(d.motion, l)));
 function imagePrompt(shot, l) {
   const sc = scenes.get(shot.scene) || {};
   const subs = (shot.cast || []).map((e) => subject(e, shot, l));
   return joinS([
     ...subs,
     pick(shot.props, l),
+    ...fxLooks(shot, l),
     bgOf(shot, sc, l),
-    lightOf(shot, sc, l),
+    joinC([lightOf(shot, sc, l), ...fxLights(shot, l)], l),
     framing(shot, l),
     pick(P.style_lock, l),
   ], l);
@@ -413,7 +530,9 @@ function audioParts(shot, l) {
   const ln = shot.line;
   if (ln && ln.text && ln.type === '對白') {
     const hit = chars.get(ln.who);
-    const who = hit ? pick(hit.c.tag, l) || hit.c.name : ln.who || '';
+    // 說話的人在這一鏡是哪個形態，就用那個形態的短稱
+    const inShot = hit && (shot.cast || []).map((e) => chars.get(e.char)).find((h) => h && h.c.id === hit.c.id);
+    const who = hit ? tagOf(hit.c, (inShot || hit).v, l) || hit.c.name : ln.who || '';
     out.push(T[l].says(who, strip(pick(ln.text, langs[0])), pick(P.speech_lang, l), strip(pick(ln.tone, l))));
   }
   if (shot.sound) out.push(T[l].sound(pick(shot.sound, l)));
@@ -424,16 +543,18 @@ function videoPrompt(shot, l) {
   const cam = T[l].cam(camTerm(shot, l));
   if (MODE === 'i2v') {
     // 圖生影片：首幀圖已經決定了外貌與場景，這裡只寫「怎麼動」
-    return joinS([pick(shot.motion, l), cam, pick(P.video_suffix, l), ...audioParts(shot, l)], l);
+    return joinS([pick(shot.motion, l), ...fxMotions(shot, l), cam, pick(P.video_suffix, l), ...audioParts(shot, l)], l);
   }
   const sc = scenes.get(shot.scene) || {};
   const subs = (shot.cast || []).map((e) => subject(e, shot, l));
   return joinS([
     ...subs,
     pick(shot.props, l),
+    ...fxLooks(shot, l),
     pick(shot.motion, l),
+    ...fxMotions(shot, l),
     bgOf(shot, sc, l),
-    lightOf(shot, sc, l),
+    joinC([lightOf(shot, sc, l), ...fxLights(shot, l)], l),
     joinC([framing(shot, l, false), cam], l),
     pick(P.style_lock, l),
     pick(P.video_suffix, l),
@@ -461,23 +582,28 @@ function checkLimit(id, kind, s, l) {
 // ---------- 資產提示詞（母圖、場景定稿圖、道具圖） ----------
 const assets = []; // {id, kind, lang, prompt}
 for (const { c, vs } of charList) {
+  const kind = kindOf(c);
   vs.forEach((v, i) => {
     for (const l of langs) {
-      if (i > 0 && !pick(v.sheet, l)) {
+      if (i > 0 && !pick(v.sheet, l) && !pick(v.look, l)) {
         // 第二個以後的造型：從第一個造型的設定圖改，臉才不會變
         const change = joinC([pick(v.outfit, l), pick(v.state, l)], l);
         assets.push({ id: v.id, kind: `設定圖（由 ${vs[0].id} 改）`, lang: l, prompt: T[l].variantEdit(vs[0].id, change) + T[l].stop.trim() });
       } else {
-        const who = joinC([pick(c.look, l), pick(v.outfit, l), pick(v.state, l), pick(c.marks, l)], l);
-        assets.push({ id: v.id, kind: '設定圖', lang: l, prompt: joinS([who, T[l].sheet(pick(v.sheet, l) || T[l].pose), pick(P.style_lock, l)], l) });
+        // 第一個造型，或有自己 look 的形態（原形和人形長得不一樣，不能從人形改）
+        const who = joinC([lookOf(c, v, l), pick(v.outfit, l), pick(v.state, l), pick(c.marks, l)], l);
+        const pose = pick(v.sheet, l) || (kind === '異獸' ? T[l].poseScale : T[l].pose);
+        assets.push({ id: v.id, kind: '設定圖', lang: l, prompt: joinS([who, T[l].sheet(pose), pick(P.style_lock, l)], l) });
       }
     }
   });
-  if (!c.minor) {
+  if (!c.minor && !(NONHUMAN.has(kind) && !c.expressions)) {
     for (const l of langs) {
       const v = vs[0];
-      const who = joinC([pick(c.look, l), pick(v.outfit_top, l) || pick(v.outfit, l), pick(c.marks, l)], l);
-      assets.push({ id: c.id, kind: '表情組圖', lang: l, prompt: joinS([who, T[l].faces(pick(c.expressions, l) || T[l].expr), pick(P.style_lock, l)], l) });
+      const who = joinC([lookOf(c, v, l), pick(v.outfit_top, l) || pick(v.outfit, l), pick(c.marks, l)], l);
+      // 非人角色沒有「半身」，表情也多半是耳朵、尾巴、光這類狀態
+      const sheet = NONHUMAN.has(kind) ? T[l].states(pick(c.expressions, l)) : T[l].faces(pick(c.expressions, l) || T[l].expr);
+      assets.push({ id: c.id, kind: '表情組圖', lang: l, prompt: joinS([who, sheet, pick(P.style_lock, l)], l) });
     }
   }
 }
@@ -492,6 +618,16 @@ for (const s of scenes.values()) {
 for (const p of propDefs.values()) {
   for (const l of langs) {
     assets.push({ id: p.id, kind: '道具圖', lang: l, prompt: joinS([pick(p.desc, l), T[l].prop, pick(P.style_lock, l)], l) });
+  }
+}
+// 特效參考圖：每個狀態一張，單獨放在純黑背景上；後製的特效出的是給剪接的人看的設計圖
+for (const f of fxDefs.values()) {
+  const kindName = isPost(f) ? '特效設計圖（後製用）' : '特效參考圖';
+  const states = Object.keys(f.states && typeof f.states === 'object' ? f.states : {});
+  for (const st of states.length ? states : ['']) {
+    for (const l of langs) {
+      assets.push({ id: f.id, kind: st ? `${kindName}・${st}` : kindName, lang: l, prompt: joinS([looksOf(f, st, l), T[l].fx, pick(P.style_lock, l)], l) });
+    }
   }
 }
 
@@ -571,13 +707,30 @@ if (ep) {
     const cast = Array.isArray(s.cast) ? s.cast : [];
     cast.forEach((e) => {
       if (!chars.has(e.char)) { err(id, `角色編號 ${e.char ?? '（空）'} 不在設定檔裡`); return; }
-      // 只入鏡身體一部分（partial 寫成片段）時，那段文字已經說明看得到什麼，視線與手部不必再寫
-      const miss = (isPartialText(e) ? [] : ['pos', 'gaze', 'hands']).filter((k) => !e[k]);
+      // 只入鏡身體一部分（partial 寫成片段）時，那段文字已經說明看得到什麼，視線與手部不必再寫。
+      // 器物沒有眼睛和手，只要寫位置；動物與異獸的前爪寫在 hands，但不強制
+      const kind = kindOf(chars.get(e.char).c);
+      const need = isPartialText(e) ? [] : kind === '器物' ? ['pos'] : kind === '動物' || kind === '異獸' ? ['pos', 'gaze'] : ['pos', 'gaze', 'hands'];
+      const miss = need.filter((k) => !e[k]);
       if (miss.length) warn(id, `${e.char} 沒寫 ${miss.join('、')}；沒寫的地方生成工具會自己猜`);
       for (const k of ['pos', 'gaze', 'hands', 'face']) checkFrag(`${id} ${e.char}.${k}`, e[k]);
       if (isPartialText(e)) checkFrag(`${id} ${e.char}.partial`, e.partial);
     });
     for (const k of ['props', 'frame', 'bg', 'light', 'negative', 'end']) checkFrag(`${id}.${k}`, s[k]);
+
+    // 特效
+    if (s.fx != null && !Array.isArray(s.fx)) err(id, 'fx 要寫成陣列，例如 [{"id": "F01", "state": "上弦", "pos": "攤開的左手掌心"}]');
+    (Array.isArray(s.fx) ? s.fx : []).forEach((e) => {
+      const d = fxDefs.get(e?.id);
+      if (!d) { err(id, `特效編號 ${e?.id ?? '（空）'} 不在設定檔的 effects 裡`); return; }
+      const states = Object.keys(d.states && typeof d.states === 'object' ? d.states : {});
+      if (e.state && !hasState(d, e.state)) err(id, `特效 ${e.id} 沒有「${e.state}」這個狀態（設定檔裡有：${states.join('、') || '沒有分狀態'}）`);
+      if (!e.state && states.length) hint(id, `特效 ${e.id}（${d.name || ''}）有分狀態（${states.join('、')}），這一鏡沒寫 state，會用 desc；確認這一鏡是哪一個狀態`);
+      if (!isPost(d) && !e.pos) warn(id, `特效 ${e.id} 沒寫 pos；特效在畫面哪裡、附著在什麼上面，生成工具會自己猜`);
+      checkFrag(`${id} ${e.id}.pos`, e.pos);
+      if (e.motion !== false) checkFrag(`${id} ${e.id}.motion`, e.motion);
+      if (e.motion && langs.some((l) => FAST_RE.test(pick(e.motion, l)))) warn(id, `特效 ${e.id} 的 motion 用了「爆發／瞬間」這類字眼；寫成慢慢擴散、明暗起伏，快的留給後製`);
+    });
     checkFrag(`${id}.motion`, s.motion, true);
     if (NATIVE_AUDIO) checkFrag(`${id}.sound`, s.sound);
     if (USE_LAST && cast.length && !s.end) warn(id, '缺少 end（尾幀與首幀的差別）；有首尾幀控制時動作最穩');
@@ -590,7 +743,7 @@ if (ep) {
     if (fullCast.length) {
       for (const l of langs) {
         const m = pick(s.motion, l).toLowerCase();
-        const tags = fullCast.map((e) => pick(chars.get(e.char)?.c.tag, l).toLowerCase()).filter(Boolean);
+        const tags = fullCast.map((e) => { const h = chars.get(e.char); return h ? tagOf(h.c, h.v, l).toLowerCase() : ''; }).filter(Boolean);
         if (m && tags.length && !tags.some((t) => m.includes(t))) {
           warn(id, `motion（${l}）沒有用到任何角色的短稱（tag）；請用短稱指人，不要用代名詞或名字`);
         }
@@ -626,6 +779,10 @@ if (ep) {
       const need = speakSeconds(s.line.text) + 0.3;
       if (need > d) warn(id, `對白／旁白約需 ${need.toFixed(1)} 秒（字數 ÷ ${RATE} + 0.3），但這一鏡只有 ${d} 秒；請拆成兩鏡、縮短句子，或把句子分到相鄰兩鏡的 line`);
       if (!LINE_TYPES.includes(s.line.type)) hint(id, 'line.type 請用「對白」（說話的人在畫面裡）、「畫外音」（人在現場但這一鏡沒拍到他說話）、「旁白」或「內心獨白」');
+      if (s.line.type === '對白' && chars.has(s.line.who) && chars.get(s.line.who).c.mouthless) {
+        const sp = chars.get(s.line.who).c;
+        hint(id, `${sp.id}${sp.name ? ` ${sp.name}` : ''} 沒有嘴（mouthless），不會對口型；type 改用「畫外音」，並在 motion 寫一個看得見的說話信號（燈光隨話語明暗、壺蓋輕輕跳動）`);
+      }
       if (s.line.type === '對白' && chars.has(s.line.who)) {
         const speaker = chars.get(s.line.who).c.id;
         const onScreen = cast.some((e) => chars.get(e.char)?.c.id === speaker && !e.partial);
@@ -659,16 +816,130 @@ if (ep) {
     }
   }
   const totalSec = shots.reduce((n, s) => n + (Number(s.duration) || 0), 0);
-  if (totalSec > 60 && !shots.slice(0, -1).some((s) => s.cut)) {
+  if (totalSec > 60 && !SHORT_EP && !shots.slice(0, -1).some((s) => s.cut)) {
     hint('整體', `整集約 ${Math.round(totalSec)} 秒，沒有標任何建議切點；在場景結束或懸念處加上 cut，使用者想切短時才有地方下刀`);
   }
+  if (EP_LEN && shots.length) {
+    if (totalSec > EP_LEN[1]) {
+      warn('整體', `整集約 ${Math.round(totalSec)} 秒，超過單集長度上限 ${EP_LEN[1]} 秒；先刪台詞、合併過場鏡頭，還是太長就把一個節拍移到下一集，並同時改分集表`);
+    } else if (totalSec < EP_LEN[0]) {
+      warn('整體', `整集約 ${Math.round(totalSec)} 秒，不到單集長度下限 ${EP_LEN[0]} 秒；不要用放慢的鏡頭撐，補反應鏡頭、插入鏡頭，或把下一集開頭的內容提前`);
+    }
+  }
+  if (seriesForEp && !epPlan) hint('分集表', `bible.json 旁邊的 series.json 裡沒有 ${ep.episode || '這一集'}；分集表要先排到這一集，拆鏡才有鉤子與卡點可以對照`);
   const durs = new Set(shots.map((s) => Number(s.duration)));
   if (shots.length >= 6 && durs.size === 1) hint('整體', `所有鏡頭都是 ${[...durs][0]} 秒，節奏會單調；依內容給長短變化`);
   if (shots.length >= 5 && slow / shots.length > 0.6) {
     hint('整體', `${slow}/${shots.length} 鏡的 motion 都強調「緩慢」，成片容易像慢動作；多數鏡頭寫「自然速度、幅度小」即可`);
   }
 }
-if (Array.isArray(bible.pending) && bible.pending.length) {
+// ---------- 分集表檢查 ----------
+const CLIFF_TYPES = ['危機', '揭露', '反轉', '抉擇', '登場'];
+const epNum = (s) => { const m = /(\d+)\s*$/.exec(String(s || '')); return m ? Number(m[1]) : null; };
+const okRange = (r) => Array.isArray(r) && r.length === 2 && r.every((n) => Number.isInteger(Number(n)) && Number(n) > 0) && Number(r[0]) <= Number(r[1]);
+const eps = series ? series.episodes : [];
+const acts = series && Array.isArray(series.acts) ? series.acts : [];
+if (series) {
+  if (!eps.length) err('episodes', '分集表裡沒有任何一集');
+  if (!EP_LEN) hint('project.episode_length', '設定檔沒有 episode_length（單集長度）；填了腳本才能檢查每一集的預估秒數');
+  acts.forEach((a, i) => {
+    if (!okRange(a.range)) warn(`第 ${a.id ?? i + 1} 幕`, 'range 要寫成 [第一集, 最後一集]，例如 [1, 16]');
+    if (!a.turn) hint(`第 ${a.id ?? i + 1} 幕`, '沒有寫 turn（這一幕結尾的轉折）；它是下一幕的起因，分集時要切在它上面');
+  });
+  const ranges = acts.filter((a) => okRange(a.range)).map((a) => a.range.map(Number)).sort((x, y) => x[0] - y[0]);
+  for (let i = 1; i < ranges.length; i++) {
+    if (ranges[i][0] !== ranges[i - 1][1] + 1) hint('acts', `幕與幕的集數範圍有重疊或缺口（${ranges[i - 1].join('–')} 接 ${ranges[i].join('–')}）`);
+  }
+  const total = Number(series.total_episodes);
+  if (total > 0 && ranges.length && ranges[ranges.length - 1][1] !== total) {
+    hint('acts', `最後一幕結束在第 ${ranges[ranges.length - 1][1]} 集，但 total_episodes 是 ${total}`);
+  }
+  const seen = new Set();
+  let prevNum = null;
+  eps.forEach((e, i) => {
+    const id = e.episode || `第 ${i + 1} 筆`;
+    const dup = !!e.episode && seen.has(e.episode);
+    if (!e.episode) err(id, '缺少 episode（集數，例如 EP01）');
+    else if (dup) err(id, '集數重複');
+    seen.add(e.episode);
+    const num = epNum(e.episode);
+    if (!dup && num != null && prevNum != null && num !== prevNum + 1) warn(id, `沒有接在 ${eps[i - 1].episode} 後面；中間漏了集數，或順序排錯`);
+    if (num != null) prevNum = num;
+    if (!e.source) warn(id, '缺少 source（對應大綱的哪一段）；沒有它，使用者很難核對有沒有漏劇情');
+    if (!e.logline) warn(id, '缺少 logline（一句話劇情）');
+    for (const [k, name] of [['hook', 'hook（鉤子：前三秒的畫面）'], ['payoff', 'payoff（爽點或核心事件）'], ['cliff', 'cliff（卡點：結尾留給觀眾的問題）']]) {
+      if (!e[k]) warn(id, `缺少 ${name}；每一集都要回答這一題，見 references/outline-to-episodes.md`);
+    }
+    if (e.cliff_type && !CLIFF_TYPES.includes(e.cliff_type)) hint(id, `cliff_type「${e.cliff_type}」不在分類裡（${CLIFF_TYPES.join('、')}）`);
+    const cast = Array.isArray(e.cast) ? e.cast : [];
+    if (!cast.length) warn(id, '缺少 cast（出場角色的編號）');
+    for (const c of cast) if (!chars.has(c)) warn(id, `角色編號 ${c} 不在設定檔裡；拆這一集之前要補進 bible.json，或先寫在 new_assets`);
+    const scs = Array.isArray(e.scenes) ? e.scenes : [];
+    if (!scs.length) warn(id, '缺少 scenes（用到的場景編號）');
+    for (const s of scs) if (!scenes.has(s)) warn(id, `場景編號 ${s} 不在設定檔裡；拆這一集之前要補進 bible.json，或先寫在 new_assets`);
+    if (scs.length > 3) hint(id, `用到 ${scs.length} 個場景；短集的地點最好不超過三個，每多一個就多一張場景定稿圖和一次建立鏡頭`);
+    const sec = Number(e.est_seconds);
+    if (!(sec > 0)) warn(id, '缺少 est_seconds（預估秒數）');
+    else if (EP_LEN && (sec < EP_LEN[0] || sec > EP_LEN[1])) {
+      warn(id, `預估 ${sec} 秒，不在單集長度 ${EP_LEN[0]} 到 ${EP_LEN[1]} 秒之內；太長就把過場併掉或移一個節拍到下一集，太短就和相鄰的集合併，不要灌水`);
+    }
+    if (ranges.length && num != null && !ranges.some((r) => num >= r[0] && num <= r[1])) hint(id, '不在任何一幕的集數範圍（acts[].range）裡');
+  });
+  // 卡點連續三集以上同一種，觀眾會疲乏
+  let runStart = 0;
+  for (let i = 1; i <= eps.length; i++) {
+    const t = eps[runStart]?.cliff_type;
+    if (i < eps.length && t && eps[i].cliff_type === t) continue;
+    if (t && i - runStart >= 3) {
+      hint(eps[runStart].episode || `第 ${runStart + 1} 筆`, `從這一集起連續 ${i - runStart} 集的卡點都是「${t}」；換一種（${CLIFF_TYPES.filter((x) => x !== t).join('、')}），觀眾才不會疲乏`);
+    }
+    runStart = i;
+  }
+  if (Array.isArray(series.pending) && series.pending.length) hint('分集表', `還有 ${series.pending.length} 項分集上的事要請使用者決定`);
+}
+
+// ---------- 分集劇本檢查 ----------
+// 台詞：「角色名（語氣）：台詞」或「旁白：…」；△ 開頭是畫面，【字】開頭是後製文字
+const SPEECH_RE = /^([^\s△【#>*|\-：:（(]{1,12})(?:[（(]([^）)]*)[）)])?\s*[：:]\s*(.+)$/u;
+const NOT_SPEAKER = new Set(['人物', '目的', '時間', '地點', '鉤子', '爽點', '卡點', '備註', '場景']);
+const scriptStats = { scenes: 0, visuals: 0, texts: 0, lines: 0, seconds: 0, bySpeaker: new Map() };
+if (scriptText != null) {
+  const names = new Set([...charList.map(({ c }) => c.name).filter(Boolean), '旁白']);
+  scriptText.split(/\r?\n/).forEach((raw, n) => {
+    const l = raw.trim();
+    if (/^##\s/.test(l)) { scriptStats.scenes++; return; }
+    if (l.startsWith('△')) { scriptStats.visuals++; return; }
+    if (l.startsWith('【')) { scriptStats.texts++; return; }
+    const m = SPEECH_RE.exec(l);
+    if (!m || NOT_SPEAKER.has(m[1])) return;
+    const who = m[1];
+    const text = m[3].replace(/[「」『』“”"]/g, '');
+    const sec = speakSeconds(text) + 0.3;
+    scriptStats.lines++;
+    scriptStats.seconds += sec;
+    scriptStats.bySpeaker.set(who, (scriptStats.bySpeaker.get(who) || 0) + sec);
+    const where = `第 ${n + 1} 行`;
+    if (!names.has(who)) hint(where, `說話者「${who}」不是設定檔裡的角色名稱，也不是「旁白」；名字打錯了，或這個角色還沒寫進 bible.json（只出聲音、不入鏡的角色可以不登記）`);
+    if (sec > 5) hint(where, `「${[...text].slice(0, 12).join('')}…」約需 ${sec.toFixed(1)} 秒，一鏡講不完；拆成兩句，中間插一個反應鏡頭`);
+  });
+  const fmt = 'references/outline-to-episodes.md 第四節';
+  if (!scriptStats.lines && !scriptStats.visuals) err('劇本', `沒有讀到任何畫面（△ 開頭）或台詞（角色名：台詞）；格式見 ${fmt}`);
+  else if (!scriptStats.scenes) warn('劇本', `沒有讀到場標（## 第 1 場　地點　時段　內外）；格式見 ${fmt}`);
+  const missingTop = ['鉤子', '爽點', '卡點'].filter((k) => !new RegExp(`^\\s*[-*]\\s*${k}[：:]`, 'm').test(scriptText));
+  if (missingTop.length) hint('劇本', `開頭沒有寫${missingTop.join('、')}；從分集表抄上來，寫的時候才不會偏`);
+  const s = scriptStats.seconds;
+  if (EP_LEN) {
+    if (s > EP_LEN[1]) {
+      warn('劇本', `台詞與旁白約需 ${Math.round(s)} 秒，已經超過單集長度上限 ${EP_LEN[1]} 秒；先刪句子`);
+    } else if (s > EP_LEN[1] * 0.75) {
+      warn('劇本', `台詞與旁白約需 ${Math.round(s)} 秒，超過單集長度上限 ${EP_LEN[1]} 秒的四分之三；鉤子畫面、反應鏡頭和停頓沒有空間，拆鏡後幾乎一定超長，先刪句子`);
+    }
+  } else {
+    hint('project.episode_length', '設定檔沒有 episode_length（單集長度）；填了才能比較台詞長度和單集長度');
+  }
+}
+
+if (scriptText == null && Array.isArray(bible.pending) && bible.pending.length) {
   hint('設定檔', `還有 ${bible.pending.length} 項待確認設定，交付時要請使用者確認`);
 }
 
@@ -692,8 +963,11 @@ const write = (name, text) => {
 };
 const written = [];
 
-// ---------- settings.md / assets.csv ----------
-{
+const lenText = EP_LEN ? `${EP_LEN[0]} 到 ${EP_LEN[1]} 秒` : '';
+const minSec = (sec) => (sec >= 60 ? `${Math.floor(sec / 60)} 分 ${Math.round(sec % 60)} 秒` : `${Math.round(sec)} 秒`);
+
+// ---------- settings.md / assets.csv（只檢查分集劇本時不寫） ----------
+if (scriptText == null) {
   const L = [];
   L.push(`# ${P.title || '未命名專案'}　設定表`, '');
   L.push('## 本次參數', '');
@@ -706,24 +980,44 @@ const written = [];
     ['首尾幀', USE_LAST ? '使用' : '不使用'],
     ['聲音方案', P.audio_plan || ''],
     ['提示詞語言', langs.map((l) => T[l].name).join('＋')],
-    ['單次可生成秒數', RANGE ? `${RANGE[0]} 到 ${RANGE[1]}` : CLIPS.length ? CLIPS.join(' / ') : '未填'],  ]), '');
+    ['單次可生成秒數', RANGE ? `${RANGE[0]} 到 ${RANGE[1]}` : CLIPS.length ? CLIPS.join(' / ') : '未填'],
+    ...(EP_LEN ? [['單集長度', lenText]] : []),
+    ...(P.narration ? [['旁白', P.narration]] : []),
+  ]), '');
   if (Array.isArray(bible.pending) && bible.pending.length) {
     L.push('## 待確認設定', '', '以下是原文沒寫、先補上的暫定值。要改請直接說，改一處所有鏡頭會一起更新。', '');
     for (const p of bible.pending) L.push(`- ${p}`);
     L.push('');
   }
   L.push('## 角色', '');
-  L.push(table(['編號', '名稱', '短稱', '固定外貌', '辨識特徵', '造型變體'], charList.map(({ c, vs }) => [
-    c.id, c.name || '', show(c.tag), show(c.look), show(c.marks),
-    vs.map((v) => `${v.id}${v.label ? `（${v.label}）` : ''}：${show(v.outfit)}${show(v.state) ? `；${show(v.state)}` : ''}`).join('<br>'),
-  ])), '');
+  L.push(table(['編號', '名稱', '短稱', '固定外貌', '辨識特徵', '造型變體'], charList.map(({ c, vs }) => {
+    const extra = [kindOf(c) !== '人' ? kindOf(c) : '', c.mouthless ? '沒有嘴' : ''].filter(Boolean).join('，');
+    return [
+      c.id, `${c.name || ''}${extra ? `（${extra}）` : ''}`, show(c.tag), show(c.look), show(c.marks),
+      vs.map((v) => {
+        const desc = [show(v.look) ? `外貌：${show(v.look)}` : '', show(v.tag) ? `短稱：${show(v.tag)}` : '', show(v.outfit), show(v.state)].filter(Boolean).join('；');
+        return `${v.id}${v.label ? `（${v.label}）` : ''}${desc ? `：${desc}` : ''}`;
+      }).join('<br>'),
+    ];
+  })), '');
   L.push('## 場景', '');
   L.push(table(['編號', '名稱', '空間', '光線', '時間／天氣'], [...scenes.values()].map((s) => [
     s.id, s.name || '', show(s.space), show(s.light), show(s.time),
   ])), '');
   if (propDefs.size) {
     L.push('## 道具', '');
-    L.push(table(['編號', '名稱', '固定描述'], [...propDefs.values()].map((p) => [p.id, p.name || '', show(p.desc)])), '');
+    const stList = (d) => Object.entries(d.states && typeof d.states === 'object' ? d.states : {}).map(([k, sv]) => `${k}：${show(sv)}`).join('<br>');
+    const hasStates = [...propDefs.values()].some((p) => stList(p));
+    L.push(table(['編號', '名稱', '固定描述', ...(hasStates ? ['狀態'] : [])], [...propDefs.values()].map((p) => [
+      p.id, p.name || '', show(p.desc), ...(hasStates ? [stList(p)] : []),
+    ])), '');
+  }
+  if (fxDefs.size) {
+    const stList = (d) => Object.entries(d.states && typeof d.states === 'object' ? d.states : {}).map(([k, sv]) => `${k}：${show(sv)}`).join('<br>');
+    L.push('## 特效', '', '「在哪裡做」是後製的特效不會進提示詞：生成時在畫面上替它留位置，剪接時再加。', '');
+    L.push(table(['編號', '名稱', '外觀', '狀態', '怎麼動', '照亮周圍', '在哪裡做'], [...fxDefs.values()].map((f) => [
+      f.id, f.name || '', show(f.desc), stList(f), show(f.motion), show(f.light), MAKES.includes(f.make) ? f.make : '生成',
+    ])), '');
   }
   L.push('## 風格鎖定句', '', ...langs.map((l) => code(pick(P.style_lock, l))), '');
   if (langs.some((l) => pick(P.negative_global, l))) {
@@ -741,12 +1035,69 @@ const written = [];
     for (const g of bible.log) L.push(`- ${g}`);
     L.push('');
   }
-  if (!ep) L.push('## 檢查結果', '', issueTable(), '');
+  if (!ep && !series) L.push('## 檢查結果', '', issueTable(), '');
   written.push(write('settings.md', L.join('\n')));
   written.push(write('assets.csv', csv([
     ['編號', '類型', '語言', '提示詞', '模型', 'seed', '定稿檔名', '備註'],
     ...assets.map((a) => [a.id, a.kind, T[a.lang].name, a.prompt, '', '', '', '']),
   ])));
+}
+
+// ---------- 分集表輸出 ----------
+if (series) {
+  const nameOf = (id) => (chars.has(id) ? chars.get(id).c.name || id : id);
+  const sceneOf = (id) => (scenes.has(id) ? scenes.get(id).name || id : id);
+  const list = (v) => (Array.isArray(v) ? v : []);
+  const sum = eps.reduce((n, e) => n + (Number(e.est_seconds) || 0), 0);
+  const L = [];
+  L.push(`# ${P.title || '未命名專案'}　分集表`, '');
+  if (series.source) L.push(`原文：${series.source}`, '');
+  const span = eps.length ? `${eps[0].episode || ''}${eps.length > 1 ? ` 到 ${eps[eps.length - 1].episode || ''}` : ''}` : '';
+  L.push([
+    Number(series.total_episodes) > 0 ? `全季 ${series.total_episodes} 集。` : '',
+    eps.length ? `這一批是 ${span}，共 ${eps.length} 集，預估約 ${minSec(sum)}。` : '',
+    lenText ? `單集長度 ${lenText}。` : '',
+    P.narration ? `旁白：${P.narration}。` : '',
+  ].join(''), '');
+  if (list(series.pending).length) {
+    L.push('## 待確認', '', '分集上要你決定的事：', '');
+    for (const p of series.pending) L.push(`- ${p}`);
+    L.push('');
+  }
+  if (acts.length) {
+    L.push('## 全季結構', '');
+    L.push(table(['幕', '名稱', '集數', '結尾的轉折', '這一批排了'], acts.map((a, i) => {
+      const r = okRange(a.range) ? a.range.map(Number) : null;
+      const n = r ? eps.filter((e) => { const k = epNum(e.episode); return k != null && k >= r[0] && k <= r[1]; }).length : 0;
+      return [a.id ?? i + 1, a.name || '', r ? `${r[0]}–${r[1]}（${r[1] - r[0] + 1} 集）` : '', a.turn || '', n ? `${n} 集` : '—'];
+    })), '');
+  }
+  L.push('## 分集表', '', '鉤子是前三秒的畫面，卡點是結尾留給觀眾的問題。', '');
+  L.push(table(['集數', '標題', '一句話劇情', '鉤子', '爽點／核心事件', '卡點', '秒'], eps.map((e) => [
+    e.episode || '', e.title || '', e.logline || '', e.hook || '', e.payoff || '',
+    `${e.cliff || ''}${e.cliff_type ? `（${e.cliff_type}）` : ''}${e.paywall ? '<br>**付費／留存卡點**' : ''}`,
+    e.est_seconds ?? '',
+  ])), '');
+  L.push('## 各集細節', '');
+  for (const e of eps) {
+    L.push(`### ${e.episode || ''}${e.title ? `　${e.title}` : ''}`, '');
+    if (e.source) L.push(`- 大綱對應：${e.source}`);
+    if (e.thread) L.push(`- 主線推進：${e.thread}`);
+    if (e.state) L.push(`- 結束時的狀態：${e.state}`);
+    if (list(e.cast).length) L.push(`- 出場角色：${list(e.cast).map(nameOf).join('、')}`);
+    if (list(e.scenes).length) L.push(`- 場景：${list(e.scenes).map(sceneOf).join('、')}`);
+    for (const a of list(e.new_assets)) L.push(`- 新增資產：${a}`);
+    for (const a of list(e.added)) L.push(`- 新增或調動：${a}`);
+    L.push('');
+  }
+  const newAssets = eps.flatMap((e) => list(e.new_assets).map((a) => [e.episode || '', a]));
+  if (newAssets.length) {
+    L.push('## 這一批要新增的資產', '', '設定檔裡還沒有。拆到那一集之前補進 bible.json，並先生成資產圖。', '');
+    L.push(table(['集數', '資產'], newAssets), '');
+  }
+  L.push('## 檢查結果', '', issueTable(), '');
+  written.push(write('series.md', L.join('\n')));
+  console.log(`分集表：${eps.length} 集，預估約 ${minSec(sum)}`);
 }
 
 // ---------- 分鏡輸出 ----------
@@ -761,7 +1112,13 @@ if (ep) {
     const name = hit ? hit.c.name || ln.who : ln.who || '';
     return `${ln.type || ''}${name && name !== ln.type ? ` ${name}` : ''}：「${rawPick(ln.text, langs[0])}」`; // 旁白的 who 也是「旁白」，不重複寫
   };
-  const note = (s) => [s.risk ? `風險：${s.risk}` : '', s.continuity ? `連戲：${s.continuity}` : ''].filter(Boolean).join('；');
+  // 後製的特效不進提示詞，要提醒剪接的人加；生成加後製的要提醒加強
+  const fxLabel = ({ e, d }) => `${d.name || d.id}${e.state ? `（${e.state}）` : ''}${zhOf(e.pos) ? `，${zhOf(e.pos)}` : ''}`;
+  const postNote = (s) => [
+    ...fxIn(s).filter((x) => isPost(x.d)).map((x) => `後製加特效：${fxLabel(x)}`),
+    ...fxIn(s).filter((x) => x.d.make === '生成加後製').map((x) => `後製加強：${x.d.name || x.d.id}`),
+  ].join('；');
+  const note = (s) => [s.risk ? `風險：${s.risk}` : '', s.continuity ? `連戲：${s.continuity}` : '', postNote(s)].filter(Boolean).join('；');
   const firstFrame = (s, i, l) => (s.link === '接續' && shots[i - 1] ? T[l].reuse(shots[i - 1].id) : imagePrompt(s, l));
   // 累計時間：播到這一鏡結束是第幾秒（用成片秒數，也就是裁完頭尾的長度）
   const ends = [];
@@ -781,7 +1138,17 @@ if (ep) {
   const L = [];
   L.push(`# ${P.title || '未命名專案'}　${epId}　分鏡表`, '');
   if (ep.source_title) L.push(`原文範圍：${ep.source_title}`, '');
-  L.push(`共 ${shots.length} 鏡，成片約 ${Math.round(total)} 秒${P.aspect ? `，畫幅 ${P.aspect}（在生成工具裡選）` : ''}。設定表與資產提示詞見 settings.md。`, '');
+  L.push(`共 ${shots.length} 鏡，成片約 ${Math.round(total)} 秒${lenText ? `（單集長度 ${lenText}）` : ''}${P.aspect ? `，畫幅 ${P.aspect}（在生成工具裡選）` : ''}。設定表與資產提示詞見 settings.md。`, '');
+  if (epPlan) {
+    L.push('## 這一集要做到的事', '', '來自分集表（series.json）。前三秒要看到鉤子，最後一鏡停在卡點上。', '');
+    L.push(table(['項目', '內容'], [
+      ['一句話劇情', epPlan.logline || ''],
+      ['鉤子', epPlan.hook || ''],
+      ['爽點／核心事件', epPlan.payoff || ''],
+      ['卡點', `${epPlan.cliff || ''}${epPlan.cliff_type ? `（${epPlan.cliff_type}）` : ''}`],
+      ['結束時的狀態', epPlan.state || ''],
+    ].filter((r) => r[1])), '');
+  }
   if (Array.isArray(ep.changes) && ep.changes.length) {
     L.push('## 對原文的改動', '');
     for (const c of ep.changes) L.push(`- ${c}`);
@@ -828,6 +1195,10 @@ if (ep) {
       L.push(`- ${e.char}${e.partial ? '（局部入鏡）' : ''}　位置：${zhOf(e.pos) || '—'}｜視線：${zhOf(e.gaze) || '—'}｜手部／道具：${zhOf(e.hands) || '—'}${e.face ? `｜表情：${zhOf(e.face)}` : ''}`);
     }
     if (s.props) L.push(`- 場上道具：${zhOf(s.props)}`);
+    for (const x of fxIn(s)) {
+      const where = MAKES.includes(x.d.make) ? x.d.make : '生成';
+      L.push(`- 特效 ${x.d.id}（${fxLabel(x)}）｜在哪裡做：${where}${isPost(x.d) ? '，不進提示詞，畫面上要替它留位置' : ''}`);
+    }
     const su = s.setup ? setups.get(s.setup) : null;
     if (su) {
       // 同機位、而且是各自生成首幀的前一鏡：拿它的首幀圖來改，背景和光線最不會跑掉
@@ -869,7 +1240,7 @@ if (ep) {
       if (USE_LAST) r.push(lastFramePrompt(s, l));
       r.push(videoPrompt(s, l), negativePrompt(s, l));
     }
-    r.push((s.refs || []).join('＋'), s.risk || '', s.continuity || '', '', '', '', '', '');
+    r.push((s.refs || []).join('＋'), s.risk || '', [s.continuity || '', postNote(s)].filter(Boolean).join('；'), '', '', '', '', '');
     return r;
   });
   written.push(write(`${epId}-shots.csv`, csv([head, ...rows])));
@@ -878,8 +1249,15 @@ if (ep) {
 }
 
 // ---------- 結果 ----------
-console.log('已寫出：');
-for (const p of written) console.log(`  ${p}`);
+if (scriptText != null) {
+  const st = scriptStats;
+  console.log(`${path.basename(second)}：${st.scenes} 場，畫面（△）${st.visuals} 行，台詞與旁白 ${st.lines} 句、約 ${Math.round(st.seconds)} 秒${lenText ? `（單集長度 ${lenText}）` : ''}，後製文字 ${st.texts} 處`);
+  if (st.bySpeaker.size) console.log(`說話時間：${[...st.bySpeaker].map(([w, s]) => `${w} ${Math.round(s)} 秒`).join('、')}`);
+}
+if (written.length) {
+  console.log('已寫出：');
+  for (const p of written) console.log(`  ${p}`);
+}
 const count = (lv) => issues.filter((x) => x.level === lv).length;
 console.log(`檢查：錯誤 ${count('錯誤')}、警告 ${count('警告')}、提示 ${count('提示')}`);
 for (const x of issues) console.log(`  [${x.level}] ${x.where}：${x.msg}`);
