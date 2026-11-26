@@ -443,6 +443,20 @@ const SLOW_RE = /緩慢|慢慢|緩緩|慢速|\bslow(ly)?\b/i;
 // 替後製留位置時說出空白是給什麼的：「給後製的數字」寫進提示詞，工具會試著把數字畫出來
 // 配樂是畫外聲，只有觀眾聽得到；寫進 sound，原生音訊時會被當成畫內的聲音生成出來
 const MUSIC_RE = /配樂|背景音樂|BGM|\b(background music|score|soundtrack)\b/i;
+// 連戲備註寫了道具被收走或拿出來：這個變化要拍到，或寫進 motion、end，只寫在備註裡生成時不會發生
+const PROP_MOVE_RE = /收走|收起|收進|拿走|拿起|拿出|抽出|放回|放下|塞進|不見了|畫面外|\b(off[- ]screen|pocket(s|ed)?|put away|picks? up|taken away)\b/i;
+// 暖光配上以冷色為主的 palette：同一句提示詞裡會打架
+const WARM_LIGHT_RE = /暖|燭|燈籠|爐火|火光|夕陽|鎢絲|琥珀|橘黃|\b(warm|amber|candle\w*|lantern\w*|firelight|tungsten|golden)\b/i;
+/** palette 說「以冷色為主」：說明主色的那一句只有冷色、沒有暖色（「暗紅與青黑為主」是混色，不算）。 */
+function coolDominant(text) {
+  for (const clause of String(text || '').split(/[，,。.;；]/)) {
+    if (!/為主|主導|主色|^\s*以|dominat|mostly|predominant/i.test(clause)) continue;
+    const cool = /冷|藍|青|\b(cool|cold|blue|teal|grey-blue|blue-grey|slate)\b/i.test(clause);
+    const warm = /暖|紅|橘|橙|金|黃|琥珀|赭|\b(warm|red|orange|gold\w*|amber|ochre|vermilion|yellow)\b/i.test(clause);
+    if (cool && !warm) return true;
+  }
+  return false;
+}
 const POST_WORD_RE =/後製|後期|數字|文字|字幕|花字|\b(post[- ]?production|in post|captions?|subtitles?|on-screen text|digits?)\b/i;
 // 冷暖與主色：寫在風格鎖定句裡會加到每一張圖，夜戲、回憶、換了光線的鏡頭就會和光線打架
 const HUE_RE = /[暖冷](色|調|光|[黃橘紅棕藍白灰青])|偏[青藍橘黃紅綠紫金暖冷]|[紅橙橘黃綠青藍紫金棕褐]色?[調系]|為主的.{0,4}色調|\b(warm|cool|cold)(er)?\b|\b(teal|amber|orange|golden|blue|red|green|purple|pink|yellow)(-\w+)?\b[^,]{0,25}\b(tones?|palette|tints?|cast|shadows?|grading|accents?)\b/i;
@@ -511,6 +525,10 @@ if (!P.style_lock) err('project.style_lock', '缺少風格鎖定句');
 checkFrag('project.style_lock', P.style_lock);
 if (langs.some((l) => HUE_RE.test(pick(P.style_lock, l)))) {
   warn('project.style_lock', '風格鎖定句寫了冷暖或主色（例如「暖色調」「偏青藍」「blue-grey shadows」）。它會加到每一張圖，夜戲、回憶和換了光線的鏡頭都會和自己的光線打架。冷暖與主色移到場景的 palette，風格鎖定句只留畫風、線條、上色方式、飽和度與對比、質感');
+}
+// 頭身比寫在風格鎖定句，會跟著進道具圖和空景背景圖；具體的比例寫在人類角色的 look
+if (langs.some((l) => /頭身|heads?[- ]tall/i.test(pick(P.style_lock, l)))) {
+  warn('project.style_lock', '風格鎖定句寫了頭身比（「約七頭身」）；它會加到道具圖和沒有人的背景圖。風格鎖定句只寫「寫實比例」「Q 版比例」這類說法，具體的頭身比寫在每個人類角色的 look');
 }
 checkFrag('project.ref_syntax', P.ref_syntax);
 checkFrag('project.negative_global', P.negative_global);
@@ -601,6 +619,15 @@ for (const c of bible.characters || []) {
     hint(c.id, `${kind}角色沒有寫 expressions，預設的「平靜、微笑、難過、生氣」不適用，所以不產出表情組圖；寫成這個角色會用到的狀態（耳朵往後貼、尾巴膨起、燈光變亮），或設 minor`);
   }
 }
+// 身高寫成相對的（比某某高一個頭）：設定圖和沒有那個人的鏡頭也會寫到他，工具可能多畫一個人
+for (const { c } of charList) {
+  for (const l of langs) {
+    const st = pick(c.stature, l);
+    if (!st) continue;
+    const other = charList.map((x) => x.c).filter((o) => o.id !== c.id).flatMap((o) => [tagOf(o, null, l), ...(o.variants || []).map((v) => pick(v.tag, l))]).find((t) => t && st.includes(t));
+    if (other) { warn(`${c.id}.stature`, `身高提到了「${other}」；角色設定圖和沒有那個人的鏡頭也會寫到他，工具可能多畫一個人。只寫絕對身高（「身高約一百八十公分」），同框時腳本會把每個人的身高一起寫進去`); break; }
+  }
+}
 // 不同角色用了同一個短稱：影片提示詞與參考圖模式都靠短稱分辨人，兩個人會被當成同一個
 for (const l of langs) {
   const byTag = new Map();
@@ -627,6 +654,9 @@ for (const s of bible.scenes || []) {
   for (const k of ['space', 'light']) {
     const hit = mentionsPerson(s[k]);
     if (hit) warn(`${s.id}.${k}`, `場景的 ${k} 寫到了人（「${hit}」）；它會進到沒有人物的場景定稿圖，也會進每一鏡。人身上的光寫在各鏡的 light，人在哪裡寫在 pos`);
+  }
+  if (langs.some((l) => WARM_LIGHT_RE.test(pick(s.light, l)) && coolDominant(pick(s.palette, l)))) {
+    hint(`${s.id}.palette`, '場景的光是暖光，palette 卻以冷色為主，這個場景每一鏡的提示詞都會打架；palette 改成只寫暗部偏什麼色、點綴色是什麼，和所有光都相容');
   }
   if (langs.some((l) => SCREEN_RE.test(pick(s.space, l)))) {
     warn(`${s.id}.space`, '場景描述用了「畫面左／右」；換個角度拍就會錯，請改寫成空間關係（例如「窗在沙發對面」），畫面位置留給每一鏡的 pos');
@@ -1127,6 +1157,24 @@ if (ep) {
     });
     checkFrag(`${id}.motion`, s.motion, !still);
     if (NATIVE_AUDIO) checkFrag(`${id}.sound`, s.sound);
+    // 暖光的鏡頭配上冷色為主的場景 palette，沒有覆寫
+    {
+      const sc = scenes.get(s.scene) || {};
+      if (s.light && !s.palette && langs.some((l) => WARM_LIGHT_RE.test(pick(s.light, l)) && coolDominant(pick(sc.palette, l)))) {
+        hint(id, `這一鏡的光是暖光，場景的 palette 卻以冷色為主（「${zhOf(sc.palette)}」），同一句提示詞裡會打架；這一鏡覆寫 palette，或把場景的 palette 改成和所有光都相容的寫法（只寫暗部偏什麼色）`);
+      }
+    }
+    // 連戲備註寫到道具被收走或拿出來，這一鏡與前一鏡的 motion、end 卻沒寫
+    if (s.continuity && PROP_MOVE_RE.test(String(s.continuity))) {
+      const prev = shots[i - 1] || {};
+      for (const p of propDefs.values()) {
+        const name = zhOf(p.name);
+        const hit = String(s.continuity).includes(`{${p.id}`) || String(s.continuity).includes(p.id) || (name && String(s.continuity).includes(name));
+        if (!hit) continue;
+        const told = [s.motion, s.end, prev.motion, prev.end].some((v) => { const t = rawPick(v, langs[0]); return t.includes(`{${p.id}`) || (name && t.includes(name)); });
+        if (!told) hint(id, `continuity 寫到 ${p.id}${name ? `（${name}）` : ''}被收走或拿出來，但這一鏡和前一鏡的 motion、end 都沒寫；生成時不會發生。拍一鏡交代，或寫進動手那一鏡的 motion 或 end`);
+      }
+    }
     if (s.sound && langs.some((l) => MUSIC_RE.test(pick(s.sound, l)))) {
       hint(id, 'sound 寫到了配樂；sound 只寫故事裡聽得到的聲音（原生音訊時它會進影片提示詞），配樂的進出寫在 music');
     }
@@ -1226,7 +1274,7 @@ if (ep) {
       const key = people.map((c) => c.id).sort().join('+');
       if (missing.length && people.length >= 2 && !told.has(key)) {
         told.add(key);
-        hint(s.id, `${people.map((c) => c.id).join('、')} 同框而且看得到身體，${missing.map((c) => c.id).join('、')} 沒有寫 stature（身高）；生成工具常把同框的人畫得一樣高。寫「約一百八十公分，比黑髮及肩的年輕女子高一個頭」這類絕對加相對的身高`);
+        hint(s.id, `${people.map((c) => c.id).join('、')} 同框而且看得到身體，${missing.map((c) => c.id).join('、')} 沒有寫 stature（身高）；生成工具常把同框的人畫得一樣高。寫絕對身高，例如「身高約一百八十公分」，同框時腳本會把每個人的身高一起寫進去`);
       }
     }
   }

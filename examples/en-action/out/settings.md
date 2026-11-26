@@ -75,7 +75,7 @@ A girl of about sixteen, round face, chin-length black bob with blunt bangs, lar
 ### C02-a　設定圖
 
 ```text
-A man in his forties, square jaw, short grey-flecked stubble, heavy brows, tall build with broad shoulders, about 185 cm tall, over a head taller than the girl with the short black bob, a long dark green rubber raincoat with the hood up, black work boots, rain beading on the raincoat. Character reference sheet, the same character shown as front, side and back full-body views, natural standing pose, calm expression, plain light grey background, soft even lighting. Hand-painted anime film style, clean ink outlines, cel shading with a single shadow tone, high saturation with strong contrast, soft film grain.
+A man in his forties, square jaw, short grey-flecked stubble, heavy brows, tall build with broad shoulders, about 185 cm tall, a long dark green rubber raincoat with the hood up, black work boots, rain beading on the raincoat. Character reference sheet, the same character shown as front, side and back full-body views, natural standing pose, calm expression, plain light grey background, soft even lighting. Hand-painted anime film style, clean ink outlines, cel shading with a single shadow tone, high saturation with strong contrast, soft film grain.
 ```
 
 ### S01　場景定稿圖
