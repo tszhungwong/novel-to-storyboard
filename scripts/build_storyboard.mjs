@@ -273,10 +273,11 @@ const RISKY_MOVES = {
 };
 // 機位高度（height）：攝影機離地多高。和角度（俯仰）是兩回事：低機位也可以平視，例如貼著桌面看過去
 const HEIGHTS = {
+  // 用離地的高度寫，不用「腰部」「頭頂」：機位背景圖沒有人，寫到身體部位容易把人叫出來
   地面: { zh: '機位貼近地面', en: 'ground-level camera' },
-  低機位: { zh: '低機位，約腰部高度', en: 'low camera height, at waist level' },
-  眼睛高度: { zh: '機位與眼睛同高', en: 'camera at eye height' },
-  高機位: { zh: '高機位，高過頭頂', en: 'high camera position, above head height' },
+  低機位: { zh: '低機位，離地約一公尺', en: 'low camera height, about one metre off the ground' },
+  眼睛高度: { zh: '機位離地約一點六公尺', en: 'camera about 1.6 metres off the ground' },
+  高機位: { zh: '高機位，離地約三公尺', en: 'high camera position, about three metres off the ground' },
 };
 // 速度（speed）：前三種寫進影片提示詞；變速與定格是剪接時做的，只寫進後製備註
 const SPEEDS = {
@@ -419,6 +420,8 @@ const FAST_RE = /快速|迅速|急速|猛烈|劇烈|猛地|猛然|瞬間|飛快|
 // 看起來是文字或數字的特效：工具寫不好，應該後製
 const FX_TEXT_RE = /數字|文字|字樣|[大小]字|篆|進度條|\b(digits?|numbers?|text|letters?|words?)\b/i;
 const SLOW_RE = /緩慢|慢慢|緩緩|慢速|\bslow(ly)?\b/i;
+// 替後製留位置時說出空白是給什麼的：「給後製的數字」寫進提示詞，工具會試著把數字畫出來
+const POST_WORD_RE = /後製|後期|數字|文字|字幕|花字|\b(post[- ]?production|in post|captions?|subtitles?|on-screen text|digits?)\b/i;
 // 冷暖與主色：寫在風格鎖定句裡會加到每一張圖，夜戲、回憶、換了光線的鏡頭就會和光線打架
 const HUE_RE = /[暖冷](色|調|光|[黃橘紅棕藍白灰青])|偏[青藍橘黃紅綠紫金暖冷]|[紅橙橘黃綠青藍紫金棕褐]色?[調系]|為主的.{0,4}色調|\b(warm|cool|cold)(er)?\b|\b(teal|amber|orange|golden|blue|red|green|purple|pink|yellow)(-\w+)?\b[^,]{0,25}\b(tones?|palette|tints?|cast|shadows?|grading|accents?)\b/i;
 // 人與人身上的東西：寫進場景或機位的描述，會跑進沒有人物的場景定稿圖與機位背景圖
@@ -446,7 +449,7 @@ function checkFrag(where, v, required = false) {
     if (unknown) err(where, `用了設定檔裡沒有的道具或特效編號，或沒有登記的狀態：${[...new Set(unknown)].join('、')}`);
     for (const m of rawPick(v, l).matchAll(PROP_RE)) {
       const d = m[1][0] === 'F' ? fxDefs.get(m[1]) : null;
-      if (d && isPost(d)) warn(where, `${m[1]}（${d.name || '特效'}）是後製做的特效，不要寫進提示詞；在畫面上替它留位置，並寫在 continuity`);
+      if (d && isPost(d)) warn(where, `${m[1]}（${d.name || '特效'}）是後製做的特效，不要寫進提示詞；在畫面上替它留位置，並寫在 post`);
     }
     if (REF_RE.test(s)) warn(where, '用了「同上／如前」之類的指代；每一鏡都要能單獨看懂，請直接寫出內容');
     if (TEXT_RE.test(s)) warn(where, '看起來要求畫面出現可讀文字；多數生成工具寫不好字，請改成後製加字');
@@ -741,8 +744,18 @@ function camTerm(shot, l) {
   return c.pre.join('') + c.def.zh;
 }
 function lastFramePrompt(shot, l) {
-  const end = strip(pick(shot.end, l));
+  let end = strip(pick(shot.end, l));
   if (!end || isStill(shot)) return '';
+  // 尾幀把特效換到另一個狀態（{F02:半開}）時，那個狀態的發光也要寫進去，否則下一鏡的首幀會突然亮起來
+  const glow = [];
+  for (const m of rawPick(shot.end, langs[0]).matchAll(PROP_RE)) {
+    const d = m[1][0] === 'F' ? fxDefs.get(m[1]) : null;
+    if (!d || isPost(d) || !m[2]) continue;
+    const g = fxField({ state: m[2].trim() }, d, 'light', l);
+    const now = fxIn(shot).find((x) => x.d.id === d.id);
+    if (g && g !== (now ? fxField(now.e, d, 'light', l) : '')) glow.push(g);
+  }
+  end = joinC([end, ...glow], l);
   return T[l].lastFrame(end, isStatic(shot) ? '' : camTerm(shot, l)) + T[l].stop.trim();
 }
 function audioParts(shot, l) {
@@ -1041,6 +1054,13 @@ if (ep) {
       if (isPartialText(e)) checkFrag(`${id} ${e.char}.partial`, e.partial);
     });
     for (const k of ['props', 'frame', 'bg', 'light', 'palette', 'negative', 'end']) checkFrag(`${id}.${k}`, s[k]);
+    // 負面詞裡寫「文字」是對的；其他片段提到後製或數字、文字，會把它們叫進畫面
+    const postHits = [...['props', 'frame', 'bg', 'end', 'motion'].map((k) => [k, s[k]]), ...cast.flatMap((e) => ['pos', 'gaze', 'hands', 'face', 'partial'].map((k) => [`${e.char}.${k}`, e.partial === true && k === 'partial' ? null : e[k]]))]
+      .filter(([, v]) => langs.some((l) => POST_WORD_RE.test(pick(v, l))));
+    for (const [k, v] of postHits) {
+      const w = langs.map((l) => pick(v, l).match(POST_WORD_RE)?.[0]).find(Boolean);
+      warn(`${id}.${k}`, `片段寫到了「${w}」；它會進提示詞，工具會試著把字或數字畫出來。替後製留位置時只寫看得見的畫面（「掌心上方留一片暗色的空白」），不要說空白是給什麼的，後製的內容寫在 post`);
+    }
 
     // 特效
     if (s.fx != null && !Array.isArray(s.fx)) err(id, 'fx 要寫成陣列，例如 [{"id": "F01", "state": "上弦", "pos": "攤開的左手掌心"}]');
@@ -1125,6 +1145,40 @@ if (ep) {
       if (!still) checkLimit(id, 'video', videoPrompt(s, l), l);
     }
   });
+
+  // 道具連戲：同一個機位、取景沒有變近，前一鏡畫面裡的道具卻沒寫到，中間也沒有一鏡交代它被拿走。
+  // 同機位的首幀是從前一張改出來的，沒交代就消失的道具，生成時常常又被畫回來
+  {
+    const propIds = (vals) => {
+      const out = new Set();
+      for (const v of vals) for (const m of rawPick(v, langs[0]).matchAll(PROP_RE)) if (m[1][0] === 'P' && propDefs.has(m[1])) out.add(m[1]);
+      return out;
+    };
+    const inFrame = (s) => propIds([s.props, s.bg, s.frame, ...(s.cast || []).flatMap((e) => [e.pos, e.gaze, e.hands, e.face, isPartialText(e) ? e.partial : null])]);
+    const mentions = (vals, id) => {
+      const t = vals.map((v) => rawPick(v, langs[0])).join(' ');
+      const name = zhOf(propDefs.get(id)?.name);
+      return t.includes(`{${id}`) || (!!name && t.includes(name));
+    };
+    const seen = new Map(); // 「機位|道具」→ 最後一次在畫面裡的鏡頭索引
+    shots.forEach((s, i) => {
+      const here = inFrame(s);
+      for (const [key, k] of [...seen]) {
+        const [setup, pid] = key.split('|');
+        if (setup !== s.setup || here.has(pid)) continue;
+        seen.delete(key);
+        const before = shots[k];
+        const notCloser = (SIZE_RANK[spec(s).size] ?? Infinity) <= (SIZE_RANK[spec(before).size] ?? -Infinity);
+        // 交代的地方：那一鏡的 end，或中間任何一鏡的 motion、end、action
+        const told = mentions([before.end], pid) || shots.slice(k + 1, i).some((x) => mentions([x.motion, x.end, x.action], pid));
+        if (notCloser && !told) {
+          const name = zhOf(propDefs.get(pid)?.name);
+          hint(s.id, `${pid}${name ? `（${name}）` : ''}在 ${before.id}（同一個機位 ${setup}）的畫面裡，這一鏡取景沒有比較近，卻沒有寫到它；還在原處就寫進 props，被拿走了就在拿走的那一鏡寫進 motion 或 end`);
+        }
+      }
+      if (s.setup) for (const pid of here) seen.set(`${s.setup}|${pid}`, i);
+    });
+  }
 
   // 節拍與高點：鏡頭有沒有照著場次設計安排
   if (plans.length && shots.length) {
