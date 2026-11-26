@@ -21,6 +21,7 @@
         "她撈回鐵盒，發現盒蓋凹了"
       ],
       "peak": "兩個人同時盯著鐵盒",
+      "blocking": "小滿從巷口往巷子深處跑，雨衣男從後面追上，在兩排攤車之間抓住她：男人在巷口那一側，小滿在深處那一側，軸線沿著巷子。鐵盒掉在兩人之間，滾進深處那一側的攤車底下。哨聲從巷口外傳來，男人往攤車之間的暗處退走",
       "mood": "濕、擠，霓虹色對深藍的陰影；節奏先急後停，高點是全場最安靜的地方"
     }
   ],
@@ -77,6 +78,7 @@
       "duration": 1.5,
       "size": "特寫",
       "type": "插入",
+      "height": "地面",
       "camera": "固定",
       "link": "切",
       "action": "小滿的腳踩過積水，從畫面左跑向畫面右",
@@ -91,7 +93,7 @@
       ],
       "bg": "wet asphalt with red and blue neon reflections, cart wheels out of focus in the background",
       "light": "low warm light from the left, neon colours reflected in the puddle",
-      "frame": "camera at ground level, a shallow puddle in the centre of the frame, shallow depth of field",
+      "frame": "a shallow puddle in the centre of the frame, shallow depth of field",
       "end": "the sneakers have left through the right edge of the frame, ripples spreading in the puddle",
       "motion": "the sneakers land in the puddle one after the other and carry on out of the right edge of the frame, water splashing up and settling into ripples",
       "risk": "奔跑：只拍腳，兩步就出畫；速度靠 1.5 秒的短鏡頭和前後的剪接",
@@ -208,6 +210,7 @@
       "duration": 2,
       "size": "特寫",
       "type": "插入",
+      "height": "地面",
       "camera": "固定",
       "link": "切",
       "action": "布料撕裂聲中，鐵盒掉在地上，滾進攤車底下",
@@ -215,7 +218,7 @@
       "sound": "fabric tearing, then the tin clanging on asphalt and rattling to a stop",
       "cast": [],
       "props": "{P01} in mid-air at the top of the frame, falling",
-      "frame": "camera at ground level, the gap under the cart in the right half of the frame",
+      "frame": "the gap under the cart in the right half of the frame",
       "end": "{P01} lies flat on the wet asphalt in the shadow under the cart",
       "motion": "{P01} drops in from the top of the frame, lands on its edge on the wet asphalt, rolls under the cart and tips over flat, water rippling around it",
       "risk": "掙脫與撕裂是高風險動作，不拍過程：用撕裂聲加鐵盒落地的結果帶過",
@@ -270,7 +273,9 @@
       "duration": 4.5,
       "size": "特寫",
       "type": "插入",
+      "height": "地面",
       "camera": "緩慢推近",
+      "speed": "升格",
       "link": "切",
       "transition": "視線剪輯",
       "action": "攤車底下的鐵盒，雨水滴在盒蓋上；遠處響起哨聲",
@@ -285,7 +290,7 @@
         "EP01-006 的尾幀圖"
       ],
       "risk": "",
-      "continuity": "高點：全場最長的一鏡，沒有人、沒有動作，只有雨聲；結尾的哨聲帶出下一鏡"
+      "continuity": "高點：全場最長的一鏡，升格讓雨滴變慢，時間像停住；沒有人、沒有動作，只有雨聲；結尾的哨聲帶出下一鏡"
     },
     {
       "id": "EP01-009",

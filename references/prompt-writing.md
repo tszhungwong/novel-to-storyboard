@@ -102,6 +102,22 @@
 
 backlighting、side lighting、rim light、high-key、low-key、volumetric lighting、golden hour 都出現在 Google 或可靈的官方提示詞指南裡（2026-11-25 查證），其餘是通用的攝影用語。
 
+**布光**：上表是一道光的性質；臉上的光通常不只一道。攝影的說法是：
+
+| 用詞 | 英文 | 意思與效果 |
+|---|---|---|
+| 主光 | key light | 照亮主體的主要光源，決定影子落在哪一邊 |
+| 輔光 | fill light | 從另一側補亮暗部，比主光弱；沒有輔光，暗部就是全黑 |
+| 三點布光 | three-point lighting | 主光、輔光加背後的輪廓光，清楚、立體、中性 |
+| 光比 | lighting ratio | 主光和輔光的亮度差。光比小：臉亮而平；光比大：半張臉在暗處，戲劇性強 |
+| 林布蘭光 | Rembrandt lighting | 主光從側上方照，暗的那半邊臉頰上留一塊倒三角形的亮區：沉穩、有故事 |
+| 分割光 | split lighting | 光只從正側面來，臉一半亮一半暗：矛盾、雙面、危險 |
+| 蝴蝶光 | butterfly lighting | 主光在正前上方，鼻子下有小小的蝴蝶形影子：美、柔和，常用在女性特寫 |
+
+- 這些是通用的攝影術語，各工具認不認得沒有逐一查證；寫了名稱，最好再補一句看得見的結果。「光比 4:1」這種數字工具更不會懂，要寫成「臉的右半邊在陰影裡，只有眼睛一點反光」。
+- 布光的術語只用在近景以內：遠景看不到臉上的光。用了也要讓光源合理：林布蘭光要有一個側上方的光源（窗、檯燈），不能憑空出現。
+- 一場戲沿用同一種布光，臉上的光才不會一鏡一個樣；換布光就是在告訴觀眾情緒變了（從三點布光的日常，變成分割光的對峙）。
+
 - 光源必須是這一鏡畫面裡合理存在的。特寫看不到屋頂的破洞，就不要寫「從屋頂破洞照下來」，用那一鏡的 `light` 改寫成「一束冷白的光從上方斜照在臉上」。
 - `time` 只寫時段與天氣，飽和度與顆粒歸 `style_lock`。
 
@@ -127,6 +143,7 @@ backlighting、side lighting、rim light、high-key、low-key、volumetric light
 
 - 冷暖寫在這裡，不寫在 `style_lock`。風格鎖定句會加到每一張圖，寫了「暖色調」，夜戲的提示詞就會同時出現「暖色調」和「冷白的月光」。腳本看到風格鎖定句寫了冷暖或主色會警告。
 - 不要重複 `light` 已經寫的顏色。光是暖橘色，`palette` 再寫「暖橘為主」只是多佔字數。
+- `palette` 會接在這個場景每一鏡的光線後面，所以要和場景裡所有的光都相容。某幾鏡的光顏色不同（暖色的燈籠、紅色的警燈、螢幕的冷光），那幾鏡用鏡頭的 `palette` 覆寫，不然同一句提示詞裡會出現「暖琥珀色的燈籠光」和「暗紅是唯一的點綴色」這種互相打架的寫法。寫完把有覆寫 `light` 的鏡頭挑出來，逐一看光和色彩有沒有矛盾。
 - 同一個地點換了時段另開場景編號時，`palette` 跟著重寫。把整季的 `palette` 排在一起看，色彩的起伏（回憶褪色、最冷的高潮夜戲、結局回暖）要和故事的起伏對得上，這就是色彩腳本。
 
 ### `style_lock`：風格鎖定句
@@ -149,9 +166,9 @@ backlighting、side lighting、rim light、high-key、low-key、volumetric light
 
 ### `props[].desc`：道具
 
-十五字以內的名詞短語：材質、顏色、形狀、新舊。「一把磨得發亮的舊銅鑰匙」。狀態（拆了沒、亮不亮）寫在鏡頭裡。
+十五字（英文十個詞）以內的名詞短語：材質、顏色、形狀、新舊，挑兩三個最能辨認的。「一把磨得發亮的舊銅鑰匙」。狀態（拆了沒、亮不亮）寫在鏡頭裡。太長或有逗號腳本會提醒。
 
-它會被代入句子中間（「右手握著{P01}」），所以寫成一個不含逗號的短語。`a square pale-blue biscuit tin, paint worn at the corners` 代進去之後句子會斷掉；寫成 `a square pale-blue biscuit tin with worn corners`。
+它會被代入句子中間（「右手握著{P01}」），所以寫成一個不含逗號的短語。`a square pale-blue biscuit tin, paint worn at the corners` 代進去之後句子會斷掉；寫成 `a square pale-blue biscuit tin with worn corners`。英文尤其要短：`a square wooden storm lantern with oiled-paper panels and a top handle` 代進「the panel of {P02} glowing」之後，glowing 會黏到 handle 上。寫完把幾個用到它的片段代進去唸一遍。
 
 ## 四、分鏡檔的片段
 
@@ -206,7 +223,7 @@ backlighting、side lighting、rim light、high-key、low-key、volumetric light
 ### `line.tone`、`sound`：聲音
 
 - **`tone`**：音量、語速、情緒，挑兩樣寫。「低沉、遲疑」「壓低聲音，說得很快」。英文寫成接在 says 後面的短語：`in a low, hesitant voice`、`whispering quickly`。
-- **`sound`**：環境音加一兩個具體的音效，寫出聲音的來源：「遠處的車聲，門軸的吱呀聲」。「緊張的氛圍音」沒有來源，生成工具只能自己編。
+- **`sound`**：環境音加一兩個具體的音效，寫出聲音的來源：「遠處的車聲，門軸的吱呀聲」。「緊張的氛圍音」沒有來源，生成工具只能自己編。只寫畫內聲（故事裡的人也聽得到的聲音）；配樂與旁白是畫外聲，不寫進影片提示詞。畫內聲、擬音、音橋的區別見 `shot-craft.md` 第十三節。
 - 不想要工具自己加字幕或配樂，寫在 `audio_suffix`（「不要字幕，不要背景音樂」）。這是少數官方認可有效的否定寫法。
 
 ## 五、英文片段
@@ -219,7 +236,7 @@ backlighting、side lighting、rim light、high-key、low-key、volumetric light
 - **`motion` 用現在式的子句**：`the young woman with shoulder-length black hair lowers her head and looks at the envelope; the curtain sways once in the breeze`。
 - **畫面位置的說法**：frame left、frame right、the upper third of the frame、foreground、midground、background。
 - **不要逐字直譯。**「神情平靜，略帶疲憊」是 `calm expression with a trace of tiredness`，不是 `expression calm, slightly tired feeling`。寫完自己唸一遍，不像英文就重寫。
-- 給人看的欄位（`action`、`risk`、`continuity`、`desc`）仍然用使用者的語言。
+- 給人看的欄位（`action`、`risk`、`continuity`、`post`、`desc`）仍然用使用者的語言。
 
 ## 六、提示詞太長的時候
 

@@ -14,9 +14,9 @@
 
 拆鏡的依據：每場戲要達成什麼、從誰的角度看、分成哪些節拍、高點在哪裡。節拍後面是拍這個節拍的鏡頭，★ 是高點。
 
-| 場次 | 場景 | 這場戲的目的 | 視點 | 節拍 | 高點 | 影像基調 |
-|---|---|---|---|---|---|---|
-| 1 | S01 | 小滿差點被搶走鐵盒，靠運氣脫身。觀眾知道鐵盒對雙方都重要，也知道她保不了它太久 | 小滿 | 1. 小滿抱著鐵盒逃進夜市（001、002、003）<br>2. 雨衣男抓住她，要她交出東西（004、005）<br>3. 她掙脫，鐵盒掉進攤車底下（006）<br>4. 兩個人同時盯著鐵盒 ★（007、008）<br>5. 哨聲響，男人退走（009）<br>6. 她撈回鐵盒，發現盒蓋凹了（010） | 兩個人同時盯著鐵盒 | 濕、擠，霓虹色對深藍的陰影；節奏先急後停，高點是全場最安靜的地方 |
+| 場次 | 場景 | 這場戲的目的 | 視點 | 節拍 | 高點 | 走位 | 影像基調 |
+|---|---|---|---|---|---|---|---|
+| 1 | S01 | 小滿差點被搶走鐵盒，靠運氣脫身。觀眾知道鐵盒對雙方都重要，也知道她保不了它太久 | 小滿 | 1. 小滿抱著鐵盒逃進夜市（001、002、003）<br>2. 雨衣男抓住她，要她交出東西（004、005）<br>3. 她掙脫，鐵盒掉進攤車底下（006）<br>4. 兩個人同時盯著鐵盒 ★（007、008）<br>5. 哨聲響，男人退走（009）<br>6. 她撈回鐵盒，發現盒蓋凹了（010） | 兩個人同時盯著鐵盒 | 小滿從巷口往巷子深處跑，雨衣男從後面追上，在兩排攤車之間抓住她：男人在巷口那一側，小滿在深處那一側，軸線沿著巷子。鐵盒掉在兩人之間，滾進深處那一側的攤車底下。哨聲從巷口外傳來，男人往攤車之間的暗處退走 | 濕、擠，霓虹色對深藍的陰影；節奏先急後停，高點是全場最安靜的地方 |
 
 ## 機位
 
@@ -47,7 +47,7 @@ The side of a food cart with a canvas awning, out-of-focus warm bulbs behind. Wa
 ### S01-C　機位背景圖
 
 ```text
-The dark underside of a food cart, one wheel at the left edge of the frame, wet asphalt with neon reflections. A strip of red neon reflected on the asphalt in the foreground, the underside of the cart in deep shadow, saturated red and blue neon accents against deep blue-grey shadows. Empty background plate, scenery only, unoccupied, framed slightly wider than the shot, eye-level shot. Hand-painted anime film style, clean ink outlines, cel shading with a single shadow tone, high saturation with strong contrast, soft film grain.
+The dark underside of a food cart, one wheel at the left edge of the frame, wet asphalt with neon reflections. A strip of red neon reflected on the asphalt in the foreground, the underside of the cart in deep shadow, saturated red and blue neon accents against deep blue-grey shadows. Empty background plate, scenery only, unoccupied, framed slightly wider than the shot, eye-level shot, ground-level camera. Hand-painted anime film style, clean ink outlines, cel shading with a single shadow tone, high saturation with strong contrast, soft film grain.
 ```
 
 ## 精簡表
@@ -72,13 +72,13 @@ The dark underside of a food cart, one wheel at the left edge of the frame, wet 
 | 鏡號 | 原文對應 | 節拍 | 場景 | 機位 | 角色 | 秒 | 累計 | 景別 | 運鏡 | 銜接 | 動作 | 對白／旁白 | 聲音 | 備註 | 切點 |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
 | EP01-001 | 「夜市收攤前下起了雨」 | 1.1 | S01 | S01-A | — | 3 | 0:03 | 空鏡・遠景（微俯） | 緩慢下降 | 切（淡入） | 雨中的夜市巷子，鏡頭從燈泡的高度降到攤車的高度 |  | steady rain drumming on canvas awnings, a pan sizzling somewhere down the lane | 連戲：建立鏡頭：巷子的走向是遠離鏡頭；之後人物都朝畫面右或遠離鏡頭的方向跑 |  |
-| EP01-002 | 「小滿抱著那只鐵盒從巷口衝出來」 | 1.1 | S01 | — | C01-a | 1.5 | 0:04.5 | 插入・特寫 | 固定 | 切 | 小滿的腳踩過積水，從畫面左跑向畫面右 |  | wet footsteps, rain | 風險：奔跑：只拍腳，兩步就出畫；速度靠 1.5 秒的短鏡頭和前後的剪接；連戲：運動方向：左到右 |  |
+| EP01-002 | 「小滿抱著那只鐵盒從巷口衝出來」 | 1.1 | S01 | — | C01-a | 1.5 | 0:04.5 | 插入・特寫（地面） | 固定 | 切 | 小滿的腳踩過積水，從畫面左跑向畫面右 |  | wet footsteps, rain | 風險：奔跑：只拍腳，兩步就出畫；速度靠 1.5 秒的短鏡頭和前後的剪接；連戲：運動方向：左到右 |  |
 | EP01-003 | 「身後的腳步聲越來越近」 | 1.1 | S01 | S01-A | C01-a | 2 | 0:06.5 | 背後・全景 | 固定 | 切 | 小滿抱著鐵盒沿巷子跑遠，身後有更重的腳步聲 |  | her footsteps fading down the lane, heavier footsteps approaching from behind the camera, rain | 風險：奔跑：背影全景、只拍兩秒，寫成穩定的小跑；腿部變形就縮短到 1.5 秒，或改用 002 那種腳步插入鏡頭；連戲：小滿雙手抱著鐵盒；和 001 同機位，背景沿用 001 結束時的畫面 |  |
 | EP01-004 | 「穿雨衣的男人伸手抓住她的後領」 | 1.2 | S01 | S01-B | C01-a、C02-a | 2 | 0:08.5 | 中景 | 固定 | 切 | 小滿鑽進攤車之間，一隻手從後面伸向她的帽兜 |  | rain on canvas, two people breathing hard | 風險：肢體接觸：這一鏡停在抓到之前，下一鏡直接切到抓住之後，不拍接觸的瞬間；連戲：運動方向：左到右。軸線：男人在畫面左、小滿在畫面右 |  |
 | EP01-005 | 「東西給我。」 | 1.2 | S01 | — | C02-a | 3 | 0:11.5 | 近景（仰拍） | 固定 | 切 | 雨衣男抓著小滿的帽兜，低頭開口 | 對白 雨衣男：「東西給我。」 | rain pattering on the rubber hood | 風險：口型：原生音訊，一鏡只說一句短話；臉朝鏡頭、頭部動作小；連戲：接觸之後：他的右拳抓著小滿的帽兜，小滿在畫面外的右下方；軸線不變，他看向畫面右。仰拍：他佔上風 |  |
-| EP01-006 | 「袖子裂開，鐵盒掉在地上，滾進攤車底下」 | 1.3 | S01 | S01-C | — | 2 | 0:13.5 | 插入・特寫 | 固定 | 切 | 布料撕裂聲中，鐵盒掉在地上，滾進攤車底下 |  | fabric tearing, then the tin clanging on asphalt and rattling to a stop | 風險：掙脫與撕裂是高風險動作，不拍過程：用撕裂聲加鐵盒落地的結果帶過；連戲：從這一鏡之後小滿換成 C01-b（右袖從肩線裂開）；鐵盒在攤車底下 |  |
+| EP01-006 | 「袖子裂開，鐵盒掉在地上，滾進攤車底下」 | 1.3 | S01 | S01-C | — | 2 | 0:13.5 | 插入・特寫（地面） | 固定 | 切 | 布料撕裂聲中，鐵盒掉在地上，滾進攤車底下 |  | fabric tearing, then the tin clanging on asphalt and rattling to a stop | 風險：掙脫與撕裂是高風險動作，不拍過程：用撕裂聲加鐵盒落地的結果帶過；連戲：從這一鏡之後小滿換成 C01-b（右袖從肩線裂開）；鐵盒在攤車底下 |  |
 | EP01-007 | 「兩個人同時看向那只鐵盒」 | 1.4 ★ | S01 | S01-B | C02-a、C01-b | 2 | 0:15.5 | 雙人・中景 | 固定 | 切 | 兩個人僵住，同時低頭看向攤車底下 |  | rain, the last rattle of the tin dying away | 風險：雙人同框、兩張臉都入鏡：兩人都是側臉、中間留空、幾乎不動；做不穩就拆成兩個特寫，各自低頭看向同一個方向；連戲：視線匹配：兩人都看向畫面右下，對應下一鏡攤車底下的鐵盒；小滿雙手已空，右袖裂開 |  |
-| EP01-008 | 「兩個人同時看向那只鐵盒」 | 1.4 ★ | S01 | S01-C | — | 4.5 | 0:20 | 插入・特寫 | 緩慢推近 | 切（視線剪輯） | 攤車底下的鐵盒，雨水滴在盒蓋上；遠處響起哨聲 |  | rain dripping on the tin lid, then a sharp whistle blast far away | 連戲：高點：全場最長的一鏡，沒有人、沒有動作，只有雨聲；結尾的哨聲帶出下一鏡 |  |
+| EP01-008 | 「兩個人同時看向那只鐵盒」 | 1.4 ★ | S01 | S01-C | — | 4.5 | 0:20 | 插入・特寫（地面） | 緩慢推近・升格 | 切（視線剪輯） | 攤車底下的鐵盒，雨水滴在盒蓋上；遠處響起哨聲 |  | rain dripping on the tin lid, then a sharp whistle blast far away | 連戲：高點：全場最長的一鏡，升格讓雨滴變慢，時間像停住；沒有人、沒有動作，只有雨聲；結尾的哨聲帶出下一鏡 |  |
 | EP01-009 | 「男人鬆開手，退進人群」 | 1.5 | S01 | — | C02-a | 2.5 | 0:22.5 | 中全景 | 固定 | 切（聲音先入） | 雨衣男朝哨聲的方向看了一眼，退進攤車之間的暗處 |  | the whistle again, closer; rain | 風險：原文是退進人群，人群是高風險，改成退進暗處；只退兩步，幅度小；連戲：男人離場 |  |
 | EP01-010 | 「小滿跪在積水裡，把鐵盒撈出來。盒蓋上多了一道凹痕」 | 1.6 | S01 | — | C01-b | 4 | 0:26.5 | 近景（微俯） | 緩慢拉遠 | 切 | 小滿跪在積水裡，抱著撈回來的鐵盒，看著盒蓋上的凹痕 |  | the rain easing, water dripping from the awning, her unsteady breathing | 風險：手拿小物件：不拍撈的過程，從已經抱在手上開始；只動拇指；連戲：鐵盒蓋上多了一道凹痕；小滿是 C01-b；拉遠是這場戲的收尾，她一個人留在畫面裡 |  |
 
@@ -123,7 +123,7 @@ Rain falls steadily through the light of the bulbs, the canvas awnings ripple in
 首幀圖像提示詞
 
 ```text
-A pair of white canvas sneakers and bare shins in mid-stride, entering from the left edge of the frame (image 1), low in the left third of the frame, moving toward frame right. Background as in image 2: wet asphalt with red and blue neon reflections, cart wheels out of focus in the background. Low warm light from the left, neon colours reflected in the puddle, saturated red and blue neon accents against deep blue-grey shadows. Close-up, detail shot, camera at ground level, a shallow puddle in the centre of the frame, shallow depth of field. Hand-painted anime film style, clean ink outlines, cel shading with a single shadow tone, high saturation with strong contrast, soft film grain.
+A pair of white canvas sneakers and bare shins in mid-stride, entering from the left edge of the frame (image 1), low in the left third of the frame, moving toward frame right. Background as in image 2: wet asphalt with red and blue neon reflections, cart wheels out of focus in the background. Low warm light from the left, neon colours reflected in the puddle, saturated red and blue neon accents against deep blue-grey shadows. Close-up, detail shot, ground-level camera, a shallow puddle in the centre of the frame, shallow depth of field. Hand-painted anime film style, clean ink outlines, cel shading with a single shadow tone, high saturation with strong contrast, soft film grain.
 ```
 
 尾幀提示詞（拿首幀圖做圖像編輯）
@@ -233,7 +233,7 @@ The tall man in the green raincoat tilts his head down a little further and spea
 首幀圖像提示詞
 
 ```text
-A square pale-blue biscuit tin with worn corners (image 2) in mid-air at the top of the frame, falling. Background as in image 1: the dark underside of a food cart, one wheel at the left edge of the frame, wet asphalt with neon reflections. A strip of red neon reflected on the asphalt in the foreground, the underside of the cart in deep shadow, saturated red and blue neon accents against deep blue-grey shadows. Close-up, detail shot, camera at ground level, the gap under the cart in the right half of the frame. Hand-painted anime film style, clean ink outlines, cel shading with a single shadow tone, high saturation with strong contrast, soft film grain.
+A square pale-blue biscuit tin with worn corners (image 2) in mid-air at the top of the frame, falling. Background as in image 1: the dark underside of a food cart, one wheel at the left edge of the frame, wet asphalt with neon reflections. A strip of red neon reflected on the asphalt in the foreground, the underside of the cart in deep shadow, saturated red and blue neon accents against deep blue-grey shadows. Close-up, detail shot, ground-level camera, the gap under the cart in the right half of the frame. Hand-painted anime film style, clean ink outlines, cel shading with a single shadow tone, high saturation with strong contrast, soft film grain.
 ```
 
 尾幀提示詞（拿首幀圖做圖像編輯）
@@ -282,14 +282,15 @@ The tall man in the green raincoat and the girl with the short black bob both st
 - 機位：S01-C（地面高度，朝攤車底下拍：鐵盒掉落的位置）；EP01-006 用過這個機位，這一鏡的首幀可以拿它的首幀圖做圖像編輯，背景才會一致
 - 看得到的背景（來自機位）：the dark underside of a food cart, one wheel at the left edge of the frame, wet asphalt with neon reflections
 - 轉場（從上一鏡進來的方式，剪接時做）：視線剪輯
+- 速度：升格（影片提示詞寫了「慢動作」）
 - 參考圖（依這個順序上傳，提示詞裡的「image N」就是第 N 張）：1. S01-C 機位背景圖；2. P01 道具圖；3. EP01-006 的尾幀圖
 - 成片 4.5 秒，建議生成 6 秒段再裁頭尾
-- 驗收重點：背景與光線和 EP01-006 一致；運鏡是「緩慢推近」，方向沒有反，人物沒有跟著大動
+- 驗收重點：背景與光線和 EP01-006 一致；運鏡是「緩慢推近」，方向沒有反，人物沒有跟著大動；整段都是慢動作，沒有忽快忽慢
 
 首幀圖像提示詞
 
 ```text
-A square pale-blue biscuit tin with worn corners (image 2) lying flat on the wet asphalt in the shadow under the cart. Background as in image 1: the dark underside of a food cart, one wheel at the left edge of the frame, wet asphalt with neon reflections. A strip of red neon reflected on the asphalt in the foreground, the underside of the cart in deep shadow, saturated red and blue neon accents against deep blue-grey shadows. Close-up, detail shot, the tin in the centre of the frame. Hand-painted anime film style, clean ink outlines, cel shading with a single shadow tone, high saturation with strong contrast, soft film grain.
+A square pale-blue biscuit tin with worn corners (image 2) lying flat on the wet asphalt in the shadow under the cart. Background as in image 1: the dark underside of a food cart, one wheel at the left edge of the frame, wet asphalt with neon reflections. A strip of red neon reflected on the asphalt in the foreground, the underside of the cart in deep shadow, saturated red and blue neon accents against deep blue-grey shadows. Close-up, detail shot, ground-level camera, the tin in the centre of the frame. Hand-painted anime film style, clean ink outlines, cel shading with a single shadow tone, high saturation with strong contrast, soft film grain.
 ```
 
 尾幀提示詞（拿首幀圖做圖像編輯）
@@ -301,7 +302,7 @@ Edit the first-frame image of this shot and keep everything not mentioned here u
 影片提示詞
 
 ```text
-Raindrops land on the lid of the tin and run off its edge, the neon reflection on the asphalt wavers; everything else stays still. Slow push-in. Audio: rain dripping on the tin lid, then a sharp whistle blast far away.
+Raindrops land on the lid of the tin and run off its edge, the neon reflection on the asphalt wavers; everything else stays still. Slow push-in, slow motion. Audio: rain dripping on the tin lid, then a sharp whistle blast far away.
 ```
 
 ### EP01-009
