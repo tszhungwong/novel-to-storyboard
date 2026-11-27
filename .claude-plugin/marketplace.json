@@ -1,0 +1,16 @@
+{
+  "name": "novel-to-storyboard",
+  "owner": {
+    "name": "tszhungwong"
+  },
+  "metadata": {
+    "description": "把小說、劇本、大綱做成 AI 影片分鏡的 plugin。"
+  },
+  "plugins": [
+    {
+      "name": "novel-to-storyboard",
+      "source": "./",
+      "description": "小說、劇本、大綱 → AI 影片分鏡與提示詞；含大綱分集、生成後修正，以及攝影、表演、美術三個審查角色。"
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "description": "改了分鏡的設定檔、分鏡檔、分集表或分集劇本時，自動跑一次檢查，把錯誤與警告回給模型（只檢查，不更新產出）",
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "apply_patch|Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node -e \"var r=process.env.PLUGIN_ROOT;if(r)require(require('path').join(r,'hooks','check-storyboard.cjs'))\""
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1684,7 +1684,7 @@ if (series) {
     if (!e.source) warn(id, '缺少 source（對應大綱的哪一段）；沒有它，使用者很難核對有沒有漏劇情');
     if (!e.logline) warn(id, '缺少 logline（一句話劇情）');
     for (const [k, name] of [['hook', 'hook（鉤子：前三秒的畫面）'], ['payoff', 'payoff（爽點或核心事件）'], ['cliff', 'cliff（卡點：結尾留給觀眾的問題）']]) {
-      if (!e[k]) warn(id, `缺少 ${name}；每一集都要回答這一題，見 references/outline-to-episodes.md`);
+      if (!e[k]) warn(id, `缺少 ${name}；每一集都要回答這一題，見 outline-to-episodes 技能第三節`);
     }
     if (e.cliff && !/[？?]/.test(e.cliff)) hint(id, 'cliff 只寫了最後發生什麼，沒有寫出觀眾心裡的問題；在最後一個畫面後面接一句問題（「外婆為什麼要押她的記憶？」），寫劇本和拆鏡時才知道要停在誰的反應上');
     if (e.cliff_type && !CLIFF_TYPES.includes(e.cliff_type)) hint(id, `cliff_type「${e.cliff_type}」不在分類裡（${CLIFF_TYPES.join('、')}）`);
@@ -1739,7 +1739,7 @@ if (scriptText != null) {
     if (!names.has(who)) hint(where, `說話者「${who}」不是設定檔裡的角色名稱，也不是「旁白」；名字打錯了，或這個角色還沒寫進 bible.json（只出聲音、不入鏡的角色可以不登記）`);
     if (sec > 5) hint(where, `「${[...text].slice(0, 12).join('')}…」約需 ${sec.toFixed(1)} 秒，一鏡講不完；拆成兩句，中間插一個反應鏡頭`);
   });
-  const fmt = 'references/outline-to-episodes.md 第四節';
+  const fmt = 'outline-to-episodes 技能第四節';
   if (!scriptStats.lines && !scriptStats.visuals) err('劇本', `沒有讀到任何畫面（△ 開頭）或台詞（角色名：台詞）；格式見 ${fmt}`);
   else if (!scriptStats.scenes) warn('劇本', `沒有讀到場標（## 第 1 場　地點　時段　內外）；格式見 ${fmt}`);
   const missingTop = ['鉤子', '爽點', '卡點'].filter((k) => !new RegExp(`^\\s*[-*]\\s*${k}[：:]`, 'm').test(scriptText));

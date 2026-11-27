@@ -1,6 +1,6 @@
 # 《午夜當鋪》故事大綱
 
-這是 skill 的範例大綱，示範 `references/outline-to-episodes.md` 的流程：分集表在 `series.json`（產出 `out/series.md`），第一集的分集劇本在 `EP01-script.md`。
+這是 outline-to-episodes 技能的範例大綱，示範它的流程：分集表在 `series.json`（產出 `out/series.md`），第一集的分集劇本在 `EP01-script.md`。
 
 ## 規格
 
