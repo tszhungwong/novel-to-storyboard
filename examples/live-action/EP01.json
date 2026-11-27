@@ -1,0 +1,647 @@
+{
+  "episode": "EP01",
+  "source_title": "第一章〈宴會〉節選",
+  "changes": [
+    "新增：EP01-005 西裝酒漬的插入鏡頭，原文只有一句「酒順著翻領往下滴」，拉成獨立鏡頭",
+    "新增：EP01-009 最後一秒定格加人物字卡，短劇常用的出場手法；不要的話拿掉這一鏡的 speed 與 post"
+  ],
+  "plan": [
+    {
+      "id": "1",
+      "scene": "S01",
+      "purpose": "許曼當眾羞辱沈知意，經理一句「沈董」讓局勢翻轉。觀眾等到了打臉，也知道沈知意的身分",
+      "pov": "C01",
+      "beats": [
+        "許曼攔住沈知意，出言羞辱",
+        "許曼把香檳潑在沈知意身上",
+        "經理走來，許曼要他趕人",
+        "經理對沈知意鞠躬，叫她沈董",
+        "許曼的杯子停在半空"
+      ],
+      "peak": 4,
+      "blocking": "沈知意剛走進雙開木門，停在門內一步，簽到台在她身側；許曼從宴會廳裡迎上來，背對宴會廳，攔在她面前一步遠。周經理從宴會廳深處走來，經過許曼身邊，停在沈知意面前。軸線在沈知意與許曼之間，機位都在簽到台這一側",
+      "mood": "表面熱鬧、底下緊繃；潑酒之後全場安靜，打臉的那一刻重拍落下"
+    }
+  ],
+  "setups": [
+    {
+      "id": "S01-A",
+      "scene": "S01",
+      "desc": "簽到台旁，越過沈知意的右肩朝宴會廳內拍：許曼正面，在畫面右、看向畫面左；吊燈與宴會廳在背景，光從上方來",
+      "bg": {
+        "zh": "挑高的宴會廳，水晶吊燈與鋪白色桌布的圓桌，背景虛化",
+        "en": "the high-ceilinged banquet hall, crystal chandeliers and round tables in white cloth, softly out of focus"
+      },
+      "detail": {
+        "zh": "吊燈的水晶串在光下閃著細小的光點，桌上擺著高腳杯與白色餐巾",
+        "en": "chandelier crystals glinting with tiny points of light, stemware and white napkins set on the tables"
+      }
+    },
+    {
+      "id": "S01-B",
+      "scene": "S01",
+      "desc": "簽到台旁，越過許曼的左肩朝門口拍：沈知意正面，在畫面左、看向畫面右；敞開的木門與較暗的走廊在背景",
+      "bg": {
+        "zh": "敞開的雙開木門，門外是深紅地毯的走廊，背景虛化",
+        "en": "the open double wooden doors and the deep red carpeted corridor beyond, softly out of focus"
+      },
+      "light": {
+        "zh": "吊燈的暖黃光從上方照下，門外的走廊偏暗",
+        "en": "warm chandelier light from above, the corridor beyond the doors darker"
+      },
+      "detail": {
+        "zh": "門框是深色的實木，黃銅把手磨得發亮，走廊牆上有一排壁燈",
+        "en": "dark solid-wood door frames, brass handles polished bright with use, a row of wall sconces along the corridor"
+      }
+    }
+  ],
+  "shots": [
+    {
+      "id": "EP01-001",
+      "scene": "S01",
+      "beat": "1.1",
+      "setup": "S01-A",
+      "source": "「這裡不是你這種人來的地方」",
+      "duration": 3.5,
+      "size": "近景",
+      "type": "過肩",
+      "lens": "中長焦",
+      "camera": "固定",
+      "link": "切",
+      "action": "許曼攔在沈知意面前，冷笑著開口",
+      "line": {
+        "type": "對白",
+        "who": "C02",
+        "text": "這裡不是你這種人來的地方。",
+        "tone": {
+          "zh": "輕蔑，尾音上揚",
+          "en": "contemptuously, her voice lifting at the end"
+        }
+      },
+      "sound": "宴會廳裡低低的交談聲，杯子相碰的輕響",
+      "cast": [
+        {
+          "char": "C01-a",
+          "facing": "背面",
+          "partial": true,
+          "pos": {
+            "zh": "畫面左側前景，只露出肩膀與後腦，虛焦",
+            "en": "in the left foreground, only a shoulder and the back of the head visible, out of focus"
+          },
+          "gaze": {
+            "zh": "看著對面的女子",
+            "en": "facing the woman opposite"
+          },
+          "hands": {
+            "zh": "手不在畫面內",
+            "en": "hands out of frame"
+          }
+        },
+        {
+          "char": "C02-a",
+          "facing": "半側朝左",
+          "pos": {
+            "zh": "站在畫面右側中景，下巴微抬",
+            "en": "standing in the right midground, chin slightly raised"
+          },
+          "gaze": {
+            "zh": "斜眼看著前景的女子",
+            "en": "eyeing the woman in the foreground sideways"
+          },
+          "hands": {
+            "zh": "右手端著{P01}停在胸前，左手垂在身側",
+            "en": "right hand holding {P01} at chest height, left hand at her side"
+          },
+          "face": {
+            "zh": "一邊嘴角上揚，眼睛沒有笑意，微微瞇起",
+            "en": "one corner of her mouth lifted, eyes cold and slightly narrowed"
+          }
+        }
+      ],
+      "end": {
+        "zh": "栗色大波浪長髮的年輕女子下巴抬得更高，冷笑更明顯",
+        "en": "the young woman with long chestnut waves has her chin raised higher, the sneer more pronounced"
+      },
+      "motion": {
+        "zh": "栗色大波浪長髮的年輕女子把下巴再抬高一點，視線上下打量，手中的杯子輕輕晃了一下",
+        "en": "the young woman with long chestnut waves lifts her chin a little higher and looks the other woman up and down; the glass in her hand tilts slightly"
+      }
+    },
+    {
+      "id": "EP01-002",
+      "scene": "S01",
+      "beat": "1.1",
+      "source": "停在她面前一步遠",
+      "duration": 2.5,
+      "size": "全景",
+      "type": "雙人",
+      "lens": "廣角",
+      "camera": "固定",
+      "link": "切",
+      "action": "兩人在門口對峙，背景的賓客轉頭看",
+      "line": null,
+      "cast": [
+        {
+          "char": "C01-a",
+          "facing": "側面朝右",
+          "pos": {
+            "zh": "站在畫面左側，剛走進敞開的木門",
+            "en": "standing on the left of the frame, just inside the open wooden doors"
+          },
+          "gaze": {
+            "zh": "平視對面的女子",
+            "en": "looking levelly at the woman opposite"
+          },
+          "hands": {
+            "zh": "雙手自然垂在身側",
+            "en": "both hands relaxed at her sides"
+          },
+          "face": {
+            "zh": "神情平靜，嘴唇閉著",
+            "en": "calm, lips closed"
+          }
+        },
+        {
+          "char": "C02-a",
+          "facing": "側面朝左",
+          "pos": {
+            "zh": "站在畫面右側，攔在她面前一步遠",
+            "en": "standing on the right of the frame, blocking her way a step away"
+          },
+          "gaze": {
+            "zh": "盯著對面的女子",
+            "en": "staring at the woman opposite"
+          },
+          "hands": {
+            "zh": "右手端著{P01}，左手扠在腰上",
+            "en": "right hand holding {P01}, left hand on her hip"
+          }
+        }
+      ],
+      "bg": {
+        "zh": "敞開的雙開木門與挑高的宴會廳入口，背景裡虛化的賓客轉頭看過來",
+        "en": "the open double wooden doors and the high-ceilinged hall entrance, blurred guests in the background turning to look"
+      },
+      "frame": {
+        "zh": "兩人在畫面中段，頭部在上三分之一",
+        "en": "both women in the middle band of the frame, heads in the upper third"
+      },
+      "end": {
+        "zh": "兩人相隔一步對峙，背景的賓客都看向她們",
+        "en": "the two women face each other a step apart, the guests behind them all watching"
+      },
+      "motion": {
+        "zh": "栗色大波浪長髮的年輕女子往前半步擋住去路，黑色及肩直髮的高瘦女子停下腳步，背景的賓客慢慢轉頭",
+        "en": "the young woman with long chestnut waves steps half a pace forward to block the way; the tall slim woman with straight shoulder-length black hair stops; guests in the background slowly turn their heads"
+      }
+    },
+    {
+      "id": "EP01-003",
+      "scene": "S01",
+      "beat": "1.1",
+      "setup": "S01-B",
+      "source": "沈知意沒說話",
+      "duration": 2.5,
+      "size": "近景",
+      "type": "過肩",
+      "lens": "中長焦",
+      "camera": "固定",
+      "link": "切",
+      "action": "沈知意不說話，平靜地看著許曼",
+      "line": null,
+      "cast": [
+        {
+          "char": "C02-a",
+          "facing": "背面",
+          "partial": true,
+          "pos": {
+            "zh": "畫面右側前景，只露出栗色長髮與裸露的肩膀，虛焦",
+            "en": "in the right foreground, only chestnut hair and a bare shoulder visible, out of focus"
+          },
+          "gaze": {
+            "zh": "看著對面的女子",
+            "en": "facing the woman opposite"
+          },
+          "hands": {
+            "zh": "手不在畫面內",
+            "en": "hands out of frame"
+          }
+        },
+        {
+          "char": "C01-a",
+          "facing": "半側朝右",
+          "pos": {
+            "zh": "站在畫面左側中景",
+            "en": "standing in the left midground"
+          },
+          "gaze": {
+            "zh": "平靜地看著前景的女子",
+            "en": "looking calmly at the woman in the foreground"
+          },
+          "hands": {
+            "zh": "手不在畫面內",
+            "en": "hands out of frame"
+          },
+          "face": {
+            "zh": "眼神不閃躲，嘴唇自然閉合，下顎放鬆",
+            "en": "eyes steady, lips closed, jaw relaxed"
+          }
+        }
+      ],
+      "end": {
+        "zh": "黑色及肩直髮的高瘦女子仍然平靜地看著前方",
+        "en": "the tall slim woman with straight shoulder-length black hair is still looking calmly ahead"
+      },
+      "motion": {
+        "zh": "黑色及肩直髮的高瘦女子沒有說話，慢慢眨了一下眼，呼吸平穩",
+        "en": "the tall slim woman with straight shoulder-length black hair says nothing and blinks slowly, her breathing even"
+      }
+    },
+    {
+      "id": "EP01-004",
+      "scene": "S01",
+      "beat": "1.2",
+      "source": "手腕一甩，半杯香檳全潑在她的前襟上",
+      "duration": 2.5,
+      "size": "中景",
+      "type": "雙人",
+      "lens": "標準",
+      "camera": "固定",
+      "speed": "升格",
+      "link": "切",
+      "action": "許曼手腕一甩，把香檳潑在沈知意的白西裝上",
+      "line": null,
+      "sound": "香檳潑出的嘩啦聲，四周的交談聲一下子停住",
+      "cast": [
+        {
+          "char": "C01-a",
+          "facing": "側面朝右",
+          "pos": {
+            "zh": "站在畫面左側",
+            "en": "standing on the left of the frame"
+          },
+          "gaze": {
+            "zh": "看著對面的女子",
+            "en": "looking at the woman opposite"
+          },
+          "hands": {
+            "zh": "雙手垂在身側",
+            "en": "both hands at her sides"
+          },
+          "face": {
+            "zh": "嘴唇閉著，眼神平穩",
+            "en": "lips closed, gaze level"
+          }
+        },
+        {
+          "char": "C02-a",
+          "facing": "側面朝左",
+          "pos": {
+            "zh": "站在畫面右側，上半身微微前傾",
+            "en": "standing on the right of the frame, leaning slightly forward"
+          },
+          "gaze": {
+            "zh": "盯著對面女子的胸前",
+            "en": "fixed on the other woman's chest"
+          },
+          "hands": {
+            "zh": "右手握著{P01}，手腕正要往前甩",
+            "en": "right hand gripping {P01}, wrist about to flick forward"
+          },
+          "face": {
+            "zh": "咬著下唇，眼神發狠",
+            "en": "biting her lower lip, eyes hard"
+          }
+        }
+      ],
+      "end": {
+        "zh": "黑色及肩直髮的高瘦女子的白色西裝前襟濕了一大片，酒液從翻領往下滴；栗色大波浪長髮的年輕女子手中的杯子空了",
+        "en": "the front of the tall slim woman's white jacket is soaked, champagne dripping from the lapel; the glass in the young woman's hand is empty"
+      },
+      "motion": {
+        "zh": "栗色大波浪長髮的年輕女子手腕一甩，杯中的香檳整片潑向黑色及肩直髮的高瘦女子，酒液在白色西裝前襟上濺開；黑色及肩直髮的高瘦女子閉了一下眼，身體沒有後退",
+        "en": "the young woman with long chestnut waves flicks her wrist and throws the champagne at the tall slim woman with straight shoulder-length black hair; it splashes across the front of the white jacket; the tall slim woman shuts her eyes for a moment and does not step back"
+      },
+      "risk": "液體潑出去、又要落在人身上，動作快。工具做不好時拆成兩鏡：只拍杯子與手腕一甩，切到西裝上的酒漬與她閉眼的反應",
+      "continuity": "這一鏡之後沈知意換成 C01-b（西裝被潑濕），許曼手上的杯子是空的"
+    },
+    {
+      "id": "EP01-005",
+      "scene": "S01",
+      "beat": "1.2",
+      "source": "酒順著翻領往下滴",
+      "duration": 1.5,
+      "size": "特寫",
+      "type": "插入",
+      "lens": "微距",
+      "camera": "固定",
+      "link": "切",
+      "action": "西裝翻領上的酒往下滴",
+      "line": null,
+      "cast": [
+        {
+          "char": "C01-b",
+          "partial": {
+            "zh": "白色西裝的翻領與前襟，深色的酒漬正往下暈開",
+            "en": "the lapel and front of a white wool jacket, a dark wet stain spreading downward"
+          },
+          "pos": {
+            "zh": "佔滿畫面中央",
+            "en": "filling the centre of the frame"
+          }
+        }
+      ],
+      "bg": {
+        "zh": "虛化的暖黃光斑",
+        "en": "blurred warm bokeh"
+      },
+      "end": {
+        "zh": "酒漬暈到了胸前",
+        "en": "the stain has spread down to the chest"
+      },
+      "motion": {
+        "zh": "酒液沿著翻領的布料一滴一滴往下落，酒漬慢慢暈開",
+        "en": "champagne drips from the lapel one drop at a time as the stain slowly spreads"
+      }
+    },
+    {
+      "id": "EP01-006",
+      "scene": "S01",
+      "beat": "1.2",
+      "setup": "S01-B",
+      "source": "沈知意低頭看了一眼，又抬起頭",
+      "duration": 2.5,
+      "size": "近景",
+      "lens": "中長焦",
+      "camera": "固定",
+      "link": "切",
+      "action": "沈知意低頭看了一眼酒漬，再抬起頭",
+      "line": null,
+      "sound": "全場安靜，只剩遠處一聲杯子輕碰",
+      "cast": [
+        {
+          "char": "C01-b",
+          "facing": "半側朝右",
+          "pos": {
+            "zh": "站在畫面中央偏左",
+            "en": "standing just left of centre"
+          },
+          "gaze": {
+            "zh": "先低頭看胸前的酒漬，再抬眼看向畫面右側",
+            "en": "glancing down at the stain on her chest, then lifting her eyes to frame right"
+          },
+          "hands": {
+            "zh": "手不在畫面內",
+            "en": "hands out of frame"
+          },
+          "face": {
+            "zh": "眉頭沒有動，嘴唇抿平",
+            "en": "brows unmoved, mouth set in a flat line"
+          }
+        }
+      ],
+      "end": {
+        "zh": "黑色及肩直髮的高瘦女子抬起頭，平靜地看向前方",
+        "en": "the tall slim woman with straight shoulder-length black hair has raised her head and looks calmly ahead"
+      },
+      "motion": {
+        "zh": "黑色及肩直髮的高瘦女子低頭看了一眼胸前的酒漬，停了一拍，再慢慢抬起眼睛",
+        "en": "the tall slim woman with straight shoulder-length black hair glances down at the stain on her chest, pauses a beat, then slowly lifts her eyes"
+      }
+    },
+    {
+      "id": "EP01-007",
+      "scene": "S01",
+      "beat": "1.3",
+      "setup": "S01-A",
+      "source": "「經理，把她趕出去」",
+      "duration": 3,
+      "size": "中景",
+      "lens": "標準",
+      "camera": "固定",
+      "link": "切",
+      "action": "周經理從廳裡快步走來，許曼回頭要他趕人",
+      "line": {
+        "type": "對白",
+        "who": "C02",
+        "text": "經理，把她趕出去。",
+        "tone": {
+          "zh": "理直氣壯，聲音拔高",
+          "en": "self-righteously, her voice rising"
+        }
+      },
+      "cast": [
+        {
+          "char": "C02-a",
+          "facing": "半側朝左",
+          "pos": {
+            "zh": "站在畫面右側前景，回頭朝宴會廳裡看",
+            "en": "standing in the right foreground, turning her head back toward the hall"
+          },
+          "gaze": {
+            "zh": "看向背景走來的中年男子",
+            "en": "looking at the middle-aged man approaching in the background"
+          },
+          "hands": {
+            "zh": "右手拿著{P01:空}垂在身側，左手往門口一指",
+            "en": "right hand holding {P01:空} at her side, left hand pointing toward the doorway"
+          },
+          "face": {
+            "zh": "下巴揚起，嘴角帶著得意的笑",
+            "en": "chin up, a smug smile at the corner of her mouth"
+          }
+        },
+        {
+          "char": "C03-a",
+          "facing": "正面",
+          "pos": {
+            "zh": "從畫面左後方的宴會廳深處快步走來，在背景，略虛",
+            "en": "walking briskly out of the depths of the hall in the left background, slightly soft"
+          },
+          "gaze": {
+            "zh": "看向門口",
+            "en": "looking toward the doorway"
+          },
+          "hands": {
+            "zh": "雙手在身側擺動",
+            "en": "arms swinging at his sides"
+          }
+        }
+      ],
+      "end": {
+        "zh": "戴細框眼鏡的灰髮中年男子走到畫面中景，栗色大波浪長髮的年輕女子的手仍指著門口",
+        "en": "the grey-haired middle-aged man in thin-framed glasses has reached the midground; the young woman with long chestnut waves is still pointing at the doorway"
+      },
+      "motion": {
+        "zh": "栗色大波浪長髮的年輕女子回頭，朝門口一指；戴細框眼鏡的灰髮中年男子從背景快步走近",
+        "en": "the young woman with long chestnut waves turns her head and points at the doorway; the grey-haired middle-aged man in thin-framed glasses hurries closer from the background"
+      }
+    },
+    {
+      "id": "EP01-008",
+      "scene": "S01",
+      "beat": "1.4",
+      "setup": "S01-B",
+      "source": "在沈知意面前停下，彎腰：「沈董，您到了」",
+      "duration": 3,
+      "size": "中景",
+      "type": "雙人",
+      "lens": "標準",
+      "camera": "固定",
+      "link": "切",
+      "action": "周經理在沈知意面前停下，鞠躬叫她沈董",
+      "line": {
+        "type": "對白",
+        "who": "C03",
+        "text": "沈董，您到了。",
+        "tone": {
+          "zh": "恭敬，聲音不大但清楚",
+          "en": "respectfully, quiet but clear"
+        }
+      },
+      "cast": [
+        {
+          "char": "C01-b",
+          "facing": "半側朝右",
+          "pos": {
+            "zh": "站在畫面左側中景",
+            "en": "standing in the left midground"
+          },
+          "gaze": {
+            "zh": "看著走到面前的中年男子",
+            "en": "watching the man who has stopped in front of her"
+          },
+          "hands": {
+            "zh": "雙手自然垂在身側",
+            "en": "both hands relaxed at her sides"
+          },
+          "face": {
+            "zh": "神情平靜，嘴唇閉著",
+            "en": "calm, lips closed"
+          }
+        },
+        {
+          "char": "C03-a",
+          "facing": "半側朝左",
+          "pos": {
+            "zh": "站在畫面右側，面對她，上半身彎下鞠躬",
+            "en": "standing on the right facing her, bowing from the waist"
+          },
+          "gaze": {
+            "zh": "視線恭敬地垂下",
+            "en": "eyes respectfully lowered"
+          },
+          "hands": {
+            "zh": "雙手交疊在身前",
+            "en": "hands clasped in front of him"
+          }
+        }
+      ],
+      "end": {
+        "zh": "戴細框眼鏡的灰髮中年男子彎著腰停在黑色及肩直髮的高瘦女子面前",
+        "en": "the grey-haired middle-aged man in thin-framed glasses remains bowed before the tall slim woman with straight shoulder-length black hair"
+      },
+      "motion": {
+        "zh": "戴細框眼鏡的灰髮中年男子在黑色及肩直髮的高瘦女子面前停下，彎腰鞠躬，其餘保持靜止",
+        "en": "the grey-haired middle-aged man in thin-framed glasses stops before the tall slim woman with straight shoulder-length black hair and bows from the waist; everything else stays still"
+      },
+      "music": "配樂在這一鏡完全抽空"
+    },
+    {
+      "id": "EP01-009",
+      "scene": "S01",
+      "beat": "1.4",
+      "setup": "S01-B",
+      "source": "「沈董」",
+      "duration": 4,
+      "size": "特寫",
+      "lens": "中長焦",
+      "camera": "固定",
+      "speed": "定格",
+      "link": "切",
+      "action": "沈知意抬起下巴，看向許曼；最後一秒定格出字卡",
+      "line": null,
+      "cast": [
+        {
+          "char": "C01-b",
+          "facing": "半側朝右",
+          "pos": {
+            "zh": "臉在畫面中段偏上",
+            "en": "her face in the upper middle of the frame"
+          },
+          "gaze": {
+            "zh": "越過鞠躬的中年男子，看向畫面右側",
+            "en": "looking past the bowing man toward frame right"
+          },
+          "hands": {
+            "zh": "手不在畫面內",
+            "en": "hands out of frame"
+          },
+          "face": {
+            "zh": "嘴角動了一下，沒有笑出來，眼神很穩",
+            "en": "the corner of her mouth twitches without becoming a smile, her gaze steady"
+          }
+        }
+      ],
+      "frame": {
+        "zh": "臉偏畫面左，右側留一片乾淨的虛化背景",
+        "en": "face placed left of centre, a clean blurred area to the right"
+      },
+      "end": {
+        "zh": "黑色及肩直髮的高瘦女子下巴微抬，看向前方",
+        "en": "the tall slim woman with straight shoulder-length black hair has her chin slightly raised, looking ahead"
+      },
+      "motion": {
+        "zh": "黑色及肩直髮的高瘦女子慢慢抬起下巴，嘴角動了一下",
+        "en": "the tall slim woman with straight shoulder-length black hair slowly lifts her chin; the corner of her mouth twitches"
+      },
+      "music": "定格的那一刻重拍落下",
+      "post": "最後一秒定格，右側加人物字卡「沈知意｜沈氏集團董事長」，配一聲重音效"
+    },
+    {
+      "id": "EP01-010",
+      "scene": "S01",
+      "beat": "1.5",
+      "setup": "S01-A",
+      "source": "許曼手上的空杯子停在半空",
+      "duration": 3,
+      "size": "近景",
+      "lens": "中長焦",
+      "camera": "固定",
+      "link": "切",
+      "action": "許曼的笑垮下來，杯子停在半空",
+      "line": null,
+      "sound": "四周一片安靜",
+      "cast": [
+        {
+          "char": "C02-a",
+          "facing": "半側朝左",
+          "pos": {
+            "zh": "站在畫面中央偏右",
+            "en": "standing just right of centre"
+          },
+          "gaze": {
+            "zh": "瞪著畫面左側",
+            "en": "staring toward frame left"
+          },
+          "hands": {
+            "zh": "右手舉著{P01:空}停在半空",
+            "en": "right hand holding {P01:空} frozen in mid-air"
+          },
+          "face": {
+            "zh": "臉上的笑僵住，嘴唇微張",
+            "en": "her smile frozen, lips parted"
+          }
+        }
+      ],
+      "end": {
+        "zh": "栗色大波浪長髮的年輕女子嘴唇微張，杯子仍停在半空",
+        "en": "the young woman with long chestnut waves stands with her lips parted, the glass still held in mid-air"
+      },
+      "motion": {
+        "zh": "栗色大波浪長髮的年輕女子臉上的笑一點一點垮下來，舉著杯子的手停在半空，忘了放下",
+        "en": "the smile slowly drains from the face of the young woman with long chestnut waves; the hand holding the glass stays frozen in mid-air"
+      }
+    }
+  ]
+}

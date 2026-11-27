@@ -32,22 +32,22 @@
 
 每個機位先生成一張沒有人物的背景並定稿，當這個機位所有鏡頭的背景參考圖。場景定稿圖只有一個角度，反打的機位看到的牆不在那張圖裡；有了這張，第一次用到這個機位的鏡頭也有背景可以參照。
 
-### S01-A　機位背景圖
+### S01-A　機位背景圖（畫幅 16:9）
 
 ```text
-Two rows of food carts with canvas awnings receding down the lane toward a brick wall, strings of bare bulbs overhead, wet asphalt. Warm bulbs overhead, red and blue neon tubes reflected on the wet ground, deep shadows between the carts, night, steady rain, saturated red and blue neon accents against deep blue-grey shadows. Empty background plate, scenery only, unoccupied, framed slightly wider than the shot. Hand-painted anime film style, clean ink outlines, cel shading with a single shadow tone, high saturation with strong contrast, soft film grain.
+Two rows of food carts with canvas awnings receding down the lane toward a brick wall, strings of bare bulbs overhead, wet asphalt, awning fringes dripping, plastic stools stacked beside the carts, puddles catching the bulb light. Warm bulbs overhead, red and blue neon tubes reflected on the wet ground, deep shadows between the carts, night, steady rain, saturated red and blue neon accents against deep blue-grey shadows. Empty background plate, scenery only, unoccupied, framed slightly wider than the shot. Hand-painted anime film style, clean ink outlines, cel shading with a single shadow tone, high saturation with strong contrast, soft film grain.
 ```
 
-### S01-B　機位背景圖
+### S01-B　機位背景圖（畫幅 16:9）
 
 ```text
-The side of a food cart with a canvas awning, out-of-focus warm bulbs behind. Warm bulbs overhead, red and blue neon tubes reflected on the wet ground, deep shadows between the carts, night, steady rain, saturated red and blue neon accents against deep blue-grey shadows. Empty background plate, scenery only, unoccupied, framed slightly wider than the shot, eye-level shot. Hand-painted anime film style, clean ink outlines, cel shading with a single shadow tone, high saturation with strong contrast, soft film grain.
+The side of a food cart with a canvas awning, out-of-focus warm bulbs behind, the cart's steel counter dented and dulled with grease, a coil of extension cord hanging on a hook. Warm bulbs overhead, red and blue neon tubes reflected on the wet ground, deep shadows between the carts, night, steady rain, saturated red and blue neon accents against deep blue-grey shadows. Empty background plate, scenery only, unoccupied, framed slightly wider than the shot, eye-level shot. Hand-painted anime film style, clean ink outlines, cel shading with a single shadow tone, high saturation with strong contrast, soft film grain.
 ```
 
-### S01-C　機位背景圖
+### S01-C　機位背景圖（畫幅 16:9）
 
 ```text
-The dark underside of a food cart, one wheel at the left edge of the frame, wet asphalt with neon reflections. A strip of red neon reflected on the asphalt in the foreground, the underside of the cart in deep shadow, saturated red and blue neon accents against deep blue-grey shadows. Empty background plate, scenery only, unoccupied, framed slightly wider than the shot, eye-level shot, ground-level camera. Hand-painted anime film style, clean ink outlines, cel shading with a single shadow tone, high saturation with strong contrast, soft film grain.
+The dark underside of a food cart, one wheel at the left edge of the frame, wet asphalt with neon reflections, a rusted axle and spokes, crushed paper cups on the asphalt. A strip of red neon reflected on the asphalt in the foreground, the underside of the cart in deep shadow, saturated red and blue neon accents against deep blue-grey shadows. Empty background plate, scenery only, unoccupied, framed slightly wider than the shot, eye-level shot, ground-level camera. Hand-painted anime film style, clean ink outlines, cel shading with a single shadow tone, high saturation with strong contrast, soft film grain.
 ```
 
 ## 精簡表
@@ -200,14 +200,14 @@ The girl with the short black bob takes one more step toward frame right, should
 - 這一鏡的光線：warm bulbs behind him as a rim light on the hood, his face lit from below by red neon reflected off the wet ground
 - 台詞語氣：flatly, barely above the rain
 - 聲線：a low, gravelly male voice
-- 參考圖（依這個順序上傳，提示詞裡的「image N」就是第 N 張）：1. C02-a 設定圖；2. S01 場景定稿圖
+- 參考圖（依這個順序上傳，提示詞裡的「image N」就是第 N 張）：1. C02-a 設定圖；2. C02 頭像；3. S01 場景定稿圖
 - 成片 3 秒，建議生成 4 秒段再裁頭尾
 - 驗收重點：台詞一字不差、嘴型對得上，聲線和這個角色前面的鏡頭一致，沒有自己加字幕或配樂；風險項見備註，不行就照備案換拍法
 
 首幀圖像提示詞
 
 ```text
-The tall man in the green raincoat from image 1, facing the camera, filling the centre of the frame, head tilted down, looking down toward the lower right of the frame, right fist closed around a bunch of brick-red sweatshirt fabric at the lower right edge of the frame, left arm down at his side below the frame, jaw set, eyes narrowed, rainwater dripping from the brim of the hood. Background as in image 2: a dark canvas awning overhead and blurred warm bulbs behind his hood. Warm bulbs behind him as a rim light on the hood, his face lit from below by red neon reflected off the wet ground, saturated red and blue neon accents against deep blue-grey shadows. Medium close-up, framed from the chest up, low-angle shot, his face in the upper half of the frame, shallow depth of field. Hand-painted anime film style, clean ink outlines, cel shading with a single shadow tone, high saturation with strong contrast, soft film grain.
+The tall man in the green raincoat from image 1 (face as in image 2), facing the camera, filling the centre of the frame, head tilted down, looking down toward the lower right of the frame, right fist closed around a bunch of brick-red sweatshirt fabric at the lower right edge of the frame, left arm down at his side below the frame, jaw set, eyes narrowed, rainwater dripping from the brim of the hood. Background as in image 3: a dark canvas awning overhead and blurred warm bulbs behind his hood. Warm bulbs behind him as a rim light on the hood, his face lit from below by red neon reflected off the wet ground, saturated red and blue neon accents against deep blue-grey shadows. Medium close-up, framed from the chest up, low-angle shot, his face in the upper half of the frame, shallow depth of field. Hand-painted anime film style, clean ink outlines, cel shading with a single shadow tone, high saturation with strong contrast, soft film grain.
 ```
 
 尾幀提示詞（拿首幀圖做圖像編輯）
@@ -338,14 +338,14 @@ The tall man in the green raincoat glances toward frame left, then takes two unh
 
 - C01-b　位置：kneeling in the centre of the frame beside a cart wheel, upper body facing the camera, shoulders hunched｜視線：looking down at the lid of the tin in her hands｜手部／道具：both hands holding a battered square pale-blue biscuit tin in front of her chest, right thumb resting on a fresh dent across its lid｜表情：brows pinched, lower lip caught between her teeth
 - 看得到的背景：a cart wheel and wet asphalt beside her, blurred warm bulbs far behind
-- 參考圖（依這個順序上傳，提示詞裡的「image N」就是第 N 張）：1. C01-b 設定圖；2. S01 場景定稿圖；3. P01 道具圖
+- 參考圖（依這個順序上傳，提示詞裡的「image N」就是第 N 張）：1. C01-b 設定圖；2. C01 頭像；3. S01 場景定稿圖；4. P01 道具圖
 - 成片 4 秒，建議生成 5 秒段再裁頭尾
 - 驗收重點：手指數量，手上拿的東西沒有變形；運鏡是「緩慢拉遠」，方向沒有反，人物沒有跟著大動；風險項見備註，不行就照備案換拍法
 
 首幀圖像提示詞
 
 ```text
-The girl with the short black bob from image 1, kneeling in the centre of the frame beside a cart wheel, upper body facing the camera, shoulders hunched, looking down at the lid of the tin in her hands, both hands holding a battered square pale-blue biscuit tin (image 3) in front of her chest, right thumb resting on a fresh dent across its lid, brows pinched, lower lip caught between her teeth. Background as in image 2: a cart wheel and wet asphalt beside her, blurred warm bulbs far behind. Warm bulbs overhead, red and blue neon tubes reflected on the wet ground, deep shadows between the carts, night, steady rain, saturated red and blue neon accents against deep blue-grey shadows. Medium close-up, framed from the chest up, slightly high angle, her face in the upper middle of the frame, the tin just below it. Hand-painted anime film style, clean ink outlines, cel shading with a single shadow tone, high saturation with strong contrast, soft film grain.
+The girl with the short black bob from image 1 (face as in image 2), kneeling in the centre of the frame beside a cart wheel, upper body facing the camera, shoulders hunched, looking down at the lid of the tin in her hands, both hands holding a battered square pale-blue biscuit tin (image 4) in front of her chest, right thumb resting on a fresh dent across its lid, brows pinched, lower lip caught between her teeth. Background as in image 3: a cart wheel and wet asphalt beside her, blurred warm bulbs far behind. Warm bulbs overhead, red and blue neon tubes reflected on the wet ground, deep shadows between the carts, night, steady rain, saturated red and blue neon accents against deep blue-grey shadows. Medium close-up, framed from the chest up, slightly high angle, her face in the upper middle of the frame, the tin just below it. Hand-painted anime film style, clean ink outlines, cel shading with a single shadow tone, high saturation with strong contrast, soft film grain.
 ```
 
 尾幀提示詞（拿首幀圖做圖像編輯）

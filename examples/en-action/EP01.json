@@ -30,20 +30,23 @@
       "id": "S01-A",
       "scene": "S01",
       "desc": "巷子入口，沿著巷子朝磚牆方向拍：兩排攤車的縱深。人物朝遠離鏡頭的方向跑",
-      "bg": "two rows of food carts with canvas awnings receding down the lane toward a brick wall, strings of bare bulbs overhead, wet asphalt"
+      "bg": "two rows of food carts with canvas awnings receding down the lane toward a brick wall, strings of bare bulbs overhead, wet asphalt",
+      "detail": "awning fringes dripping, plastic stools stacked beside the carts, puddles catching the bulb light"
     },
     {
       "id": "S01-B",
       "scene": "S01",
       "desc": "兩台攤車之間，側面拍：男人在畫面左、小滿在畫面右。軸線在兩人之間，鏡頭在靠巷子入口的一側",
-      "bg": "the side of a food cart with a canvas awning, out-of-focus warm bulbs behind"
+      "bg": "the side of a food cart with a canvas awning, out-of-focus warm bulbs behind",
+      "detail": "the cart's steel counter dented and dulled with grease, a coil of extension cord hanging on a hook"
     },
     {
       "id": "S01-C",
       "scene": "S01",
       "desc": "地面高度，朝攤車底下拍：鐵盒掉落的位置",
       "bg": "the dark underside of a food cart, one wheel at the left edge of the frame, wet asphalt with neon reflections",
-      "light": "a strip of red neon reflected on the asphalt in the foreground, the underside of the cart in deep shadow"
+      "light": "a strip of red neon reflected on the asphalt in the foreground, the underside of the cart in deep shadow",
+      "detail": "a rusted axle and spokes, crushed paper cups on the asphalt"
     }
   ],
   "shots": [

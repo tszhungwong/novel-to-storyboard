@@ -5,7 +5,7 @@ timeout_seconds: 900
 allowed_tools: [Read, Glob, Grep, Skill, Write, Edit, Bash]
 ---
 
-我有一個短劇大綱，想做成抖音的 AI 漫劇。幫我拆。
+我有一個短劇大綱，想做成抖音的 AI 漫劇。幫我拆。其他參數你決定就好，不用先問我，有要確認的列在回覆裡。
 
 《夜班城隍》大綱
 
