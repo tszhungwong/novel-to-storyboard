@@ -62,6 +62,7 @@ skills/
   storyboard-fix/       換工具、修改、生成結果不對：SKILL.md
 agents/               Claude Code 的三個審查代理
 hooks/                hooks.json（Claude Code）、codex-hooks.json（Codex）、check-storyboard.cjs
+tests/                腳本的測試（node --test）
 evals/                評測案例（claude plugin eval 讀這裡）
 ```
 
@@ -81,3 +82,13 @@ node skills/novel-to-storyboard/scripts/build_storyboard.mjs skills/outline-to-e
 ```
 
 `creature-fx`、`en-action`、`live-action` 三個範例照第一行的寫法跑。
+
+## 測試
+
+改了腳本之後，在 repo 根目錄跑（需要 Node 18 以上）：
+
+```
+node --test
+```
+
+`tests/` 測的是重跑時 CSV 手填紀錄的保留、備份、已移除檔，以及集數和檔名的檢查。測試只在暫存資料夾裡建專案，不動範例的 `out/`。
