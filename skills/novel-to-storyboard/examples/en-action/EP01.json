@@ -120,7 +120,8 @@
       "cast": [
         {
           "char": "C01-a",
-          "pos": "seen from behind in the centre of the frame, mid-stride, moving away from the camera down the lane",
+          "facing": "背面",
+          "pos": "in the centre of the frame, mid-stride, moving away from the camera down the lane",
           "gaze": "facing down the lane",
           "hands": "both arms wrapped around {P01} in front of her, elbows showing at her sides",
           "partial": true
@@ -255,7 +256,8 @@
         },
         {
           "char": "C01-b",
-          "pos": "in the right half of the frame, half turned back toward frame left, one step away from the man",
+          "facing": "半側朝右",
+          "pos": "in the right half of the frame, shoulders still half turned back toward the man, one step away from him",
           "gaze": "head turned down toward the lower right of the frame",
           "hands": "both hands open and empty in front of her chest",
           "face": "eyes wide, lips parted"
@@ -315,7 +317,8 @@
       "cast": [
         {
           "char": "C02-a",
-          "pos": "standing in the centre of the frame between two carts, body turned three-quarters toward the camera",
+          "facing": "半側朝左",
+          "pos": "standing in the centre of the frame between two carts",
           "gaze": "head turned toward frame left, toward the sound",
           "hands": "both hands lowered at his sides",
           "face": "jaw tight"
@@ -345,7 +348,8 @@
       "cast": [
         {
           "char": "C01-b",
-          "pos": "kneeling in the centre of the frame beside a cart wheel, upper body facing the camera, shoulders hunched",
+          "facing": "正面",
+          "pos": "kneeling in the centre of the frame beside a cart wheel, shoulders hunched",
           "gaze": "looking down at the lid of the tin in her hands",
           "hands": "both hands holding {P01} in front of her chest, right thumb resting on a fresh dent across its lid",
           "face": "brows pinched, lower lip caught between her teeth"

@@ -390,7 +390,7 @@ const FACINGS = {
   半側朝右: { zh: '半側面朝畫面右', en: 'three-quarter view, facing frame right', dir: '右' },
   側面朝左: { zh: '正側面朝畫面左', en: 'in profile, facing frame left', dir: '左' },
   側面朝右: { zh: '正側面朝畫面右', en: 'in profile, facing frame right', dir: '右' },
-  背面: { zh: '背對鏡頭', en: 'with their back to the camera', dir: '' },
+  背面: { zh: '背對鏡頭', en: 'seen from behind', dir: '' },
 };
 // face 只寫了一個情緒詞：工具會給一張標準的「難過臉」，寫成看得見的眉、眼、嘴才有表演
 const ABSTRACT_FACE_RE = /^(神情|表情|臉色|面色|神色)?(很|非常|有點|有些|略微|略顯|十分|一臉)?(難過|悲傷|傷心|生氣|憤怒|開心|高興|快樂|害怕|恐懼|驚訝|吃驚|緊張|焦慮|尷尬|心虛|失望|絕望|平靜|溫柔|冷漠|害羞|疲憊|痛苦|興奮|得意|委屈)(的樣子|的表情|的神情)?$|^(very |a bit |slightly )?(sad|angry|happy|scared|afraid|surprised|nervous|anxious|embarrassed|calm|tired|shy|upset|worried)( expression| look| face)?$/i;
