@@ -344,7 +344,7 @@ Markdown 格式，一集一個檔案：場標寫成 `## 第 1 場　地點　時
 |---|---|---|---|
 | 單人 | 一個人，預設值 | （不寫） | 不用填 |
 | 雙人 | 兩個人都清楚入鏡 | two-shot | 9:16 畫面窄，並排的雙人很擠，改用一前一後的縱深或過肩 |
-| 群像 | 三人以上同框 | group shot | 只有主要人物寫完整，其餘用 `partial` 或寫在 `bg` |
+| 群像 | 三人以上同框 | group shot | 只有主要人物寫完整，其餘用 `partial` 或寫在 `bg`。中全景以上的寬鏡頭裡，`partial` 的人也會寫進身高 |
 | 過肩 | 越過前景人物的肩膀，拍對面的人 | over-the-shoulder shot | 前景的人設 `partial: true`；`size` 指的是對面那個人的取景範圍 |
 | 主觀 | 角色眼睛看到的畫面 | first-person POV shot | `cast` 不放這雙眼睛的主人，只放他看到的人或物；他的手入鏡時用 `partial` 片段 |
 | 背後 | 從人物背後拍 | shot from behind | 人物設 `partial: true` |

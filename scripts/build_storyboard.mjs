@@ -389,7 +389,7 @@ const FACINGS = {
   背面: { zh: '背對鏡頭', en: 'with their back to the camera', dir: '' },
 };
 // face 只寫了一個情緒詞：工具會給一張標準的「難過臉」，寫成看得見的眉、眼、嘴才有表演
-const ABSTRACT_FACE_RE = /^(很|非常|有點|有些|略微|略顯|十分|一臉)?(難過|悲傷|傷心|生氣|憤怒|開心|高興|快樂|害怕|恐懼|驚訝|吃驚|緊張|焦慮|尷尬|心虛|失望|絕望|平靜|溫柔|冷漠|害羞|疲憊|痛苦|興奮|得意|委屈)(的樣子|的表情|的神情)?$|^(very |a bit |slightly )?(sad|angry|happy|scared|afraid|surprised|nervous|anxious|embarrassed|calm|tired|shy|upset|worried)( expression| look| face)?$/i;
+const ABSTRACT_FACE_RE = /^(神情|表情|臉色|面色|神色)?(很|非常|有點|有些|略微|略顯|十分|一臉)?(難過|悲傷|傷心|生氣|憤怒|開心|高興|快樂|害怕|恐懼|驚訝|吃驚|緊張|焦慮|尷尬|心虛|失望|絕望|平靜|溫柔|冷漠|害羞|疲憊|痛苦|興奮|得意|委屈)(的樣子|的表情|的神情)?$|^(very |a bit |slightly )?(sad|angry|happy|scared|afraid|surprised|nervous|anxious|embarrassed|calm|tired|shy|upset|worried)( expression| look| face)?$/i;
 // 生成方式（render）：靜幀只出首幀圖、不跑影片；靜幀運鏡是剪接時在那張圖上推拉或搖移
 const RENDERS = ['影片', '靜幀運鏡', '靜幀'];
 const STILL_MOVES = new Set(['固定', '推近', '拉遠', '左搖', '右搖', '上搖', '下搖', '左移', '右移', '變焦推近', '變焦拉遠', '手持']);
@@ -533,6 +533,18 @@ const MUSIC_RE = /配樂|背景音樂|BGM|\b(background music|score|soundtrack)\
 const PROP_MOVE_RE = /收走|收起|收進|拿走|拿起|拿出|抽出|放回|放下|塞進|不見了|畫面外|\b(off[- ]screen|pocket(s|ed)?|put away|picks? up|taken away)\b/i;
 // 暖光配上以冷色為主的 palette：同一句提示詞裡會打架
 const WARM_LIGHT_RE = /暖|燭|燈籠|爐火|火光|夕陽|鎢絲|琥珀|橘黃|\b(warm|amber|candle\w*|lantern\w*|firelight|tungsten|golden)\b/i;
+// 暖色系的色相：光是哪一種暖色，palette 或場景的光裡有沒有同一種。
+// 暗紅的燈籠光配「點綴色是暗紅」相容；暖橘的風燈光配「褪色紅漆點綴」就不相容，橘色在 palette 裡沒有位置
+const WARM_FAMILIES = {
+  warm: /暖|\bwarm\w*/i,
+  red: /紅|\b(red|crimson|scarlet|vermilion)\b/i,
+  orange: /橘|橙|琥珀|\b(orange|amber)\b/i,
+  yellow: /黃|金|\b(yellow|gold\w*|honey)\b/i,
+};
+const warmFamilies = (text) => Object.keys(WARM_FAMILIES).filter((k) => WARM_FAMILIES[k].test(text));
+const WARM_COLOR_LIGHT_RE = /(暖|紅|橘|橙|琥珀|黃|金)[色黃紅橘]?的?(燈|燭|火)?光|\b(warm|red|orange|amber|yellow|golden)(-\w+)?\s+(\w+\s+)?(light|glow)\b/i;
+/** 光的第一句是主光：「天花板的日光燈照下，保溫架透出一小片暖黃」的主光是冷的，暖黃只是陪襯。 */
+const keyLight = (text) => String(text || '').split(/[，,；;。]/)[0];
 /** palette 說「以冷色為主」：說明主色的那一句只有冷色、沒有暖色（「暗紅與青黑為主」是混色，不算）。 */
 function coolDominant(text) {
   for (const clause of String(text || '').split(/[，,。.;；]/)) {
@@ -549,6 +561,8 @@ const TEXT_WORD_RE = /數字|文字|\b(on-screen text|digits?)\b/i;
 // 冷暖與主色：寫在風格鎖定句裡會加到每一張圖，夜戲、回憶、換了光線的鏡頭就會和光線打架
 const HUE_RE = /[暖冷](色|調|光|[黃橘紅棕藍白灰青])|偏[青藍橘黃紅綠紫金暖冷]|[紅橙橘黃綠青藍紫金棕褐]色?[調系]|為主的.{0,4}色調|\b(warm|cool|cold)(er)?\b|\b(teal|amber|orange|golden|blue|red|green|purple|pink|yellow)(-\w+)?\b[^,]{0,25}\b(tones?|palette|tints?|cast|shadows?|grading|accents?)\b/i;
 // 人與人身上的東西：寫進場景或機位的描述，會跑進沒有人物的場景定稿圖與機位背景圖
+// 用身體部位說位置（「頭頂一線夜空」「腰部高度」）：沒有人的場景圖裡，工具可能把它讀成人的頭頂、腰
+const BODY_POS_RE = /頭頂|腰部|齊腰|及腰高/;
 const PERSON_RE = /臉|人物|人影|他的|她的|頭髮|肩膀|眼睛|身上|身後|身前|女子|男子|女人|男人|老人|少女|少年|孩子|\b(face|faces|his|her|hair|shoulders?|eyes|figure|person|people|man|woman|girl|boy)\b/i;
 // 手不在畫面裡的寫法：這種鏡頭不用驗收手指
 const NO_HANDS_RE = /不在畫面|看不到|看不見|畫面外|out of (the )?frame|not visible|below the frame|out of shot/i;
@@ -765,6 +779,10 @@ for (const s of bible.scenes || []) {
     const hit = mentionsPerson(s[k]);
     if (hit) warn(`${s.id}.${k}`, `場景的 ${k} 寫到了人（「${hit}」）；它會進到沒有人物的場景定稿圖，也會進每一鏡。人身上的光寫在各鏡的 light，人在哪裡寫在 pos`);
   }
+  {
+    const w = langs.map((l) => [s.space, s.light, s.detail].map((v) => BODY_POS_RE.exec(pick(v, l))?.[0]).find(Boolean)).find(Boolean);
+    if (w) hint(s.id, `場景描述用「${w}」說位置；場景定稿圖和每一鏡的背景都沒有固定的人，工具可能讀成人的${w}而多畫一個人。改寫成「上方」「天花板」「屋簷下」「離地約一公尺」`);
+  }
   const detailHit = mentionsPerson(s.detail);
   if (detailHit) warn(`${s.id}.detail`, `場景的 detail 寫到了人（「${detailHit}」）；它會進到沒有人物的場景定稿圖，工具會多畫一個人。detail 只寫陳設、材質與磨損`);
   if (langs.some((l) => WARM_LIGHT_RE.test(pick(s.light, l)) && coolDominant(pick(s.palette, l)))) {
@@ -789,13 +807,20 @@ for (const u of (ep && Array.isArray(ep.setups) ? ep.setups : [])) {
   for (const k of ['bg', 'light', 'detail']) {
     const hit = mentionsPerson(u[k]);
     if (hit) warn(`${u.id}.${k}`, `機位的 ${k} 寫到了人（「${hit}」）；它會進到沒有人物的機位背景圖。機位只寫從這個位置看到的空間與光，人身上的光寫在各鏡的 light`);
+    const w = langs.map((l) => BODY_POS_RE.exec(pick(u[k], l))?.[0]).find(Boolean);
+    if (w && !hit) hint(`${u.id}.${k}`, `機位的 ${k} 用「${w}」說位置；機位背景圖沒有人，工具可能讀成人的${w}而多畫一個人。改寫成「上方」「天花板」「離地約一公尺」`);
   }
 }
 
 // ---------- 提示詞組合 ----------
 const isPartialText = (e) => e.partial && e.partial !== true;
 /** 這一鏡要不要寫身高：兩個以上完整入鏡的角色，而且景別寬到看得到身體（中景以外）。 */
-const showStature = (shot) => (shot.cast || []).filter((e) => !e.partial && chars.has(e.char)).length >= 2
+/**
+ * 這個人在這一鏡看得到身體：完整入鏡的人；或是中全景以上的寬鏡頭裡，用 partial 寫的背影與局部人物。
+ * 群像的遠景常把配角寫成 partial（「矮壯的蒙面人跨進門」），他們其實全身入鏡，身高一樣要寫。
+ */
+const bodyShown = (entry, shot) => chars.has(entry.char) && (!entry.partial || (SIZE_RANK[spec(shot).size] ?? Infinity) <= SIZE_RANK['中全景']);
+const showStature = (shot) => (shot.cast || []).filter((e) => bodyShown(e, shot)).length >= 2
   && (SIZE_RANK[spec(shot).size] ?? Infinity) <= SIZE_RANK['中景'];
 /**
  * 一個入鏡角色：外貌與造型 ＋ 走位。
@@ -809,15 +834,15 @@ function subject(entry, shot, l, withBlocking = true, tok = null) {
   const outfit = UPPER_BODY.has(spec(shot).size) && pick(v.outfit_top, l) ? pick(v.outfit_top, l) : pick(v.outfit, l);
   const t = tok && tok.get(v.id);
   // 兩個人以上同框、而且看得到身體時才寫身高，生成工具才不會把所有人畫得一樣高
-  const tall = !isPartialText(entry) && entry.partial !== true && showStature(shot) ? pick(c.stature, l) : '';
+  const tall = bodyShown(entry, shot) && showStature(shot) ? pick(c.stature, l) : '';
   let base;
   // 只入鏡一部分：直接寫看得到的那一部分。參考圖只借顏色與質感，免得工具照整張設定圖畫出整個人
-  if (isPartialText(entry)) base = [strip(pick(entry.partial, l, tok)) + (t ? T[l].refPart(t) : '')];
+  if (isPartialText(entry)) base = [strip(pick(entry.partial, l, tok)) + (t ? T[l].refPart(t) : ''), tall];
   else if (t) {
     const ft = tok.get(`face:${c.id}`);
     base = [T[l].refWho(t, tagOf(c, v, l) || lookOf(c, v, l)) + (ft ? T[l].refFace(ft) : ''), tall];
   }
-  else if (entry.partial === true) base = [tagOf(c, v, l), outfit]; // 背影、前景虛焦：不寫臉部細節與狀態
+  else if (entry.partial === true) base = [tagOf(c, v, l), tall, outfit]; // 背影、前景虛焦：不寫臉部細節與狀態
   else base = [lookOf(c, v, l), tall, outfit, pick(v.state, l), pick(c.marks, l)];
   const facing = isPartialText(entry) ? '' : (FACINGS[zhOf(entry.facing)]?.[l] || pick(entry.facing, l));
   const block = withBlocking ? [facing, pick(entry.pos, l, tok), pick(entry.gaze, l, tok), pick(entry.hands, l, tok), pick(entry.face, l, tok)] : [];
@@ -1335,11 +1360,29 @@ if (ep) {
     });
     checkFrag(`${id}.motion`, s.motion, !still);
     if (NATIVE_AUDIO) checkFrag(`${id}.sound`, s.sound);
-    // 暖光的鏡頭配上冷色為主的場景 palette，沒有覆寫
+    // 暖光的鏡頭沿用了不是為暖光寫的場景 palette：
+    // 一是 palette 寫明以冷色為主；二是場景本身的光不暖、這一鏡（或機位）才換成暖光，而 palette 裡沒有任何暖色。
+    // 後者常見於冷色調的夜戲裡點起燈籠、風燈：palette 是照月光寫的，燈光一亮，同一句提示詞就兩邊打架
     {
       const sc = scenes.get(s.scene) || {};
-      if (s.light && !s.palette && langs.some((l) => WARM_LIGHT_RE.test(pick(s.light, l)) && coolDominant(pick(sc.palette, l)))) {
-        hint(id, `這一鏡的光是暖光，場景的 palette 卻以冷色為主（「${zhOf(sc.palette)}」），同一句提示詞裡會打架；這一鏡覆寫 palette，或把場景的 palette 改成和所有光都相容的寫法（只寫暗部偏什麼色）`);
+      const local = s.light || setupOf(s).light;
+      if (local && !s.palette && pick(sc.palette, langs[0])) {
+        const warmHere = (l) => WARM_LIGHT_RE.test(pick(local, l));
+        // 主光是暖的，而且它的暖色（沒寫顏色的燭火、燈籠算「暖」）在場景的光和 palette 裡都找不到
+        const unmatched = (l) => {
+          const key = keyLight(pick(local, l));
+          // 主光本身要是暖光：暖光的光源（燈籠、燭火）或帶暖色的光；「金色的眼睛發著微光」不算
+          if (!WARM_LIGHT_RE.test(key) && !WARM_COLOR_LIGHT_RE.test(key)) return false;
+          const fam = warmFamilies(key);
+          const own = fam.length ? fam : ['warm'];
+          const there = warmFamilies(joinC([pick(sc.palette, l), pick(sc.light, l)], l));
+          return !own.some((f) => there.includes(f)) && !there.includes('warm');
+        };
+        if (langs.some((l) => warmHere(l) && coolDominant(pick(sc.palette, l)))) {
+          hint(id, `這一鏡的光是暖光，場景的 palette 卻以冷色為主（「${zhOf(sc.palette)}」），同一句提示詞裡會打架；這一鏡覆寫 palette，或把場景的 palette 改成和所有光都相容的寫法（只寫暗部偏什麼色）`);
+        } else if (langs.some(unmatched)) {
+          hint(id, `這一鏡把光換成暖光（場景本身的光不暖），色彩卻沿用場景的 palette（「${zhOf(sc.palette)}」），裡面沒有任何暖色；palette 是照場景原本的光寫的，這一鏡覆寫 palette（例如「暖橘的燈光只照亮一角，其餘沉在冷灰的暗部裡」）`);
+        }
       }
     }
     // 連戲備註寫到道具被收走或拿出來，這一鏡與前一鏡的 motion、end 卻沒寫
@@ -1347,7 +1390,9 @@ if (ep) {
       const prev = shots[i - 1] || {};
       for (const p of propDefs.values()) {
         const name = zhOf(p.name);
-        const hit = String(s.continuity).includes(`{${p.id}`) || String(s.continuity).includes(p.id) || (name && String(s.continuity).includes(name));
+        // 道具編號要是獨立的一個詞：P01 不能算到鏡號 EP01-021 裡面
+        const idRe = new RegExp(`(^|[^A-Za-z0-9])${p.id}(?![A-Za-z0-9])`);
+        const hit = idRe.test(String(s.continuity)) || (name && String(s.continuity).includes(name));
         if (!hit) continue;
         const told = [s.motion, s.end, prev.motion, prev.end].some((v) => { const t = rawPick(v, langs[0]); return t.includes(`{${p.id}`) || (name && t.includes(name)); });
         if (!told) hint(id, `continuity 寫到 ${p.id}${name ? `（${name}）` : ''}被收走或拿出來，但這一鏡和前一鏡的 motion、end 都沒寫；生成時不會發生。拍一鏡交代，或寫進動手那一鏡的 motion 或 end`);
@@ -1447,7 +1492,7 @@ if (ep) {
     for (const s of shots) {
       if (!showStature(s)) continue;
       // 只比人與半人：器物、動物、異獸的大小已經在 look 裡拿人來比
-      const people = [...new Map((s.cast || []).filter((e) => !e.partial && chars.has(e.char) && ['人', '半人'].includes(kindOf(chars.get(e.char).c))).map((e) => [chars.get(e.char).c.id, chars.get(e.char).c])).values()];
+      const people = [...new Map((s.cast || []).filter((e) => bodyShown(e, s) && ['人', '半人'].includes(kindOf(chars.get(e.char).c))).map((e) => [chars.get(e.char).c.id, chars.get(e.char).c])).values()];
       const missing = people.filter((c) => !pick(c.stature, langs[0]));
       const key = people.map((c) => c.id).sort().join('+');
       if (missing.length && people.length >= 2 && !told.has(key)) {
