@@ -63,6 +63,7 @@ skills/
 agents/               Claude Code 的三個審查代理
 hooks/                hooks.json（Claude Code）、codex-hooks.json（Codex）、check-storyboard.cjs
 tests/                腳本的測試（node --test）
+.github/workflows/    GitHub Actions：每個 PR 自動跑測試
 evals/                評測案例（claude plugin eval 讀這裡）
 ```
 
@@ -91,4 +92,13 @@ node skills/novel-to-storyboard/scripts/build_storyboard.mjs skills/outline-to-e
 node --test
 ```
 
-`tests/` 測的是重跑時 CSV 手填紀錄的保留、備份、已移除檔（包含寫到一半失敗時紀錄不丟、不重複），以及集數和檔名的檢查。寫入失敗用環境變數 `STORYBOARD_TEST_FAIL_FILES` 模擬，只給測試用。測試只在暫存資料夾裡建專案，不動範例的 `out/`。
+`tests/` 裡有四份：
+
+- `csv-records.test.mjs`：重跑時 CSV 手填紀錄的保留、備份、已移除檔（包含寫到一半失敗時紀錄不丟、不重複），以及集數和檔名的檢查。寫入失敗用環境變數 `STORYBOARD_TEST_FAIL_FILES` 模擬，只給測試用。
+- `script-checks.test.mjs`：腳本的檢查與產出（打錯的欄位與值、寫壞的 JSON、字幕時間⋯）。
+- `examples.test.mjs`：每個範例重新產生一次，和 repo 裡的 `out/` 比對。改了腳本卻沒重跑範例，這裡會失敗：照上一節的指令重跑，再把 `out/` 一起提交。
+- `plugin.test.mjs`：三份 manifest 的版號一致，技能與代理的名稱和檔名對得上。發新版時三份的 `version` 要一起改。
+
+測試只在暫存資料夾裡建專案，不動範例的 `out/`。
+
+每次推送到 main、每個 PR，GitHub Actions 都會在 Ubuntu 與 Windows、Node 18 與 22 上跑一次 `node --test`，另外用 Node 16 跑一次每個範例（README 寫的最低版本），設定在 `.github/workflows/test.yml`。
