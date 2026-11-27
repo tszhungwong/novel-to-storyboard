@@ -149,7 +149,7 @@
 
 ## series.json
 
-分集表：輸入是大綱，或要切成固定長度的短集時，先排好每一集演什麼。怎麼排見 `outline-to-episodes.md`，範例在 `examples/outline/`。這些欄位都給人看，不進提示詞。
+分集表：輸入是大綱，或要切成固定長度的短集時，先排好每一集演什麼。怎麼排見 `outline-to-episodes` 技能（`../outline-to-episodes/SKILL.md`），範例在它的 `examples/`。這些欄位都給人看，不進提示詞。
 
 執行 `build_storyboard.mjs bible.json series.json` 會產出 `series.md` 並檢查分集表。拆某一集時，`bible.json` 旁邊有 `series.json` 的話，腳本會把那一集的鉤子、爽點與卡點列在分鏡表最上面。
 
@@ -184,7 +184,7 @@
 
 ## 分集劇本（EPxx-script.md）
 
-Markdown 格式，一集一個檔案：場標寫成 `## 第 1 場　地點　時段　內外`，畫面以 `△` 開頭，台詞寫成 `角色名（語氣）：台詞`，後製文字以 `【字】` 開頭。完整格式與寫法見 `outline-to-episodes.md` 第四節。執行 `build_storyboard.mjs bible.json EP01-script.md` 會算台詞長度、列出太長的句子與不在設定檔裡的說話者。
+Markdown 格式，一集一個檔案：場標寫成 `## 第 1 場　地點　時段　內外`，畫面以 `△` 開頭，台詞寫成 `角色名（語氣）：台詞`，後製文字以 `【字】` 開頭。完整格式與寫法見 `outline-to-episodes` 技能第四節。執行 `build_storyboard.mjs bible.json EP01-script.md` 會算台詞長度、列出太長的句子與不在設定檔裡的說話者。
 
 ## EPxx.json
 
