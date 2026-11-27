@@ -1,0 +1,51 @@
+# 每次推送到 main、每個 PR 都跑一次：
+# - node --test：CSV 紀錄的保留與備份、腳本的檢查、範例的 out/ 和腳本產出一致、plugin 設定檔
+# - 腳本在 Node 16 也能跑（README 寫的最低版本）
+name: 測試
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: node --test（${{ matrix.os }}，Node ${{ matrix.node }}）
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        node: ['18', '22']
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+      - name: 跑測試
+        run: node --test
+
+  node16:
+    name: 腳本在 Node 16 也能跑
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '16'
+      - name: 用 Node 16 跑每個範例
+        shell: bash
+        run: |
+          set -e
+          S=skills/novel-to-storyboard/scripts/build_storyboard.mjs
+          E=skills/novel-to-storyboard/examples
+          O=skills/outline-to-episodes/examples
+          node "$S" "$E/bible.json" "$E/EP01.json" --out "$RUNNER_TEMP/main"
+          for x in creature-fx en-action live-action; do
+            node "$S" "$E/$x/bible.json" "$E/$x/EP01.json" --out "$RUNNER_TEMP/$x"
+          done
+          node "$S" "$O/bible.json" "$O/series.json" --out "$RUNNER_TEMP/outline"
+          node "$S" "$O/bible.json" "$O/EP01-script.md"

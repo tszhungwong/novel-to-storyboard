@@ -18,11 +18,6 @@
       3,
       30
     ],
-    "prompt_limits": {
-      "image": {
-        "zh": 300
-      }
-    },
     "speech_rate": 4.5,
     "style_lock": "水彩質感的動畫插畫風，線條細，暈染上色，中低飽和，輕微紙張紋理",
     "negative_global": ""

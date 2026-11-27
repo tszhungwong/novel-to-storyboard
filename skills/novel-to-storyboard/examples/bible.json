@@ -19,11 +19,6 @@
       3,
       30
     ],
-    "prompt_limits": {
-      "image": {
-        "zh": 300
-      }
-    },
     "speech_rate": 4.5,
     "style_lock": "日系賽璐珞動畫風，線條柔和，低飽和，輕微膠片顆粒",
     "negative_global": ""

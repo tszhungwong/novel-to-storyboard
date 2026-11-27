@@ -17,11 +17,6 @@
       3,
       30
     ],
-    "prompt_limits": {
-      "image": {
-        "zh": 300
-      }
-    },
     "speech_rate": 4.5,
     "episode_length": [
       60,
