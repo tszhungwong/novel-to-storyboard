@@ -79,8 +79,11 @@ if (ep) {
     try { seriesForEp = JSON.parse(fs.readFileSync(sp, 'utf8').replace(/^﻿/, '')); } catch (e) { seriesReadError = e.message; }
   }
 }
+// 這一集的集數：沒填 episode 時先用檔名開頭的 EPxx（缺 episode 的錯誤在檢查分鏡時報）
+const epFileId = ep && second ? ((/^EP\d+/i.exec(path.basename(second)) || [])[0] || '').toUpperCase() || null : null;
+const epKey = ep ? String(ep.episode ?? '').trim() || epFileId : null;
 const epPlan = ep && seriesForEp && Array.isArray(seriesForEp.episodes)
-  ? seriesForEp.episodes.find((e) => e && e.episode === ep.episode) || null
+  ? seriesForEp.episodes.find((e) => e && e.episode === epKey) || null
   : null;
 outDir = outDir || path.join(path.dirname(path.resolve(files[0])), 'out');
 if (scriptText == null) fs.mkdirSync(outDir, { recursive: true });
@@ -1175,21 +1178,22 @@ let epBlocked = '';
 if (ep) {
   const raw = ep.episode == null ? '' : String(ep.episode).trim();
   const base = path.basename(second);
-  const fileEp = (/^EP\d+/i.exec(base) || [])[0] || null;
-  const numOf = (s) => { const m = /(\d+)\s*$/.exec(s || ''); return m ? Number(m[1]) : null; };
+  const stem = base.replace(/\.json$/i, '');
+  // 兩邊都取開頭 EP 後面的數字來比：EP01-2.json 寫 EP01-2、EP101.json 寫 S1E01，都不算對不上
+  const leadNum = (s) => { const m = /^EP(\d+)/i.exec(s || ''); return m ? Number(m[1]) : null; };
   if (!raw) {
-    EP_ID = fileEp ? fileEp.toUpperCase() : 'EP';
-    err('分鏡檔', `缺少 episode（集數，例如 EP01）；輸出檔名會用到它${fileEp ? `，這次先照檔名用 ${EP_ID}` : ''}`);
-  } else if (/[\\/:*?"<>|]/.test(raw) || /^\.+$/.test(raw)) {
+    EP_ID = epFileId || 'EP';
+    err('分鏡檔', `缺少 episode（集數，例如 EP01）；輸出檔名會用到它${epFileId ? `，這次先照檔名用 ${EP_ID}` : ''}`);
+  } else if (/[\\/:*?"<>|\u0000-\u001f]/.test(raw) || /^\.+$/.test(raw)) {
     epBlocked = `episode「${raw}」有不能放進檔名的字`;
     err('分鏡檔', `${epBlocked}；改成 EP01 這種寫法。這次沒有寫出分鏡表與 CSV`);
   } else {
     EP_ID = raw;
-    const a = fileEp ? numOf(fileEp) : null;
-    const b = numOf(raw);
-    if (a != null && b != null && a !== b) {
+    const a = leadNum(stem);
+    const b = leadNum(raw);
+    if (stem.toUpperCase() !== raw.toUpperCase() && a != null && b != null && a !== b) {
       epBlocked = `episode 寫的是 ${raw}，檔名卻是 ${base}`;
-      err('分鏡檔', `${epBlocked}；照這樣寫會蓋掉 ${raw} 的分鏡表與 CSV。把 episode 改成 ${fileEp.toUpperCase()}，或把檔名改成 ${raw}.json。這次沒有寫出分鏡表與 CSV`);
+      err('分鏡檔', `${epBlocked}；照這樣寫會蓋掉 ${raw} 的分鏡表與 CSV。把 episode 改成 ${epFileId}，或把檔名改成 ${raw}.json。這次沒有寫出分鏡表與 CSV`);
     }
   }
   if (EP_ID && EP_ID !== 'EP' && !epBlocked) {
@@ -1674,7 +1678,7 @@ if (ep) {
       warn('整體', `整集約 ${Math.round(totalSec)} 秒，不到單集長度下限 ${EP_LEN[0]} 秒；不要用放慢的鏡頭撐，補反應鏡頭、插入鏡頭，或把下一集開頭的內容提前`);
     }
   }
-  if (seriesForEp && !epPlan) hint('分集表', `bible.json 旁邊的 series.json 裡沒有 ${ep.episode || '這一集'}；分集表要先排到這一集，拆鏡才有鉤子與卡點可以對照`);
+  if (seriesForEp && !epPlan) hint('分集表', `bible.json 旁邊的 series.json 裡沒有 ${epKey || '這一集'}；分集表要先排到這一集，拆鏡才有鉤子與卡點可以對照`);
   const durs = new Set(shots.map((s) => Number(s.duration)));
   if (shots.length >= 6 && durs.size === 1) hint('整體', `所有鏡頭都是 ${[...durs][0]} 秒，節奏會單調；依內容給長短變化`);
   if (shots.length >= 5 && slow / shots.length > 0.6) {
@@ -1810,10 +1814,36 @@ const writeFailed = []; // {name, msg}
 const csvNotes = []; // 重跑時搬回手填紀錄、備份的摘要，印在畫面上
 const isLocked = (e) => ['EBUSY', 'EPERM', 'EACCES'].includes(e?.code);
 const LOCKED_MSG = '寫不進去：這個檔案可能正在 Excel 或其他程式裡開著，或被設成唯讀。關掉它（或取消唯讀）後再跑一次腳本；其他檔案已經照常更新';
+// 只給 tests/ 用：列在這裡的檔名，寫入或刪除時故意失敗，用來測試寫到一半失敗時紀錄會不會丟
+const FAIL_FILES = new Set(String(process.env.STORYBOARD_TEST_FAIL_FILES || '').split(',').map((x) => x.trim()).filter(Boolean));
+const testFail = (p) => {
+  if (FAIL_FILES.has(path.basename(p))) throw Object.assign(new Error('測試用：故意讓這個檔案寫不進去'), { code: 'EIO' });
+};
+/** 寫檔。檔案已經存在時用 r+ 開、清空再寫：和 probeWrite 同一種開法，試開過了就寫得進去（隱藏檔也可以）。 */
+function writeText(p, text) {
+  testFail(p);
+  const buf = Buffer.from(text, 'utf8');
+  if (!fs.existsSync(p)) {
+    fs.writeFileSync(p, buf);
+    return;
+  }
+  const fd = fs.openSync(p, 'r+');
+  try {
+    fs.ftruncateSync(fd, 0);
+    let off = 0;
+    while (off < buf.length) off += fs.writeSync(fd, buf, off, buf.length - off, off);
+  } finally {
+    fs.closeSync(fd);
+  }
+}
+function removeFile(p) {
+  testFail(p);
+  fs.unlinkSync(p);
+}
 const write = (name, text) => {
   const p = path.join(outDir, name);
   try {
-    fs.writeFileSync(p, text, 'utf8');
+    writeText(p, text);
     return p;
   } catch (e) {
     writeFailed.push({ name, msg: isLocked(e) ? LOCKED_MSG : `寫不進去：${e.message}` });
@@ -1844,14 +1874,19 @@ function parseCsv(text) {
   if (f !== '' || row.length) { row.push(f); rows.push(row); }
   return rows.filter((r) => r.some((v) => v.trim() !== ''));
 }
-/** 讀舊的 CSV。Excel 在中文 Windows 上另存時常存成 Big5 或 GBK，UTF-8 讀不懂就換這兩種試。 */
+/**
+ * 讀舊的 CSV，回傳 { table, skipped }；讀不懂回傳 null。
+ * Excel 在中文 Windows 上另存時常存成 Big5 或 GBK，UTF-8 讀不懂就換這兩種試。
+ * 標題列不一定在第一列（使用者在上面插了一列說明），在前十列裡找；上面那幾列算 skipped。
+ */
 function readCsvFile(p, mustHave) {
   const buf = fs.readFileSync(p);
   for (const enc of ['utf-8', 'big5', 'gb18030']) {
     let text;
     try { text = new TextDecoder(enc, { fatal: enc === 'utf-8' }).decode(buf); } catch { continue; }
     const rows = parseCsv(text);
-    if (rows.length && mustHave.every((c) => rows[0].map((h) => h.trim()).includes(c))) return rows;
+    const at = rows.slice(0, 10).findIndex((r) => mustHave.every((c) => r.map((h) => h.trim()).includes(c)));
+    if (at >= 0) return { table: rows.slice(at), skipped: at };
   }
   return null;
 }
@@ -1884,31 +1919,52 @@ function backup(name) {
     if (latest && fs.readFileSync(path.join(dir, latest.x)).equals(src)) return path.relative(outDir, path.join(dir, latest.x));
     const dest = path.join(dir, `${base}-${stamp()}.csv`);
     fs.writeFileSync(dest, src);
-    const all = list();
-    const keep = new Set(all.slice(0, BACKUP_KEEP).map((b) => b.x));
-    const days = new Set();
-    for (const b of all) {
-      if (days.has(b.day)) continue;
-      if (days.size >= BACKUP_DAYS) break;
-      days.add(b.day);
-      keep.add(b.x); // 這一天最新的一份
+    // 清掉太舊的備份；清不掉（被別的程式開著）不影響這一份已經備份好
+    try {
+      const all = list();
+      const keep = new Set(all.slice(0, BACKUP_KEEP).map((b) => b.x));
+      const days = new Set();
+      for (const b of all) {
+        if (days.has(b.day)) continue;
+        if (days.size >= BACKUP_DAYS) break;
+        days.add(b.day);
+        keep.add(b.x); // 這一天最新的一份
+      }
+      for (const b of all) if (!keep.has(b.x)) fs.unlinkSync(path.join(dir, b.x));
+    } catch {
+      // 下次再清
     }
-    for (const b of all) if (!keep.has(b.x)) fs.unlinkSync(path.join(dir, b.x));
     return path.relative(outDir, dest);
   } catch {
     return '';
   }
 }
-// 腳本產生的欄位：換了提示詞語言、ref_mode、use_last_frame，或升級了腳本，欄名就會變。
-// 舊的欄名不能當成「使用者自己加的欄位」一直留下來，也不能把只有這些欄的列算成有手填紀錄。
-const GENERATED_COL_RE = /^(首幀圖像提示詞|尾幀提示詞|影片提示詞|負面詞|參考圖)/;
-/** 把讀進來的表轉成物件。沒有欄名、但有內容的欄，補一個名字（「欄位43」），裡面的字才不會在重跑時不見。 */
+// 腳本產生、而且欄名會跟著設定變的欄位（提示詞語言、ref_mode、use_last_frame）。
+// 換了設定之後，舊的欄名不能當成「使用者自己加的欄位」一直留下來，也不能把只有這些欄的列算成有手填紀錄。
+// 要整個欄名完全相符才算：使用者自己加的「參考圖路徑」「影片提示詞（改）」不能被當成產生的欄位刪掉。
+const LANG_SUFFIXES = ['', ...Object.values(T).map((x) => `（${x.name}）`)];
+const SHOT_GENERATED = new Set([
+  ...['首幀圖像提示詞', '尾幀提示詞（拿首幀圖做圖像編輯）', '影片提示詞', '負面詞'].flatMap((b) => LANG_SUFFIXES.map((s) => b + s)),
+  '參考圖',
+  '參考圖（依序上傳）',
+]);
+/**
+ * 把讀進來的表轉成物件。
+ * - 沒有欄名、但有內容的欄，補一個名字（「欄位43」），裡面的字才不會在重跑時不見。
+ * - 欄名重複的（自己又加了一欄「備註」），後面的加上「(2)」，兩欄的內容都留著。
+ */
 function csvObjects(table) {
   const width = Math.max(0, ...table.map((r) => r.length));
+  const seen = new Map();
   const head = Array.from({ length: width }, (_, i) => {
-    const n = String(table[0][i] ?? '').trim();
-    if (n) return n;
-    return table.slice(1).some((r) => String(r[i] ?? '').trim() !== '') ? `欄位${i + 1}` : '';
+    let n = String(table[0][i] ?? '').trim();
+    if (!n) {
+      if (!table.slice(1).some((r) => String(r[i] ?? '').trim() !== '')) return '';
+      n = `欄位${i + 1}`;
+    }
+    const k = (seen.get(n) || 0) + 1;
+    seen.set(n, k);
+    return k === 1 ? n : `${n}(${k})`;
   });
   return {
     head: head.filter(Boolean),
@@ -1918,50 +1974,73 @@ function csvObjects(table) {
 /**
  * 把舊檔的手填紀錄搬到新的 rows。只算出要寫的內容，不寫檔：寫檔的順序由 writeCsv 決定。
  * opt.keys：對應同一列用的欄位；opt.manual：腳本留空給使用者填的欄位；
- * opt.loose：主鍵對不上時退一步用的欄位，兩邊都只有一列時才用（資產換了提示詞語言，「語言」那一欄就變了）；
+ * opt.generated：腳本產生、欄名會變的欄位（完整欄名）；
+ * opt.loose：主鍵對不上時退一步用的欄位（資產換了提示詞語言，「語言」那一欄就變了）；
  * opt.gone：對不上的紀錄怎麼說（「已經不在分鏡裡」）。
- * - 舊檔有、新檔沒有的欄位（使用者自己加的、沒有欄名的）也保留，排在最後；腳本產生的舊欄位不算。
+ * - 舊檔有、新檔沒有的欄位（使用者自己加的、沒有欄名的）也保留，排在最後。
  * - 同一個鍵有好幾列紀錄（使用者複製一列來記第二次抽卡），每一列都保留，接在一起。
  * - 已經不在新檔裡的列（鏡頭刪了或改了鏡號），有手填紀錄的移到「<檔名>-已移除.csv」；鍵回來了，再從那裡搬回來。
+ * - 已移除檔裡和舊檔一模一樣的紀錄（上一次寫到一半失敗留下的）不重複算。
  */
 function mergeCsv(name, rows, opt) {
   const p = path.join(outDir, name);
   const removedName = `${name.replace(/\.csv$/i, '')}-已移除.csv`;
   const removedPath = path.join(outDir, removedName);
-  const res = { rows, removedName, removed: null, notes: [], oldExists: fs.existsSync(p), unreadable: false };
-  if (!res.oldExists && !fs.existsSync(removedPath)) return res;
+  const res = {
+    rows, removedName, notes: [], oldExists: fs.existsSync(p), removedExists: fs.existsSync(removedPath),
+    unreadable: '', hadData: false, before: null, after: null,
+  };
+  if (!res.oldExists && !res.removedExists) return res;
   const head = [...rows[0]];
   let old = { head: [], objs: [] };
+  let skipped = 0;
   if (res.oldExists) {
-    const table = readCsvFile(p, opt.keys);
-    if (!table) {
-      res.unreadable = true;
+    const got = readCsvFile(p, opt.keys);
+    if (!got) {
+      res.unreadable = name;
       return res;
     }
-    old = csvObjects(table);
+    old = csvObjects(got.table);
+    skipped = got.skipped;
   }
-  const removedTable = fs.existsSync(removedPath) ? readCsvFile(removedPath, opt.keys) : null;
-  const rem = removedTable ? csvObjects(removedTable) : { head: [], objs: [] };
-  const extra = [...new Set([...old.head, ...rem.head])].filter((c) => !head.includes(c) && !GENERATED_COL_RE.test(c));
+  let rem = { head: [], objs: [] };
+  if (res.removedExists) {
+    const got = readCsvFile(removedPath, opt.keys);
+    if (!got) {
+      res.unreadable = removedName;
+      return res;
+    }
+    rem = csvObjects(got.table);
+  }
+  const generated = opt.generated || new Set();
+  const extra = [...new Set([...old.head, ...rem.head])].filter((c) => !head.includes(c) && !generated.has(c));
   const keep = [...opt.manual.filter((c) => head.includes(c)), ...extra];
   const keyOf = (o, cols = opt.keys) => cols.map((c) => String(o[c] ?? '').trim()).join('|');
   const filled = (o) => keep.some((c) => String(o[c] ?? '').trim() !== '');
+  const sig = (o) => [keyOf(o), ...keep.map((c) => String(o[c] ?? '').trim())].join('\u0000');
+  const oldRecs = old.objs.filter(filled);
+  const oldSigs = new Set(oldRecs.map(sig));
   // 有手填紀錄的列：舊檔的排前面，已移除檔的接在後面
   const records = [
-    ...old.objs.filter(filled).map((o) => ({ o, from: 'old' })),
-    ...rem.objs.filter(filled).map((o) => ({ o, from: 'removed' })),
+    ...oldRecs.map((o) => ({ o, from: 'old' })),
+    ...rem.objs.filter(filled).filter((o) => !oldSigs.has(sig(o))).map((o) => ({ o, from: 'removed' })),
   ];
-  const hadData = records.some((r) => r.from === 'old');
+  res.hadData = oldRecs.length > 0;
   const body = rows.slice(1);
   const rowKey = (r, cols) => cols.map((c) => String(r[head.indexOf(c)] ?? '').trim()).join('|');
   const matched = body.map(() => []);
   const used = new Set();
-  const byKey = new Map();
-  records.forEach((rec, j) => {
-    const k = keyOf(rec.o);
-    if (!byKey.has(k)) byKey.set(k, []);
-    byKey.get(k).push(j);
-  });
+  const group = (pick) => {
+    const m = new Map();
+    records.forEach((rec, j) => {
+      if (used.has(j)) return;
+      const k = pick(rec);
+      if (!m.has(k)) m.set(k, []);
+      m.get(k).push(j);
+    });
+    return m;
+  };
+  const byKey = group((rec) => keyOf(rec.o));
   body.forEach((r, n) => {
     for (const j of byKey.get(rowKey(r, opt.keys)) || []) {
       if (used.has(j)) continue;
@@ -1969,18 +2048,20 @@ function mergeCsv(name, rows, opt) {
       used.add(j);
     }
   });
+  // 主鍵對不上時，退一步用 opt.loose：新檔只有一列、剩下的紀錄也全是同一個主鍵（可以是好幾列），才搬過去
   if (opt.loose) {
-    const tally = (keys) => keys.reduce((m, k) => m.set(k, (m.get(k) || 0) + 1), new Map());
-    const newCount = tally(body.map((r) => rowKey(r, opt.loose)));
-    const left = records.map((rec, j) => ({ rec, j })).filter(({ j }) => !used.has(j));
-    const leftCount = tally(left.map(({ rec }) => keyOf(rec.o, opt.loose)));
+    const newCount = new Map();
+    for (const r of body) newCount.set(rowKey(r, opt.loose), (newCount.get(rowKey(r, opt.loose)) || 0) + 1);
+    const left = group((rec) => keyOf(rec.o, opt.loose));
     body.forEach((r, n) => {
       if (matched[n].length) return;
       const k = rowKey(r, opt.loose);
-      if (newCount.get(k) !== 1 || leftCount.get(k) !== 1) return;
-      const hit = left.find(({ rec }) => keyOf(rec.o, opt.loose) === k);
-      matched[n].push(hit.rec);
-      used.add(hit.j);
+      const js = left.get(k);
+      if (!js || newCount.get(k) !== 1 || new Set(js.map((j) => keyOf(records[j].o))).size !== 1) return;
+      for (const j of js) {
+        matched[n].push(records[j]);
+        used.add(j);
+      }
     });
   }
   const newHead = [...head, ...extra];
@@ -2003,21 +2084,33 @@ function mergeCsv(name, rows, opt) {
       restored++;
     }
   });
-  // 對不上的紀錄：移到已移除檔，不丟掉
+  // 對不上的紀錄移到已移除檔，不丟掉
   const orphans = records.filter((_, j) => !used.has(j));
-  const newlyRemoved = orphans.filter((x) => x.from === 'old').map((x) => keyOf(x.o));
-  if (orphans.length) {
-    const cols = [...new Set([...opt.keys, ...orphans.flatMap((x) => Object.keys(x.o))])];
-    res.removed = { text: csv([cols, ...orphans.map((x) => cols.map((c) => x.o[c] ?? ''))]) };
-  } else if (fs.existsSync(removedPath)) {
-    res.removed = { drop: true };
+  const newlyRemoved = orphans.filter((x) => x.from === 'old');
+  const comingBack = records.filter((x, j) => used.has(j) && x.from === 'removed');
+  const removedText = (list) => {
+    const cols = [...new Set([...opt.keys, ...list.flatMap((x) => Object.keys(x.o))])];
+    return csv([cols, ...list.map((x) => cols.map((c) => x.o[c] ?? ''))]);
+  };
+  // 寫檔的順序（writeCsv）：before 在主檔之前寫，after 在主檔寫成功之後才寫。
+  // 要離開主檔的紀錄先進已移除檔；要搬回主檔的紀錄，等主檔寫好了才從已移除檔拿掉。
+  // 任何一步失敗，每一筆紀錄都至少還在一個檔案裡；兩邊都有的，下次重跑由上面的 oldSigs 去重。
+  const final = orphans.length ? { text: removedText(orphans) } : res.removedExists ? { drop: true } : null;
+  if (newlyRemoved.length) {
+    res.before = { text: removedText([...orphans, ...comingBack]) };
+    if (comingBack.length) res.after = final;
+  } else {
+    res.after = final;
   }
-  if (hadData || restored) {
-    res.notes.push(hadData ? `搬回 ${restored} 列手填的紀錄` : `從 ${removedName} 搬回 ${restored} 列紀錄`);
+  if (res.hadData || restored) {
+    res.notes.push(res.hadData ? `搬回 ${restored} 列手填的紀錄` : `從 ${removedName} 搬回 ${restored} 列紀錄`);
     if (multi.length) res.notes.push(`${[...new Set(multi)].join('、')} 有不只一列紀錄，每一列都保留了`);
     if (extra.length) res.notes.push(`保留自己加的欄位：${extra.join('、')}`);
-    if (newlyRemoved.length) res.notes.push(`${newlyRemoved.length} 列${opt.gone}（${newlyRemoved.map((k) => k.split('|')[0]).join('、')}），紀錄移到 ${removedName}`);
+    if (newlyRemoved.length) {
+      res.notes.push(`${newlyRemoved.length} 列${opt.gone}（${[...new Set(newlyRemoved.map((x) => keyOf(x.o).split('|')[0]))].join('、')}），紀錄移到 ${removedName}`);
+    }
   }
+  if (skipped) res.notes.push(`舊檔標題列上面的 ${skipped} 列不是表格內容，沒有搬過來`);
   res.rows = [newHead, ...out];
   return res;
 }
@@ -2032,8 +2125,11 @@ function probeWrite(p) {
   }
 }
 /**
- * 搬回手填紀錄後寫出 CSV。順序是：先確定主檔和已移除檔都寫得進去，再備份、寫主檔，
- * 主檔寫成功了才更新已移除檔。中途任何一步寫不進去，紀錄都還在原本的檔案裡。
+ * 搬回手填紀錄後寫出 CSV。順序：
+ * 1. 試開主檔和已移除檔，寫不進去就什麼都不動。
+ * 2. 舊檔內容會變時先備份；舊檔有手填紀錄、卻備份不起來，就不寫。
+ * 3. 寫已移除檔的 before（要離開主檔的紀錄先放進去），再寫主檔，主檔寫成功才寫 after（或刪掉已移除檔）。
+ * 舊檔或已移除檔讀不懂時不覆蓋，請使用者處理。
  */
 function writeCsv(name, rows, opt) {
   const p = path.join(outDir, name);
@@ -2049,8 +2145,16 @@ function writeCsv(name, rows, opt) {
     });
     return null;
   }
+  if (m.unreadable) {
+    writeFailed.push({
+      name,
+      msg: `讀不懂 ${m.unreadable}（可能被另存成別的格式，或找不到「${opt.keys.join('、')}」這幾欄的標題列）。為了不蓋掉裡面手填的紀錄，${name} 這次沒有更新：在 Excel 裡把 ${m.unreadable} 另存成「CSV UTF-8」，或把它移到別的資料夾（腳本會重新產生），再跑一次`,
+    });
+    return null;
+  }
   const removedPath = path.join(outDir, m.removedName);
-  for (const [who, e] of [[name, probeWrite(p)], [m.removedName, m.removed ? probeWrite(removedPath) : null]]) {
+  const touchRemoved = !!(m.before || m.after);
+  for (const [who, e] of [[name, probeWrite(p)], [m.removedName, touchRemoved ? probeWrite(removedPath) : null]]) {
     if (!e) continue;
     const why = isLocked(e) ? LOCKED_MSG : `寫不進去：${e.message}`;
     writeFailed.push({
@@ -2070,22 +2174,31 @@ function writeCsv(name, rows, opt) {
     } catch {
       // 讀不到就照樣備份
     }
-    if (!same) b = backup(name);
+    if (!same) {
+      b = backup(name);
+      if (!b && m.hadData) {
+        writeFailed.push({ name, msg: `舊檔有手填的紀錄，但備份不起來（out/備份 建不起來或寫不進去），為了保險這次沒有更新` });
+        return null;
+      }
+    }
   }
-  if (m.unreadable) {
-    csvNotes.push(`${name}：讀不懂舊檔（可能被另存成別的格式），手填的紀錄沒有搬過來${b ? `；舊檔備份在 ${b}` : ''}。用 Excel 存檔時選「CSV UTF-8」`);
-  }
+  if (m.before && !write(m.removedName, m.before.text)) return null; // 什麼都還沒動
   const done = write(name, text);
-  if (!done) return null; // 原因已經記在 writeFailed；已移除檔沒有動
-  if (m.removed?.text != null) {
-    const r = write(m.removedName, m.removed.text);
-    if (r) written.push(r);
-    else if (b) m.notes.push(`${m.removedName} 沒有寫出，對不上的紀錄在 ${b} 裡`);
-  } else if (m.removed?.drop) {
+  if (!done) return null; // 要離開主檔的紀錄已經在已移除檔裡，舊的主檔在 out/備份/；下次重跑會去重
+  if (m.before) written.push(path.join(outDir, m.removedName));
+  if (m.after?.text != null) {
     try {
-      fs.unlinkSync(removedPath);
+      writeText(removedPath, m.after.text);
+      if (!m.before) written.push(removedPath);
     } catch {
-      // 被鎖住就留著，下次再清
+      // 不算失敗：紀錄都在，只是已移除檔多了已經搬回主檔的幾列
+      m.notes.push(`${m.removedName} 沒有更新（可能被別的程式開著），已經搬回主檔的紀錄下次重跑會自動從那裡清掉`);
+    }
+  } else if (m.after?.drop) {
+    try {
+      removeFile(removedPath);
+    } catch {
+      m.notes.push(`${m.removedName} 刪不掉（可能被別的程式開著），裡面的紀錄都已經搬回主檔，下次重跑會再清一次`);
     }
   }
   if (m.notes.length) {
@@ -2095,7 +2208,7 @@ function writeCsv(name, rows, opt) {
   return done;
 }
 const SHOT_MANUAL = ['模型', 'seed', '抽卡次數', '採用版本', '驗收結果', '備註'];
-const SHOT_CSV = { keys: ['鏡號'], manual: SHOT_MANUAL, gone: '已經不在分鏡裡' };
+const SHOT_CSV = { keys: ['鏡號'], manual: SHOT_MANUAL, generated: SHOT_GENERATED, gone: '已經不在分鏡裡' };
 const ANIMATIC_CSV = { keys: ['鏡號'], manual: [], gone: '已經不在分鏡裡' };
 const ASSET_CSV = { keys: ['編號', '類型', '語言'], loose: ['編號', '類型'], manual: ['模型', 'seed', '定稿檔名', '備註'], gone: '已經不在資產清單裡（資產刪了或改了編號）' };
 

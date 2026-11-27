@@ -91,4 +91,4 @@ node skills/novel-to-storyboard/scripts/build_storyboard.mjs skills/outline-to-e
 node --test
 ```
 
-`tests/` 測的是重跑時 CSV 手填紀錄的保留、備份、已移除檔，以及集數和檔名的檢查。測試只在暫存資料夾裡建專案，不動範例的 `out/`。
+`tests/` 測的是重跑時 CSV 手填紀錄的保留、備份、已移除檔（包含寫到一半失敗時紀錄不丟、不重複），以及集數和檔名的檢查。寫入失敗用環境變數 `STORYBOARD_TEST_FAIL_FILES` 模擬，只給測試用。測試只在暫存資料夾裡建專案，不動範例的 `out/`。
