@@ -1,0 +1,227 @@
+{
+  "project": {
+    "title": "宴會",
+    "format": "短劇",
+    "medium": "真人寫實",
+    "aspect": "9:16",
+    "image_tool": "",
+    "video_tool": "",
+    "prompt_langs": [
+      "zh",
+      "en"
+    ],
+    "video_mode": "i2v",
+    "use_last_frame": true,
+    "audio_plan": "後配口型",
+    "music": "低沉的弦樂鋪底，打臉的那一刻重拍落下，之後抽空",
+    "style_lock": {
+      "zh": "寫實攝影，數位電影機質感，清晰銳利，中等飽和，輕微顆粒",
+      "en": "photorealistic, digital cinema camera look, crisp detail, moderate saturation, subtle grain"
+    },
+    "negative_global": {
+      "zh": "多餘的手指，變形的手，浮水印，磨皮過度的皮膚",
+      "en": "extra fingers, deformed hands, watermark, airbrushed skin"
+    }
+  },
+  "characters": [
+    {
+      "id": "C01",
+      "name": "沈知意",
+      "tag": {
+        "zh": "黑色及肩直髮的高瘦女子",
+        "en": "the tall slim woman with straight shoulder-length black hair"
+      },
+      "look": {
+        "zh": "二十八歲左右的女性，鵝蛋臉，黑色及肩直髮別在耳後，眉形平直，眼睛細長，身形高瘦",
+        "en": "a woman of about twenty-eight, oval face, straight shoulder-length black hair tucked behind her ears, level brows, long narrow eyes, tall slim build"
+      },
+      "stature": {
+        "zh": "身高約一百七十公分",
+        "en": "about 170 cm tall"
+      },
+      "marks": {
+        "zh": "左眉尾有一顆小痣",
+        "en": "a small mole at the tail of her left eyebrow"
+      },
+      "detail": {
+        "zh": "皮膚白而略乾，看得到細小的毛孔，眼角有很淡的細紋，指甲修短沒有塗色",
+        "en": "pale, slightly dry skin with visible fine pores, faint lines at the corners of her eyes, short unpainted nails"
+      },
+      "voice": {
+        "zh": "二十多歲的女聲，音色偏低，說話慢而穩",
+        "en": "a low, steady female voice in her late twenties"
+      },
+      "variants": [
+        {
+          "id": "C01-a",
+          "label": "白西裝",
+          "outfit": {
+            "zh": "白色羊毛西裝外套與同色西裝褲，裡面是黑色絲質上衣，黑色尖頭低跟鞋",
+            "en": "a white wool suit jacket and matching trousers over a black silk top, black pointed low heels"
+          },
+          "outfit_top": {
+            "zh": "白色羊毛西裝外套，裡面是黑色絲質上衣",
+            "en": "a white wool suit jacket over a black silk top"
+          },
+          "detail": {
+            "zh": "西裝的肩線俐落，翻領的布料有細緻的斜紋，袖口露出一點黑色絲質袖口",
+            "en": "sharp shoulder line, fine twill weave on the lapels, a sliver of black silk cuff showing at the sleeves"
+          }
+        },
+        {
+          "id": "C01-b",
+          "label": "被潑酒後",
+          "outfit": {
+            "zh": "白色羊毛西裝外套與同色西裝褲，裡面是黑色絲質上衣，黑色尖頭低跟鞋",
+            "en": "a white wool suit jacket and matching trousers over a black silk top, black pointed low heels"
+          },
+          "outfit_top": {
+            "zh": "白色羊毛西裝外套，裡面是黑色絲質上衣",
+            "en": "a white wool suit jacket over a black silk top"
+          },
+          "state": {
+            "zh": "白色西裝的前襟被香檳潑濕，深色的酒漬從翻領往下暈開，一縷濕髮貼在臉頰上",
+            "en": "the front of the white jacket soaked with champagne, a dark wet stain spreading down from the lapel, a damp strand of hair stuck to her cheek"
+          }
+        }
+      ]
+    },
+    {
+      "id": "C02",
+      "name": "許曼",
+      "tag": {
+        "zh": "栗色大波浪長髮的年輕女子",
+        "en": "the young woman with long chestnut waves"
+      },
+      "look": {
+        "zh": "二十五歲左右的女性，尖下巴，栗色大波浪長髮披在背後，濃眉，眼尾上挑，身形纖細",
+        "en": "a woman of about twenty-five, pointed chin, long chestnut waves falling down her back, thick brows, upswept eyes, slender build"
+      },
+      "stature": {
+        "zh": "身高約一百六十二公分",
+        "en": "about 162 cm tall"
+      },
+      "marks": {
+        "zh": "一對大顆的珍珠耳環",
+        "en": "a pair of large pearl earrings"
+      },
+      "detail": {
+        "zh": "妝很完整，粉底略厚，正紅色的唇膏，睫毛刷得很長",
+        "en": "full makeup with slightly heavy foundation, true-red lipstick, long mascaraed lashes"
+      },
+      "voice": {
+        "zh": "二十出頭的女聲，音調偏高，說話快，尾音上揚",
+        "en": "a high, quick female voice in her early twenties that lilts up at the end"
+      },
+      "variants": [
+        {
+          "id": "C02-a",
+          "label": "晚禮服",
+          "outfit": {
+            "zh": "香檳色緞面露肩長禮服，銀色細帶高跟鞋",
+            "en": "a champagne satin off-the-shoulder evening gown, thin-strapped silver heels"
+          },
+          "outfit_top": {
+            "zh": "香檳色緞面露肩禮服",
+            "en": "a champagne satin off-the-shoulder gown"
+          },
+          "detail": {
+            "zh": "緞面在光下有柔和的反光，裙擺垂墜，腰線收得很緊",
+            "en": "the satin catching soft highlights, a fluid draped skirt, a tightly fitted waist"
+          }
+        }
+      ]
+    },
+    {
+      "id": "C03",
+      "name": "周經理",
+      "minor": true,
+      "tag": {
+        "zh": "戴細框眼鏡的灰髮中年男子",
+        "en": "the grey-haired middle-aged man in thin-framed glasses"
+      },
+      "look": {
+        "zh": "五十歲左右的男性，國字臉，灰白短髮梳得整齊，細框眼鏡，身形微胖",
+        "en": "a man of about fifty, square face, neatly combed short grey hair, thin-framed glasses, slightly heavy build"
+      },
+      "stature": {
+        "zh": "身高約一百七十五公分",
+        "en": "about 175 cm tall"
+      },
+      "voice": {
+        "zh": "五十多歲的男聲，沉穩，語速慢",
+        "en": "a calm, unhurried male voice in his fifties"
+      },
+      "variants": [
+        {
+          "id": "C03-a",
+          "label": "制服",
+          "outfit": {
+            "zh": "深灰色三件式西裝，白襯衫，深藍色領帶，黑色皮鞋",
+            "en": "a dark grey three-piece suit, white shirt, navy tie, black leather shoes"
+          },
+          "outfit_top": {
+            "zh": "深灰色西裝外套與背心，白襯衫，深藍色領帶",
+            "en": "a dark grey suit jacket and waistcoat, white shirt, navy tie"
+          },
+          "detail": {
+            "zh": "西裝布料是細密的毛料，背心的鈕扣是深色牛角扣，領帶打得很端正，皮鞋擦得發亮",
+            "en": "fine worsted suiting, dark horn buttons on the waistcoat, a precisely knotted tie, shoes polished to a shine"
+          }
+        }
+      ]
+    }
+  ],
+  "scenes": [
+    {
+      "id": "S01",
+      "name": "酒店宴會廳入口",
+      "space": {
+        "zh": "五星級酒店宴會廳的入口，兩扇高大的雙開木門敞開，門外是鋪著深紅地毯的走廊，門內是挑高的宴會廳，天花板垂著水晶吊燈，門內靠牆有一張鋪白布的簽到台",
+        "en": "the entrance of a five-star hotel banquet hall, tall double wooden doors standing open onto a corridor with deep red carpet, a high-ceilinged hall inside with crystal chandeliers, a sign-in table draped in white cloth against the wall just inside the doors"
+      },
+      "light": {
+        "zh": "水晶吊燈的暖黃光從上方柔和地灑下，門外的走廊較暗",
+        "en": "warm yellow light falling softly from the crystal chandeliers above, the corridor outside the doors dimmer"
+      },
+      "time": {
+        "zh": "晚上，室內",
+        "en": "night, interior"
+      },
+      "palette": {
+        "zh": "暗部偏深棕，點綴色是地毯的深紅",
+        "en": "shadows leaning deep brown, the deep red of the carpet as the accent"
+      },
+      "detail": {
+        "zh": "木門有深色的拼花與黃銅把手，地毯的絨毛被踩得有點倒伏，牆上是淺金色的絲質壁布",
+        "en": "dark parquet inlay and brass handles on the doors, carpet pile slightly flattened by footsteps, pale gold silk wallcovering"
+      }
+    }
+  ],
+  "props": [
+    {
+      "id": "P01",
+      "name": "香檳杯",
+      "desc": {
+        "zh": "一只盛著半杯香檳的細長高腳杯",
+        "en": "a tall flute half full of champagne"
+      },
+      "states": {
+        "空": {
+          "zh": "一只空了的細長高腳杯",
+          "en": "an empty tall champagne flute"
+        }
+      },
+      "detail": {
+        "zh": "薄透的玻璃杯身，杯腳細長，杯緣有一圈淡淡的口紅印",
+        "en": "thin clear glass, a long slender stem, a faint ring of lipstick on the rim"
+      }
+    }
+  ],
+  "pending": [
+    "形式與媒材：依「宴會」「打臉」的題材暫定真人寫實的豎屏短劇",
+    "工具未定：提示詞是不限工具的完整版，通用負面詞先寫好；選定工具後照工具的長度、秒數與弱點改一次",
+    "C02 許曼與 C03 周經理的外貌、服裝：原文沒寫，暫定栗色大波浪長髮配香檳色禮服、灰髮細框眼鏡配深灰西裝",
+    "三個角色的聲線：原文沒寫，暫定如設定表"
+  ]
+}

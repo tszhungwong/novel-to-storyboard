@@ -5,7 +5,7 @@ timeout_seconds: 900
 allowed_tools: [Read, Glob, Grep, Skill, Write, Edit, Bash]
 ---
 
-我寫了一個短篇的第一章，想做成 AI 動畫，你幫我拆分鏡。
+我寫了一個短篇的第一章，想做成 AI 動畫，你幫我拆分鏡。其他參數你決定就好，不用先問我，有要確認的列在回覆裡。
 
 第一章　回島
 

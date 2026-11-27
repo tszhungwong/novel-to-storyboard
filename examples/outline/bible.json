@@ -2,6 +2,7 @@
   "project": {
     "title": "午夜當鋪",
     "format": "漫劇",
+    "medium": "漫畫",
     "aspect": "9:16",
     "image_tool": "即夢圖像",
     "video_tool": "可靈",
@@ -10,6 +11,7 @@
     ],
     "video_mode": "i2v",
     "use_last_frame": true,
+    "tool_limits": {},
     "audio_plan": "旁白",
     "clip_range": [
       3,
@@ -60,7 +62,7 @@
           "label": "平常",
           "outfit": "脖子上繫著一條褪色的紅布領巾",
           "state": "",
-          "sheet": "正面、側面、背面全身三視圖，蹲坐姿，表情平靜"
+          "sheet": "正面、四分之三側面、側面、背面全身四視圖，蹲坐姿，表情平靜"
         }
       ]
     },
