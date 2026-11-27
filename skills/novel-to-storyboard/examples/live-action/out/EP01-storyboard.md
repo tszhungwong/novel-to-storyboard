@@ -49,13 +49,13 @@ The high-ceilinged banquet hall, crystal chandeliers and round tables in white c
 中文
 
 ```text
-敞開的雙開木門，門外是深紅地毯的走廊，背景虛化，門框是深色的實木，黃銅把手磨得發亮，走廊牆上有一排壁燈。吊燈的暖黃光從上方照下，門外的走廊偏暗，暗部偏深棕，點綴色是地毯的深紅。純背景空景照片，取景比這個機位的鏡頭略寬，平視角度。寫實攝影，數位電影機質感，清晰銳利，中等飽和，輕微顆粒。
+敞開的雙開木門，門外是深紅地毯的走廊，背景虛化，門框是深色的實木，黃銅把手磨得發亮，走廊牆上有一排壁燈。吊燈的暖黃光從上方照下，門外的走廊偏暗，晚上，室內，暗部偏深棕，點綴色是地毯的深紅。純背景空景照片，取景比這個機位的鏡頭略寬，平視角度。寫實攝影，數位電影機質感，清晰銳利，中等飽和，輕微顆粒。
 ```
 
 English
 
 ```text
-The open double wooden doors and the deep red carpeted corridor beyond, softly out of focus, dark solid-wood door frames, brass handles polished bright with use, a row of wall sconces along the corridor. Warm chandelier light from above, the corridor beyond the doors darker, shadows leaning deep brown, the deep red of the carpet as the accent. Empty background plate photo, scenery only, unoccupied, framed slightly wider than the shot, eye-level shot. Photorealistic, digital cinema camera look, crisp detail, moderate saturation, subtle grain.
+The open double wooden doors and the deep red carpeted corridor beyond, softly out of focus, dark solid-wood door frames, brass handles polished bright with use, a row of wall sconces along the corridor. Warm chandelier light from above, the corridor beyond the doors darker, night, interior, shadows leaning deep brown, the deep red of the carpet as the accent. Empty background plate photo, scenery only, unoccupied, framed slightly wider than the shot, eye-level shot. Photorealistic, digital cinema camera look, crisp detail, moderate saturation, subtle grain.
 ```
 
 ## 精簡表
@@ -204,7 +204,7 @@ The young woman with long chestnut waves steps half a pace forward to block the 
 首幀圖像提示詞（中文）
 
 ```text
-栗色大波浪長髮的年輕女子，香檳色緞面露肩禮服，背對鏡頭，畫面右側前景，只露出栗色長髮與裸露的肩膀，虛焦，看著對面的女子，手不在畫面內。二十八歲左右的女性，鵝蛋臉，黑色及肩直髮別在耳後，眉形平直，眼睛細長，身形高瘦，白色羊毛西裝外套，裡面是黑色絲質上衣，左眉尾有一顆小痣，半側面朝畫面右，站在畫面左側中景，平靜地看著前景的女子，手不在畫面內，眼神不閃躲，嘴唇自然閉合，下顎放鬆。敞開的雙開木門，門外是深紅地毯的走廊，背景虛化。吊燈的暖黃光從上方照下，門外的走廊偏暗，暗部偏深棕，點綴色是地毯的深紅。近景，胸部以上入鏡，過肩鏡頭，中長焦鏡頭，約 85mm。寫實攝影，數位電影機質感，清晰銳利，中等飽和，輕微顆粒。
+栗色大波浪長髮的年輕女子，香檳色緞面露肩禮服，背對鏡頭，畫面右側前景，只露出栗色長髮與裸露的肩膀，虛焦，看著對面的女子，手不在畫面內。二十八歲左右的女性，鵝蛋臉，黑色及肩直髮別在耳後，眉形平直，眼睛細長，身形高瘦，白色羊毛西裝外套，裡面是黑色絲質上衣，左眉尾有一顆小痣，半側面朝畫面右，站在畫面左側中景，平靜地看著前景的女子，手不在畫面內，眼神不閃躲，嘴唇自然閉合，下顎放鬆。敞開的雙開木門，門外是深紅地毯的走廊，背景虛化。吊燈的暖黃光從上方照下，門外的走廊偏暗，晚上，室內，暗部偏深棕，點綴色是地毯的深紅。近景，胸部以上入鏡，過肩鏡頭，中長焦鏡頭，約 85mm。寫實攝影，數位電影機質感，清晰銳利，中等飽和，輕微顆粒。
 ```
 
 尾幀提示詞（拿首幀圖做圖像編輯）（中文）
@@ -222,7 +222,7 @@ The young woman with long chestnut waves steps half a pace forward to block the 
 首幀圖像提示詞（English）
 
 ```text
-The young woman with long chestnut waves, a champagne satin off-the-shoulder gown, seen from behind, in the right foreground, only chestnut hair and a bare shoulder visible, out of focus, facing the woman opposite, hands out of frame. A woman of about twenty-eight, oval face, straight shoulder-length black hair tucked behind her ears, level brows, long narrow eyes, tall slim build, a white wool suit jacket over a black silk top, a small mole at the tail of her left eyebrow, three-quarter view, facing frame right, standing in the left midground, looking calmly at the woman in the foreground, hands out of frame, eyes steady, lips closed, jaw relaxed. The open double wooden doors and the deep red carpeted corridor beyond, softly out of focus. Warm chandelier light from above, the corridor beyond the doors darker, shadows leaning deep brown, the deep red of the carpet as the accent. Medium close-up, framed from the chest up, over-the-shoulder shot, 85mm lens. Photorealistic, digital cinema camera look, crisp detail, moderate saturation, subtle grain.
+The young woman with long chestnut waves, a champagne satin off-the-shoulder gown, seen from behind, in the right foreground, only chestnut hair and a bare shoulder visible, out of focus, facing the woman opposite, hands out of frame. A woman of about twenty-eight, oval face, straight shoulder-length black hair tucked behind her ears, level brows, long narrow eyes, tall slim build, a white wool suit jacket over a black silk top, a small mole at the tail of her left eyebrow, three-quarter view, facing frame right, standing in the left midground, looking calmly at the woman in the foreground, hands out of frame, eyes steady, lips closed, jaw relaxed. The open double wooden doors and the deep red carpeted corridor beyond, softly out of focus. Warm chandelier light from above, the corridor beyond the doors darker, night, interior, shadows leaning deep brown, the deep red of the carpet as the accent. Medium close-up, framed from the chest up, over-the-shoulder shot, 85mm lens. Photorealistic, digital cinema camera look, crisp detail, moderate saturation, subtle grain.
 ```
 
 尾幀提示詞（拿首幀圖做圖像編輯）（English）
@@ -334,7 +334,7 @@ Champagne drips from the lapel one drop at a time as the stain slowly spreads. S
 首幀圖像提示詞（中文）
 
 ```text
-二十八歲左右的女性，鵝蛋臉，黑色及肩直髮別在耳後，眉形平直，眼睛細長，身形高瘦，白色羊毛西裝外套，裡面是黑色絲質上衣，白色西裝的前襟被香檳潑濕，深色的酒漬從翻領往下暈開，一縷濕髮貼在臉頰上，左眉尾有一顆小痣，半側面朝畫面右，站在畫面中央偏左，先低頭看胸前的酒漬，再抬眼看向畫面右側，手不在畫面內，眉頭沒有動，嘴唇抿平。敞開的雙開木門，門外是深紅地毯的走廊，背景虛化。吊燈的暖黃光從上方照下，門外的走廊偏暗，暗部偏深棕，點綴色是地毯的深紅。近景，胸部以上入鏡，中長焦鏡頭，約 85mm。寫實攝影，數位電影機質感，清晰銳利，中等飽和，輕微顆粒。
+二十八歲左右的女性，鵝蛋臉，黑色及肩直髮別在耳後，眉形平直，眼睛細長，身形高瘦，白色羊毛西裝外套，裡面是黑色絲質上衣，白色西裝的前襟被香檳潑濕，深色的酒漬從翻領往下暈開，一縷濕髮貼在臉頰上，左眉尾有一顆小痣，半側面朝畫面右，站在畫面中央偏左，先低頭看胸前的酒漬，再抬眼看向畫面右側，手不在畫面內，眉頭沒有動，嘴唇抿平。敞開的雙開木門，門外是深紅地毯的走廊，背景虛化。吊燈的暖黃光從上方照下，門外的走廊偏暗，晚上，室內，暗部偏深棕，點綴色是地毯的深紅。近景，胸部以上入鏡，中長焦鏡頭，約 85mm。寫實攝影，數位電影機質感，清晰銳利，中等飽和，輕微顆粒。
 ```
 
 尾幀提示詞（拿首幀圖做圖像編輯）（中文）
@@ -352,7 +352,7 @@ Champagne drips from the lapel one drop at a time as the stain slowly spreads. S
 首幀圖像提示詞（English）
 
 ```text
-A woman of about twenty-eight, oval face, straight shoulder-length black hair tucked behind her ears, level brows, long narrow eyes, tall slim build, a white wool suit jacket over a black silk top, the front of the white jacket soaked with champagne, a dark wet stain spreading down from the lapel, a damp strand of hair stuck to her cheek, a small mole at the tail of her left eyebrow, three-quarter view, facing frame right, standing just left of centre, glancing down at the stain on her chest, then lifting her eyes to frame right, hands out of frame, brows unmoved, mouth set in a flat line. The open double wooden doors and the deep red carpeted corridor beyond, softly out of focus. Warm chandelier light from above, the corridor beyond the doors darker, shadows leaning deep brown, the deep red of the carpet as the accent. Medium close-up, framed from the chest up, 85mm lens. Photorealistic, digital cinema camera look, crisp detail, moderate saturation, subtle grain.
+A woman of about twenty-eight, oval face, straight shoulder-length black hair tucked behind her ears, level brows, long narrow eyes, tall slim build, a white wool suit jacket over a black silk top, the front of the white jacket soaked with champagne, a dark wet stain spreading down from the lapel, a damp strand of hair stuck to her cheek, a small mole at the tail of her left eyebrow, three-quarter view, facing frame right, standing just left of centre, glancing down at the stain on her chest, then lifting her eyes to frame right, hands out of frame, brows unmoved, mouth set in a flat line. The open double wooden doors and the deep red carpeted corridor beyond, softly out of focus. Warm chandelier light from above, the corridor beyond the doors darker, night, interior, shadows leaning deep brown, the deep red of the carpet as the accent. Medium close-up, framed from the chest up, 85mm lens. Photorealistic, digital cinema camera look, crisp detail, moderate saturation, subtle grain.
 ```
 
 尾幀提示詞（拿首幀圖做圖像編輯）（English）
@@ -429,7 +429,7 @@ The young woman with long chestnut waves turns her head and points at the doorwa
 首幀圖像提示詞（中文）
 
 ```text
-二十八歲左右的女性，鵝蛋臉，黑色及肩直髮別在耳後，眉形平直，眼睛細長，身形高瘦，身高約一百七十公分，白色羊毛西裝外套，裡面是黑色絲質上衣，白色西裝的前襟被香檳潑濕，深色的酒漬從翻領往下暈開，一縷濕髮貼在臉頰上，左眉尾有一顆小痣，半側面朝畫面右，站在畫面左側中景，看著走到面前的中年男子，雙手自然垂在身側，神情平靜，嘴唇閉著。五十歲左右的男性，國字臉，灰白短髮梳得整齊，細框眼鏡，身形微胖，身高約一百七十五公分，深灰色西裝外套與背心，白襯衫，深藍色領帶，半側面朝畫面左，站在畫面右側，面對她，上半身彎下鞠躬，視線恭敬地垂下，雙手交疊在身前。敞開的雙開木門，門外是深紅地毯的走廊，背景虛化。吊燈的暖黃光從上方照下，門外的走廊偏暗，暗部偏深棕，點綴色是地毯的深紅。中景，腰部以上入鏡，雙人鏡頭，標準鏡頭，約 50mm。寫實攝影，數位電影機質感，清晰銳利，中等飽和，輕微顆粒。
+二十八歲左右的女性，鵝蛋臉，黑色及肩直髮別在耳後，眉形平直，眼睛細長，身形高瘦，身高約一百七十公分，白色羊毛西裝外套，裡面是黑色絲質上衣，白色西裝的前襟被香檳潑濕，深色的酒漬從翻領往下暈開，一縷濕髮貼在臉頰上，左眉尾有一顆小痣，半側面朝畫面右，站在畫面左側中景，看著走到面前的中年男子，雙手自然垂在身側，神情平靜，嘴唇閉著。五十歲左右的男性，國字臉，灰白短髮梳得整齊，細框眼鏡，身形微胖，身高約一百七十五公分，深灰色西裝外套與背心，白襯衫，深藍色領帶，半側面朝畫面左，站在畫面右側，面對她，上半身彎下鞠躬，視線恭敬地垂下，雙手交疊在身前。敞開的雙開木門，門外是深紅地毯的走廊，背景虛化。吊燈的暖黃光從上方照下，門外的走廊偏暗，晚上，室內，暗部偏深棕，點綴色是地毯的深紅。中景，腰部以上入鏡，雙人鏡頭，標準鏡頭，約 50mm。寫實攝影，數位電影機質感，清晰銳利，中等飽和，輕微顆粒。
 ```
 
 尾幀提示詞（拿首幀圖做圖像編輯）（中文）
@@ -447,7 +447,7 @@ The young woman with long chestnut waves turns her head and points at the doorwa
 首幀圖像提示詞（English）
 
 ```text
-A woman of about twenty-eight, oval face, straight shoulder-length black hair tucked behind her ears, level brows, long narrow eyes, tall slim build, about 170 cm tall, a white wool suit jacket over a black silk top, the front of the white jacket soaked with champagne, a dark wet stain spreading down from the lapel, a damp strand of hair stuck to her cheek, a small mole at the tail of her left eyebrow, three-quarter view, facing frame right, standing in the left midground, watching the man who has stopped in front of her, both hands relaxed at her sides, calm, lips closed. A man of about fifty, square face, neatly combed short grey hair, thin-framed glasses, slightly heavy build, about 175 cm tall, a dark grey suit jacket and waistcoat, white shirt, navy tie, three-quarter view, facing frame left, standing on the right facing her, bowing from the waist, eyes respectfully lowered, hands clasped in front of him. The open double wooden doors and the deep red carpeted corridor beyond, softly out of focus. Warm chandelier light from above, the corridor beyond the doors darker, shadows leaning deep brown, the deep red of the carpet as the accent. Medium shot, framed from the waist up, two-shot, standard 50mm lens. Photorealistic, digital cinema camera look, crisp detail, moderate saturation, subtle grain.
+A woman of about twenty-eight, oval face, straight shoulder-length black hair tucked behind her ears, level brows, long narrow eyes, tall slim build, about 170 cm tall, a white wool suit jacket over a black silk top, the front of the white jacket soaked with champagne, a dark wet stain spreading down from the lapel, a damp strand of hair stuck to her cheek, a small mole at the tail of her left eyebrow, three-quarter view, facing frame right, standing in the left midground, watching the man who has stopped in front of her, both hands relaxed at her sides, calm, lips closed. A man of about fifty, square face, neatly combed short grey hair, thin-framed glasses, slightly heavy build, about 175 cm tall, a dark grey suit jacket and waistcoat, white shirt, navy tie, three-quarter view, facing frame left, standing on the right facing her, bowing from the waist, eyes respectfully lowered, hands clasped in front of him. The open double wooden doors and the deep red carpeted corridor beyond, softly out of focus. Warm chandelier light from above, the corridor beyond the doors darker, night, interior, shadows leaning deep brown, the deep red of the carpet as the accent. Medium shot, framed from the waist up, two-shot, standard 50mm lens. Photorealistic, digital cinema camera look, crisp detail, moderate saturation, subtle grain.
 ```
 
 尾幀提示詞（拿首幀圖做圖像編輯）（English）
@@ -476,7 +476,7 @@ The grey-haired middle-aged man in thin-framed glasses stops before the tall sli
 首幀圖像提示詞（中文）
 
 ```text
-二十八歲左右的女性，鵝蛋臉，黑色及肩直髮別在耳後，眉形平直，眼睛細長，身形高瘦，白色羊毛西裝外套，裡面是黑色絲質上衣，白色西裝的前襟被香檳潑濕，深色的酒漬從翻領往下暈開，一縷濕髮貼在臉頰上，左眉尾有一顆小痣，半側面朝畫面右，臉在畫面中段偏上，越過鞠躬的中年男子，看向畫面右側，手不在畫面內，嘴角動了一下，沒有笑出來，眼神很穩。敞開的雙開木門，門外是深紅地毯的走廊，背景虛化。吊燈的暖黃光從上方照下，門外的走廊偏暗，暗部偏深棕，點綴色是地毯的深紅。特寫，肩部以上入鏡，中長焦鏡頭，約 85mm，臉偏畫面左，右側留一片乾淨的虛化背景。寫實攝影，數位電影機質感，清晰銳利，中等飽和，輕微顆粒。
+二十八歲左右的女性，鵝蛋臉，黑色及肩直髮別在耳後，眉形平直，眼睛細長，身形高瘦，白色羊毛西裝外套，裡面是黑色絲質上衣，白色西裝的前襟被香檳潑濕，深色的酒漬從翻領往下暈開，一縷濕髮貼在臉頰上，左眉尾有一顆小痣，半側面朝畫面右，臉在畫面中段偏上，越過鞠躬的中年男子，看向畫面右側，手不在畫面內，嘴角動了一下，沒有笑出來，眼神很穩。敞開的雙開木門，門外是深紅地毯的走廊，背景虛化。吊燈的暖黃光從上方照下，門外的走廊偏暗，晚上，室內，暗部偏深棕，點綴色是地毯的深紅。特寫，肩部以上入鏡，中長焦鏡頭，約 85mm，臉偏畫面左，右側留一片乾淨的虛化背景。寫實攝影，數位電影機質感，清晰銳利，中等飽和，輕微顆粒。
 ```
 
 尾幀提示詞（拿首幀圖做圖像編輯）（中文）
@@ -494,7 +494,7 @@ The grey-haired middle-aged man in thin-framed glasses stops before the tall sli
 首幀圖像提示詞（English）
 
 ```text
-A woman of about twenty-eight, oval face, straight shoulder-length black hair tucked behind her ears, level brows, long narrow eyes, tall slim build, a white wool suit jacket over a black silk top, the front of the white jacket soaked with champagne, a dark wet stain spreading down from the lapel, a damp strand of hair stuck to her cheek, a small mole at the tail of her left eyebrow, three-quarter view, facing frame right, her face in the upper middle of the frame, looking past the bowing man toward frame right, hands out of frame, the corner of her mouth twitches without becoming a smile, her gaze steady. The open double wooden doors and the deep red carpeted corridor beyond, softly out of focus. Warm chandelier light from above, the corridor beyond the doors darker, shadows leaning deep brown, the deep red of the carpet as the accent. Close-up, framed from the shoulders up, 85mm lens, face placed left of centre, a clean blurred area to the right. Photorealistic, digital cinema camera look, crisp detail, moderate saturation, subtle grain.
+A woman of about twenty-eight, oval face, straight shoulder-length black hair tucked behind her ears, level brows, long narrow eyes, tall slim build, a white wool suit jacket over a black silk top, the front of the white jacket soaked with champagne, a dark wet stain spreading down from the lapel, a damp strand of hair stuck to her cheek, a small mole at the tail of her left eyebrow, three-quarter view, facing frame right, her face in the upper middle of the frame, looking past the bowing man toward frame right, hands out of frame, the corner of her mouth twitches without becoming a smile, her gaze steady. The open double wooden doors and the deep red carpeted corridor beyond, softly out of focus. Warm chandelier light from above, the corridor beyond the doors darker, night, interior, shadows leaning deep brown, the deep red of the carpet as the accent. Close-up, framed from the shoulders up, 85mm lens, face placed left of centre, a clean blurred area to the right. Photorealistic, digital cinema camera look, crisp detail, moderate saturation, subtle grain.
 ```
 
 尾幀提示詞（拿首幀圖做圖像編輯）（English）

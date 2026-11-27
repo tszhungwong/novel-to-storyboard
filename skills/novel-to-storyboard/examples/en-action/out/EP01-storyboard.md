@@ -47,7 +47,7 @@ The side of a food cart with a canvas awning, out-of-focus warm bulbs behind, th
 ### S01-C　機位背景圖（畫幅 16:9）
 
 ```text
-The dark underside of a food cart, one wheel at the left edge of the frame, wet asphalt with neon reflections, a rusted axle and spokes, crushed paper cups on the asphalt. A strip of red neon reflected on the asphalt in the foreground, the underside of the cart in deep shadow, saturated red and blue neon accents against deep blue-grey shadows. Empty background plate, scenery only, unoccupied, framed slightly wider than the shot, eye-level shot, ground-level camera. Hand-painted anime film style, clean ink outlines, cel shading with a single shadow tone, high saturation with strong contrast, soft film grain.
+The dark underside of a food cart, one wheel at the left edge of the frame, wet asphalt with neon reflections, a rusted axle and spokes, crushed paper cups on the asphalt. A strip of red neon reflected on the asphalt in the foreground, the underside of the cart in deep shadow, night, steady rain, saturated red and blue neon accents against deep blue-grey shadows. Empty background plate, scenery only, unoccupied, framed slightly wider than the shot, eye-level shot, ground-level camera. Hand-painted anime film style, clean ink outlines, cel shading with a single shadow tone, high saturation with strong contrast, soft film grain.
 ```
 
 ## 精簡表
@@ -123,7 +123,7 @@ Rain falls steadily through the light of the bulbs, the canvas awnings ripple in
 首幀圖像提示詞
 
 ```text
-A pair of white canvas sneakers and bare shins in mid-stride, entering from the left edge of the frame (colours and textures as in image 1), low in the left third of the frame, moving toward frame right. Background as in image 2: wet asphalt with red and blue neon reflections, cart wheels out of focus in the background. Low warm light from the left, neon colours reflected in the puddle, saturated red and blue neon accents against deep blue-grey shadows. Close-up, detail shot, ground-level camera, a shallow puddle in the centre of the frame, shallow depth of field. Hand-painted anime film style, clean ink outlines, cel shading with a single shadow tone, high saturation with strong contrast, soft film grain.
+A pair of white canvas sneakers and bare shins in mid-stride, entering from the left edge of the frame (colours and textures as in image 1), low in the left third of the frame, moving toward frame right. Background as in image 2: wet asphalt with red and blue neon reflections, cart wheels out of focus in the background. Low warm light from the left, neon colours reflected in the puddle, night, steady rain, saturated red and blue neon accents against deep blue-grey shadows. Close-up, detail shot, ground-level camera, a shallow puddle in the centre of the frame, shallow depth of field. Hand-painted anime film style, clean ink outlines, cel shading with a single shadow tone, high saturation with strong contrast, soft film grain.
 ```
 
 尾幀提示詞（拿首幀圖做圖像編輯）
@@ -207,7 +207,7 @@ The girl with the short black bob takes one more step toward frame right, should
 首幀圖像提示詞
 
 ```text
-The tall man in the green raincoat from image 1 (face as in image 2), facing the camera, filling the centre of the frame, head tilted down, looking down toward the lower right of the frame, right fist closed around a bunch of brick-red sweatshirt fabric at the lower right edge of the frame, left arm down at his side below the frame, jaw set, eyes narrowed, rainwater dripping from the brim of the hood. Background as in image 3: a dark canvas awning overhead and blurred warm bulbs behind his hood. Warm bulbs behind him as a rim light on the hood, his face lit from below by red neon reflected off the wet ground, saturated red and blue neon accents against deep blue-grey shadows. Medium close-up, framed from the chest up, low-angle shot, his face in the upper half of the frame, shallow depth of field. Hand-painted anime film style, clean ink outlines, cel shading with a single shadow tone, high saturation with strong contrast, soft film grain.
+The tall man in the green raincoat from image 1 (face as in image 2), facing the camera, filling the centre of the frame, head tilted down, looking down toward the lower right of the frame, right fist closed around a bunch of brick-red sweatshirt fabric at the lower right edge of the frame, left arm down at his side below the frame, jaw set, eyes narrowed, rainwater dripping from the brim of the hood. Background as in image 3: a dark canvas awning overhead and blurred warm bulbs behind his hood. Warm bulbs behind him as a rim light on the hood, his face lit from below by red neon reflected off the wet ground, night, steady rain, saturated red and blue neon accents against deep blue-grey shadows. Medium close-up, framed from the chest up, low-angle shot, his face in the upper half of the frame, shallow depth of field. Hand-painted anime film style, clean ink outlines, cel shading with a single shadow tone, high saturation with strong contrast, soft film grain.
 ```
 
 尾幀提示詞（拿首幀圖做圖像編輯）
@@ -234,7 +234,7 @@ The tall man in the green raincoat tilts his head down a little further and spea
 首幀圖像提示詞
 
 ```text
-A battered square pale-blue biscuit tin (image 2) in mid-air at the top of the frame, falling. Background as in image 1: the dark underside of a food cart, one wheel at the left edge of the frame, wet asphalt with neon reflections. A strip of red neon reflected on the asphalt in the foreground, the underside of the cart in deep shadow, saturated red and blue neon accents against deep blue-grey shadows. Close-up, detail shot, ground-level camera, the gap under the cart in the right half of the frame. Hand-painted anime film style, clean ink outlines, cel shading with a single shadow tone, high saturation with strong contrast, soft film grain.
+A battered square pale-blue biscuit tin (image 2) in mid-air at the top of the frame, falling. Background as in image 1: the dark underside of a food cart, one wheel at the left edge of the frame, wet asphalt with neon reflections. A strip of red neon reflected on the asphalt in the foreground, the underside of the cart in deep shadow, night, steady rain, saturated red and blue neon accents against deep blue-grey shadows. Close-up, detail shot, ground-level camera, the gap under the cart in the right half of the frame. Hand-painted anime film style, clean ink outlines, cel shading with a single shadow tone, high saturation with strong contrast, soft film grain.
 ```
 
 尾幀提示詞（拿首幀圖做圖像編輯）
@@ -291,7 +291,7 @@ The tall man in the green raincoat and the girl with the short black bob both st
 首幀圖像提示詞
 
 ```text
-A battered square pale-blue biscuit tin (image 2) lying flat on the wet asphalt in the shadow under the cart. Background as in image 1: the dark underside of a food cart, one wheel at the left edge of the frame, wet asphalt with neon reflections. A strip of red neon reflected on the asphalt in the foreground, the underside of the cart in deep shadow, saturated red and blue neon accents against deep blue-grey shadows. Close-up, detail shot, ground-level camera, the tin in the centre of the frame. Hand-painted anime film style, clean ink outlines, cel shading with a single shadow tone, high saturation with strong contrast, soft film grain.
+A battered square pale-blue biscuit tin (image 2) lying flat on the wet asphalt in the shadow under the cart. Background as in image 1: the dark underside of a food cart, one wheel at the left edge of the frame, wet asphalt with neon reflections. A strip of red neon reflected on the asphalt in the foreground, the underside of the cart in deep shadow, night, steady rain, saturated red and blue neon accents against deep blue-grey shadows. Close-up, detail shot, ground-level camera, the tin in the centre of the frame. Hand-painted anime film style, clean ink outlines, cel shading with a single shadow tone, high saturation with strong contrast, soft film grain.
 ```
 
 尾幀提示詞（拿首幀圖做圖像編輯）
@@ -319,7 +319,7 @@ Raindrops land on the lid of the tin and run off its edge, the neon reflection o
 首幀圖像提示詞
 
 ```text
-The tall man in the green raincoat from image 1, three-quarter view, facing frame left, standing in the centre of the frame between two carts, head turned toward frame left, toward the sound, both hands lowered at his sides, jaw tight. Background as in image 2: the dark gap between two food carts behind him, a canvas awning above. Warm bulb light on his front, deep shadow in the gap behind him, saturated red and blue neon accents against deep blue-grey shadows. Medium full shot, framed from the knees up, eye-level shot, the dark gap fills the centre of the frame behind him. Hand-painted anime film style, clean ink outlines, cel shading with a single shadow tone, high saturation with strong contrast, soft film grain.
+The tall man in the green raincoat from image 1, three-quarter view, facing frame left, standing in the centre of the frame between two carts, head turned toward frame left, toward the sound, both hands lowered at his sides, jaw tight. Background as in image 2: the dark gap between two food carts behind him, a canvas awning above. Warm bulb light on his front, deep shadow in the gap behind him, night, steady rain, saturated red and blue neon accents against deep blue-grey shadows. Medium full shot, framed from the knees up, eye-level shot, the dark gap fills the centre of the frame behind him. Hand-painted anime film style, clean ink outlines, cel shading with a single shadow tone, high saturation with strong contrast, soft film grain.
 ```
 
 尾幀提示詞（拿首幀圖做圖像編輯）
