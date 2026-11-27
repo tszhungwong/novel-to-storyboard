@@ -88,11 +88,108 @@ const epPlan = ep && seriesForEp && Array.isArray(seriesForEp.episodes)
 outDir = outDir || path.join(path.dirname(path.resolve(files[0])), 'out');
 if (scriptText == null) fs.mkdirSync(outDir, { recursive: true });
 
+// ---------- 問題收集 ----------
+const issues = []; // {level: '錯誤'|'警告'|'提示', where, msg}
+const report = (level, where, msg) => {
+  if (!issues.some((x) => x.level === level && x.where === where && x.msg === msg)) issues.push({ level, where, msg });
+};
+const err = (where, msg) => report('錯誤', where, msg);
+const warn = (where, msg) => report('警告', where, msg);
+const hint = (where, msg) => report('提示', where, msg);
+
+// ---------- 結構：清單寫成物件、裡面混了 null 或文字時，先報錯再略過，腳本才不會整個當掉 ----------
+const isObj = (x) => !!x && typeof x === 'object' && !Array.isArray(x);
+if (!isObj(bible)) {
+  console.error(`設定檔的最外層要是 { … } 物件：${files[0]}`);
+  process.exit(2);
+}
+/** owner[key] 應該是物件的清單。idKey 是每一筆的編號欄位（角色、場景是 id，cast 是 char）。 */
+function normList(owner, key, where, idKey = 'id') {
+  if (!isObj(owner) || owner[key] == null) return;
+  let v = owner[key];
+  if (!Array.isArray(v)) {
+    if (isObj(v) && idKey in v) {
+      err(where, `${key} 要寫成清單 [ { … } ]，目前是一個物件；這次當成只有一筆`);
+      v = [v];
+    } else if (isObj(v) && Object.values(v).length && Object.values(v).every(isObj)) {
+      err(where, `${key} 要寫成清單 [ { … }, { … } ]，目前是以編號當鍵的物件；這次照順序讀成清單`);
+      v = Object.entries(v).map(([k, x]) => (x[idKey] == null ? { [idKey]: k, ...x } : x));
+    } else {
+      err(where, `${key} 要寫成清單 [ { … } ]；目前的寫法讀不懂，這次略過`);
+      v = [];
+    }
+  }
+  const bad = v.filter((x) => !isObj(x)).length;
+  if (bad) err(where, `${key} 裡有 ${bad} 筆不是 { … } 的資料（空值或文字），這次略過`);
+  owner[key] = v.filter(isObj);
+}
+for (const k of ['characters', 'scenes', 'props', 'effects']) normList(bible, k, '設定檔');
+for (const c of bible.characters || []) normList(c, 'variants', c.id || '角色');
+if (isObj(secondJson) && !series) {
+  for (const k of ['shots', 'plan', 'setups']) normList(secondJson, k, '分鏡檔');
+  for (const s of secondJson.shots || []) normList(s, 'cast', s.id || '鏡頭', 'char');
+}
+
 // ---------- 專案參數 ----------
-const P = bible.project || {};
-let langs = (Array.isArray(P.prompt_langs) ? P.prompt_langs : []).filter((l) => l === 'zh' || l === 'en');
+const P = isObj(bible.project) ? bible.project : {};
+/** 打錯的值最接近哪一個認得的值（差一兩個字的才算）。 */
+function closest(v, list) {
+  const a = [...String(v)];
+  let best = null;
+  let bestD = Infinity;
+  for (const w of list) {
+    const b = [...w];
+    const d = Array.from({ length: a.length + 1 }, (_, i) => [i, ...Array(b.length).fill(0)]);
+    for (let j = 1; j <= b.length; j++) d[0][j] = j;
+    for (let i = 1; i <= a.length; i++) {
+      for (let j = 1; j <= b.length; j++) d[i][j] = Math.min(d[i - 1][j] + 1, d[i][j - 1] + 1, d[i - 1][j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));
+    }
+    if (d[a.length][b.length] < bestD) { bestD = d[a.length][b.length]; best = w; }
+  }
+  return bestD <= 2 ? best : null;
+}
+// 這幾個參數打錯時會被默默當成預設值（原生音訊整個關掉、文生影片變成圖生影片），所以要說出來。
+// 常見的簡體與別名直接認，並提示改成正式的寫法。
+const AUDIO_PLANS = ['旁白', '後配口型', '原生音訊', '配樂'];
+const AUDIO_ALIASES = { 原生音频: '原生音訊', 原生音頻: '原生音訊', 后配口型: '後配口型', 後期配音: '後配口型', 后期配音: '後配口型', 配乐: '配樂' };
+if (P.audio_plan != null && !AUDIO_PLANS.includes(String(P.audio_plan).trim())) {
+  const raw = String(P.audio_plan).trim();
+  const fix = AUDIO_ALIASES[raw];
+  if (fix) {
+    hint('project.audio_plan', `audio_plan「${raw}」當成「${fix}」；請改成「${fix}」`);
+    P.audio_plan = fix;
+  } else {
+    const near = closest(raw, AUDIO_PLANS);
+    warn('project.audio_plan', `audio_plan「${raw}」不是 ${AUDIO_PLANS.join('、')} 其中一個${near ? `（是不是「${near}」？）` : ''}；腳本不認得它，原生音訊的台詞與聲音、後配口型的檢查都不會套用`);
+  }
+} else if (P.audio_plan != null) {
+  P.audio_plan = String(P.audio_plan).trim();
+}
+const VIDEO_MODES = { i2v: 'i2v', t2v: 't2v', 圖生影片: 'i2v', 文生影片: 't2v', 'image-to-video': 'i2v', 'text-to-video': 't2v' };
+let MODE = 'i2v';
+if (P.video_mode != null) {
+  const raw = String(P.video_mode).trim();
+  const m = VIDEO_MODES[raw.toLowerCase()] || VIDEO_MODES[raw];
+  if (m) MODE = m;
+  else warn('project.video_mode', `video_mode「${raw}」請填 i2v（圖生影片）或 t2v（文生影片）；這次當成 i2v`);
+  if (m && m !== raw) hint('project.video_mode', `video_mode「${raw}」當成「${m}」；請改成「${m}」`);
+}
+// 提示詞語言：["zh"]、["en"] 或 ["zh", "en"]。寫成字串或用了 zh-TW、English 這類寫法也照讀
+const LANG_ALIASES = [[/^(zh|zh[-_].+|cn|chinese|中文|繁體中文|簡體中文)$/i, 'zh'], [/^(en|en[-_].+|english|英文)$/i, 'en']];
+let langs = [];
+if (P.prompt_langs != null) {
+  const rawList = Array.isArray(P.prompt_langs) ? P.prompt_langs : String(P.prompt_langs).split(/[\s,，、]+/).filter(Boolean);
+  if (!Array.isArray(P.prompt_langs)) hint('project.prompt_langs', `prompt_langs 要寫成清單，例如 ["zh"] 或 ["zh", "en"]；這次照「${P.prompt_langs}」讀`);
+  const unknown = [];
+  for (const x of rawList) {
+    const hit = LANG_ALIASES.find(([re]) => re.test(String(x).trim()));
+    if (!hit) unknown.push(x);
+    else if (!langs.includes(hit[1])) langs.push(hit[1]);
+    if (hit && String(x).trim() !== hit[1]) hint('project.prompt_langs', `prompt_langs 的「${x}」當成「${hit[1]}」；請改成「${hit[1]}」`);
+  }
+  if (unknown.length) warn('project.prompt_langs', `prompt_langs 只認得 zh 與 en，「${unknown.join('、')}」這次略過`);
+}
 if (!langs.length) langs = ['zh', 'en'];
-const MODE = P.video_mode === 't2v' ? 't2v' : 'i2v';
 const USE_LAST = P.use_last_frame !== false;
 const NATIVE_AUDIO = P.audio_plan === '原生音訊';
 // 工具可生成的秒數是連續範圍時用 clip_range: [最短, 最長]；是固定幾種時用 clip_lengths
@@ -126,15 +223,6 @@ const FORMATS = ['漫劇', '短劇', '動畫', '真人劇', '影片'];
 const FORMAT = P.format === '正式動畫' ? '動畫' : String(P.format || '').trim(); // 舊檔的「正式動畫」照收
 const MEDIUMS = ['真人寫實', '2D 動畫', '3D 動畫', '漫畫'];
 const PHOTO = String(P.medium || '').trim() === '真人寫實';
-// ---------- 問題收集 ----------
-const issues = []; // {level: '錯誤'|'警告'|'提示', where, msg}
-const report = (level, where, msg) => {
-  if (!issues.some((x) => x.level === level && x.where === where && x.msg === msg)) issues.push({ level, where, msg });
-};
-const err = (where, msg) => report('錯誤', where, msg);
-const warn = (where, msg) => report('警告', where, msg);
-const hint = (where, msg) => report('提示', where, msg);
-
 // 單集長度 [最短, 最長]（秒）：使用者或大綱指定了才有。不填就是一章一集、不設上限
 const EP_LEN = Array.isArray(P.episode_length) && P.episode_length.length === 2 && P.episode_length.every((n) => Number(n) > 0)
   ? P.episode_length.map(Number).sort((a, b) => a - b)
@@ -523,7 +611,7 @@ function parseCam(shot) {
 }
 const isStatic = (shot) => !zhOf(shot.camera) || parseCam(shot).base === '固定';
 
-const REF_RE = /同上|同前|如前|same as above|as before|as above/i;
+const REF_RE = /同上|同前(?:一鏡|一張|一個|面|述)|如前(?:所述|一鏡|面)|跟上一鏡一樣|same as above|as before|as above/i;
 const TEXT_RE = /寫著|寫有|字樣|上面的字|that (says|reads)|text reading|with the words/i;
 const SCREEN_RE = /畫面(的)?[左右]|鏡頭(的)?[左右]|螢幕[左右]|screen[- ](left|right)|frame[- ](left|right)|(left|right) of (the )?(frame|screen)/i;
 const FAST_RE = /快速|迅速|急速|猛烈|劇烈|猛地|猛然|瞬間|飛快|狂奔|飛撲|暴衝|大幅|爆發|炸開|爆炸|噴發|\b(rapid(ly)?|violent(ly)?|sudden(ly)?|quick(ly)?|fast|dramatic(ally)?|bursts?|lunges?|dash(es)?|sprints?|slams?|whips?|explod(e|es|ing)|explosions?|erupts?)\b/i;
@@ -568,6 +656,8 @@ const HUE_RE = /[暖冷](色|調|光|[黃橘紅棕藍白灰青])|偏[青藍橘�
 // 用身體部位說位置（「頭頂一線夜空」「腰部高度」）：沒有人的場景圖裡，工具可能把它讀成人的頭頂、腰
 const BODY_POS_RE = /頭頂|腰部|齊腰|及腰高/;
 const PERSON_RE = /臉|人物|人影|他的|她的|頭髮|肩膀|眼睛|身上|身後|身前|女子|男子|女人|男人|老人|少女|少年|孩子|\b(face|faces|his|her|hair|shoulders?|eyes|figure|person|people|man|woman|girl|boy)\b/i;
+// 字面上有人、其實是地方或東西的詞：男子宿舍、洗臉台、老人院、hair dryer
+const PERSON_OK_RE = /(男子|女子)(宿舍|學校|學院|中學|高中|監獄|浴室|廁所|更衣室|會館|會所)|洗臉[台檯盆]?|臉盆|老人(院|中心|之家|會)|少年(宮|院|隊)|\bhair[- ]?(dryers?|salons?|dresser'?s?)\b/gi;
 // 手不在畫面裡的寫法：這種鏡頭不用驗收手指
 const NO_HANDS_RE = /不在畫面|看不到|看不見|畫面外|out of (the )?frame|not visible|below the frame|out of shot/i;
 
@@ -588,6 +678,9 @@ function checkFrag(where, v, required = false) {
       warn(where, '提示詞語言包含 en，但這一段只有中文；請寫成 {"zh": "…", "en": "…"}');
     }
     const unknown = s.match(PROP_RE);
+    const stray = [...new Set([...s.matchAll(/\{[^{}\n]{0,40}\}/g)].map((m) => m[0]))]
+      .filter((x) => !/^\{[PF][0-9A-Za-z_-]*(?:[:：][^{}]+?)?\}$/.test(x) && !/^\{(n|ar)\}$/.test(x));
+    if (stray.length) warn(where, `有沒換掉的 ${stray.join('、')}，會原樣進提示詞；道具寫成 {P01}、特效寫成 {F01}（大寫的 P 或 F 加編號），有狀態寫成 {P01:拆開}，冒號後面要有狀態名稱`);
     if (unknown) err(where, `用了設定檔裡沒有的道具或特效編號，或沒有登記的狀態：${[...new Set(unknown)].join('、')}`);
     for (const m of rawPick(v, l).matchAll(PROP_RE)) {
       const d = m[1][0] === 'F' ? fxDefs.get(m[1]) : null;
@@ -601,7 +694,7 @@ function checkFrag(where, v, required = false) {
 /** 片段裡有沒有寫到人：人稱、身體部位，或任何角色的短稱。回傳碰到的字，沒有就回傳空字串。 */
 function mentionsPerson(v) {
   for (const l of langs) {
-    const s = pick(v, l);
+    const s = pick(v, l).replace(PERSON_OK_RE, '');
     if (!s) continue;
     const m = PERSON_RE.exec(s);
     if (m) return m[0];
@@ -610,6 +703,35 @@ function mentionsPerson(v) {
     }
   }
   return '';
+}
+
+/** 動作裡有沒有寫到某個角色的名字或短稱：cast 是空的鏡頭，提示詞不會寫出那個角色。 */
+function mentionsCharacter(vals) {
+  for (const l of langs) {
+    for (const v of vals) {
+      const s = pick(v, l).toLowerCase();
+      if (!s) continue;
+      for (const { c, vs } of charList) {
+        for (const tg of [c.name, pick(c.tag, l), ...vs.map((x) => pick(x.tag, l))]) if (tg && s.includes(String(tg).toLowerCase())) return tg;
+      }
+    }
+  }
+  return '';
+}
+// 分鏡檔各層認得的欄位。寫錯名字或放錯層的欄位腳本不會用，寫在裡面的內容也不會進提示詞
+const EP_KEYS = ['episode', 'source_title', 'changes', 'plan', 'setups', 'shots'];
+const PLAN_KEYS = ['id', 'scene', 'purpose', 'pov', 'beats', 'peak', 'blocking', 'mood'];
+const SETUP_KEYS = ['id', 'scene', 'desc', 'bg', 'light', 'detail'];
+const SHOT_KEYS = ['id', 'scene', 'beat', 'source', 'duration', 'setup', 'size', 'type', 'angle', 'height', 'lens', 'camera', 'speed', 'render', 'link', 'transition', 'action', 'line', 'sound', 'music', 'cast', 'props', 'fx', 'bg', 'light', 'palette', 'frame', 'end', 'motion', 'refs', 'negative', 'risk', 'continuity', 'post', 'cut'];
+const CAST_KEYS = ['char', 'facing', 'pos', 'gaze', 'hands', 'face', 'partial'];
+/** 不認得的欄位。名稱以 _ 開頭的當成給人看的備註，不檢查。 */
+function checkKeys(where, obj, known, level = 'shot') {
+  for (const k of Object.keys(obj)) {
+    if (known.includes(k) || /^(_|\/\/|\$)/.test(k)) continue;
+    const near = closest(k, known);
+    const misplaced = level === 'shot' && CAST_KEYS.includes(k) ? `；${k} 是 cast 裡每個人的欄位，要寫在 cast 的那個人底下` : near ? `（是不是「${near}」？）` : '';
+    warn(where, `不認得「${k}」這個欄位${misplaced}；腳本不會用它，寫在裡面的內容不會進提示詞。給自己看的備註，欄位名稱前面加底線（_note）`);
+  }
 }
 
 /** 道具描述會被代入句子中間（「右手握著{P01}」），要是短的名詞短語，不能有逗號。 */
@@ -800,6 +922,7 @@ for (const s of bible.scenes || []) {
 // 機位（分鏡檔的 setups）：同一場戲裡反覆使用的拍攝位置。背景寫一次，同機位的鏡頭共用
 const setups = new Map();
 for (const u of (ep && Array.isArray(ep.setups) ? ep.setups : [])) {
+  checkKeys(u.id || '機位', u, SETUP_KEYS, 'setup');
   if (!u.id) { err('setups', '有機位缺少 id'); continue; }
   if (setups.has(u.id)) err(u.id, '機位編號重複');
   setups.set(u.id, u);
@@ -853,8 +976,8 @@ function subject(entry, shot, l, withBlocking = true, tok = null) {
   return joinC([...base, ...block], l);
 }
 const setupOf = (shot) => (shot.setup ? setups.get(shot.setup) : null) || {};
-/** 光線：這一鏡的 light → 機位的 light → 場景的光線與時間。 */
-const lightOf = (shot, sc, l) => pick(shot.light, l) || pick(setupOf(shot).light, l) || joinC([pick(sc.light, l), pick(sc.time, l)], l);
+/** 光線：這一鏡的 light → 機位的 light → 場景的光線；場景的時間與天氣（time）不管光有沒有覆寫都接在後面，熄了燈還是深夜、還在下雨。 */
+const lightOf = (shot, sc, l) => joinC([pick(shot.light, l) || pick(setupOf(shot).light, l) || pick(sc.light, l), pick(sc.time, l)], l);
 /** 色彩：這一鏡的 palette → 場景的 palette。冷暖與主色放這裡，不放風格鎖定句。 */
 const paletteOf = (shot, sc, l) => pick(shot.palette, l) || pick(sc.palette, l);
 /** 背景：這一鏡的 bg → 機位的 bg → 整段場景描述（只適合全景以上）。參考圖模式下註明參照哪一張背景圖。 */
@@ -1107,7 +1230,7 @@ for (const u of setups.values()) {
   const oneLens = lensShots.length === 1 && used.every((s) => spec(s).lens) ? lensShots[0] : null;
   const lensOf = (l) => (!oneLens ? '' : LENSES[spec(oneLens).lens]?.[l] || pick(oneLens.lens, l));
   for (const l of langs) {
-    const light = pick(u.light, l) || joinC([pick(sc.light, l), pick(sc.time, l)], l);
+    const light = joinC([pick(u.light, l) || pick(sc.light, l), pick(sc.time, l)], l);
     plateAssets.push({
       id: u.id, kind: '機位背景圖', lang: l, ar: AR.plate,
       prompt: joinS([joinC([pick(u.bg, l), pick(u.detail, l)], l), joinC([light, pick(sc.palette, l)], l), joinC([T[l].plate, ang ? ang[l] : '', hgt ? hgt[l] : '', lensOf(l)], l), pick(P.style_lock, l)], l),
@@ -1176,6 +1299,7 @@ const shots = ep && Array.isArray(ep.shots) ? ep.shots : [];
 let EP_ID = null;
 let epBlocked = '';
 if (ep) {
+  checkKeys('分鏡檔', ep, EP_KEYS, 'ep');
   const raw = ep.episode == null ? '' : String(ep.episode).trim();
   const base = path.basename(second);
   const stem = base.replace(/\.json$/i, '');
@@ -1260,6 +1384,7 @@ if (ep) {
   }
   plans.forEach((p, i) => {
     const where = `plan 第 ${planId(p, i)} 場`;
+    checkKeys(where, p, PLAN_KEYS, 'plan');
     if (planById.get(planId(p, i)) !== p) err(where, '場次編號重複');
     if (p.scene && !scenes.has(p.scene)) err(where, `場景編號 ${p.scene} 不在設定檔裡`);
     const miss = [['purpose', '目的'], ['beats', '節拍'], ['peak', '高點']].filter(([k]) => (k === 'beats' ? !beatsOf(p).length : !p[k])).map(([k, n]) => `${k}（${n}）`);
@@ -1347,6 +1472,14 @@ if (ep) {
 
     // 角色與走位
     const cast = Array.isArray(s.cast) ? s.cast : [];
+    checkKeys(id, s, SHOT_KEYS);
+    cast.forEach((e) => checkKeys(`${id} ${e.char ?? '（cast）'}`, e, CAST_KEYS, 'cast'));
+    // 12：cast 是必填；空鏡寫 []。cast 是空的，動作卻寫到某個角色，提示詞就不會寫出那個人
+    if (!('cast' in s)) warn(id, '缺少 cast；沒有人入鏡的空鏡寫 "cast": []，有人入鏡就把角色放進來，提示詞才會寫出外貌與走位');
+    else if (!cast.length) {
+      const who = mentionsCharacter([s.action, s.motion]);
+      if (who) warn(id, `cast 是空的，但 action 或 motion 寫到了「${who}」；入鏡的角色要放進 cast，提示詞才會寫出這個角色的外貌與走位`);
+    }
     const baseIds = cast.map((e) => chars.get(e.char)?.c.id).filter(Boolean);
     const twice = [...new Set(baseIds.filter((x, k) => baseIds.indexOf(x) !== k))];
     if (twice.length) {
@@ -1479,6 +1612,11 @@ if (ep) {
 
     // 時長
     const d = Number(s.duration) || 0;
+    if (s.line != null && !(isObj(s.line) && s.line.text)) {
+      warn(id, isObj(s.line)
+        ? 'line 沒有 text；沒有台詞就拿掉 line，有台詞就寫在 text'
+        : 'line 要寫成 {"type": "對白", "who": "C01", "text": "…"}；目前的寫法腳本讀不懂，這句台詞不會進字幕、表格和提示詞');
+    }
     if (s.line && s.line.text) {
       const need = speakSeconds(s.line.text) + 0.3;
       if (need > d) warn(id, `對白／旁白約需 ${need.toFixed(1)} 秒（字數 ÷ ${RATE} + 0.3），但這一鏡只有 ${d} 秒；請拆成兩鏡、縮短句子，或把句子分到相鄰兩鏡的 line`);
@@ -1722,7 +1860,7 @@ if (series) {
     for (const [k, name] of [['hook', 'hook（鉤子：前三秒的畫面）'], ['payoff', 'payoff（爽點或核心事件）'], ['cliff', 'cliff（卡點：結尾留給觀眾的問題）']]) {
       if (!e[k]) warn(id, `缺少 ${name}；每一集都要回答這一題，見 outline-to-episodes 技能第三節`);
     }
-    if (e.cliff && !/[？?]/.test(e.cliff)) hint(id, 'cliff 只寫了最後發生什麼，沒有寫出觀眾心裡的問題；在最後一個畫面後面接一句問題（「外婆為什麼要押她的記憶？」），寫劇本和拆鏡時才知道要停在誰的反應上');
+    if (e.cliff && !/[？?][」』"”']?\s*$/.test(String(e.cliff).trim())) hint(id, 'cliff 只寫了最後發生什麼，沒有寫出觀眾心裡的問題；在最後一個畫面後面接一句問題（「外婆為什麼要押她的記憶？」），寫劇本和拆鏡時才知道要停在誰的反應上');
     if (e.cliff_type && !CLIFF_TYPES.includes(e.cliff_type)) hint(id, `cliff_type「${e.cliff_type}」不在分類裡（${CLIFF_TYPES.join('、')}）`);
     const cast = Array.isArray(e.cast) ? e.cast : [];
     if (!cast.length) warn(id, '缺少 cast（出場角色的編號）');
@@ -1786,6 +1924,9 @@ if (scriptText != null) {
       warn('劇本', `台詞與旁白約需 ${Math.round(s)} 秒，已經超過單集長度上限 ${EP_LEN[1]} 秒；先刪句子`);
     } else if (s > EP_LEN[1] * 0.75) {
       warn('劇本', `台詞與旁白約需 ${Math.round(s)} 秒，超過單集長度上限 ${EP_LEN[1]} 秒的四分之三；鉤子畫面、反應鏡頭和停頓沒有空間，拆鏡後幾乎一定超長，先刪句子`);
+    }
+    else if (s < EP_LEN[0] * 0.6) {
+      hint('劇本', `台詞與旁白約 ${Math.round(s)} 秒，單集至少 ${EP_LEN[0]} 秒；台詞大約要佔單集的四分之三（約 ${Math.round(EP_LEN[0] * 0.75)} 秒，見 outline-to-episodes 第三節）。太短的話拆鏡後撐不到下限：補一段戲、反應或台詞，不要用放慢的鏡頭撐`);
     }
   } else {
     hint('project.episode_length', '設定檔沒有 episode_length（單集長度）；填了才能比較台詞長度和單集長度');
@@ -2225,7 +2366,10 @@ function toolLimitText() {
   if (!weak.length && !nums.length) return P.tool_limits == null ? '還沒填（見檢查結果）' : '沒有限制';
   return [...nums, weak.length ? `工具做不好：${weak.join('、')}` : ''].filter(Boolean).join('；');
 }
-const minSec = (sec) => (sec >= 60 ? `${Math.floor(sec / 60)} 分 ${Math.round(sec % 60)} 秒` : `${Math.round(sec)} 秒`);
+const minSec = (sec) => {
+  const r = Math.round(sec); // 先取整數再拆分，119.6 秒才不會變成「1 分 60 秒」
+  return r >= 60 ? `${Math.floor(r / 60)} 分 ${r % 60} 秒` : `${r} 秒`;
+};
 
 // ---------- settings.md / assets.csv（只檢查分集劇本時不寫） ----------
 if (scriptText == null) {
@@ -2656,11 +2800,16 @@ if (ep && !epBlocked) {
     const p = (n, w = 2) => String(n).padStart(w, '0');
     return `${p(Math.floor(ms / 3600000))}:${p(Math.floor(ms / 60000) % 60)}:${p(Math.floor(ms / 1000) % 60)},${p(ms % 1000, 3)}`;
   };
-  const subs = shots.map((s, i) => ({ s, i })).filter(({ s }) => s.line && s.line.text).map(({ s, i }, k) => {
+  const subCues = shots.map((s, i) => ({ s, i })).filter(({ s }) => isObj(s.line) && s.line.text).map(({ s, i }) => {
     const a = startOf(i) + 0.2;
-    const b = Math.max(a + 0.8, Math.min(ends[i], a + speakSeconds(s.line.text) + 0.3));
-    return `${k + 1}\r\n${srtTime(a)} --> ${srtTime(b)}\r\n${rawPick(s.line.text, langs[0])}\r\n`;
+    return { a, b: Math.max(a + 0.8, Math.min(ends[i], a + speakSeconds(s.line.text) + 0.3)), text: rawPick(s.line.text, langs[0]) };
   });
+  // 很短的鏡頭撐不到 0.8 秒的字幕時，截到下一句開始之前，字幕才不會疊在一起
+  subCues.forEach((c, k) => {
+    const next = subCues[k + 1];
+    if (next && c.b > next.a - 0.05) c.b = Math.max(c.a + 0.1, next.a - 0.05);
+  });
+  const subs = subCues.map((c, k) => `${k + 1}\r\n${srtTime(c.a)} --> ${srtTime(c.b)}\r\n${c.text}\r\n`);
   written.push(write(`${epId}.srt`, subs.join('\r\n')));
 
   console.log(`${epId}：${shots.length} 鏡，成片約 ${Math.round(total)} 秒`);

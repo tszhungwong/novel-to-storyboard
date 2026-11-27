@@ -120,7 +120,10 @@ function runCheck(args, cwd) {
     const lines = String(r.stdout || '').split(/\r?\n/);
     const head = lines.findIndex((l) => l.startsWith('檢查：'));
     if (head < 0) {
-      const why = String(r.stderr || r.stdout || '').trim().split(/\r?\n/).slice(0, 3).join(' ');
+      // 腳本當掉時，stderr 前幾行是程式碼的位置；真正說明原因的是「TypeError: …」那一行
+      const errLines = String(r.stderr || r.stdout || '').trim().split(/\r?\n/);
+      const cause = errLines.find((l) => /^\s*\w*Error\b.*:/.test(l));
+      const why = cause ? `${cause.trim()}（${errLines[0].trim()}）` : errLines.slice(0, 3).join(' ');
       return { label, failed: why || `腳本結束碼 ${r.status}` };
     }
     const issues = lines.slice(head + 1).map((l) => l.trim()).filter((l) => /^\[(錯誤|警告|提示)\]/.test(l));
