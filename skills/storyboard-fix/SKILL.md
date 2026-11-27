@@ -1,6 +1,6 @@
 ---
 name: storyboard-fix
-description: 已經用 novel-to-storyboard 做好的分鏡（storyboard 資料夾裡的 bible.json 與 EPxx.json）要改的時候使用：選定或換了圖像、影片生成工具，要把提示詞改成那個工具的寫法（可靈、即夢、Seedance、Veo、Sora、Runway、Vidu、Midjourney、FLUX 這類）；照分鏡生成出來的圖或影片不對（臉不像、手壞掉、動作沒做、背景跳、多了一個人、字畫壞、光不對、角色前後長得不一樣），想知道原因與怎麼改；或要改角色、場景、道具、風格，改某幾鏡、插入或刪除鏡頭。使用者貼上生成結果、說「第幾鏡出來怪怪的」「改用可靈了」「這個角色要改成短髮」時都使用，即使沒有提到分鏡。還沒有分鏡、要從小說或劇本拆起時，用 novel-to-storyboard。
+description: 已經用 novel-to-storyboard 做好的分鏡（storyboard 資料夾裡的 bible.json 與 EPxx.json）要改的時候使用：選定或換了圖像、影片生成工具，要把提示詞改成那個工具的寫法（可靈、即夢、Seedance、Veo、Sora、Runway、Vidu、Midjourney、FLUX 這類）；照分鏡生成出來的圖或影片不對（臉不像、手壞掉、動作沒做、背景跳、多了一個人、字畫壞、光不對、角色前後長得不一樣），想知道原因與怎麼改；或要改角色、場景、道具、風格，改某幾鏡、插入或刪除鏡頭。使用者貼上生成結果、說「第幾鏡出來怪怪的」「改用可靈了」「這個角色要改成短髮」時都使用，即使沒有提到分鏡；前提是專案裡已經有 storyboard/bible.json，或這個對話裡剛做過分鏡。只是一般地問 AI 圖或影片哪裡怪、手上沒有分鏡專案時，不用這個 skill。還沒有分鏡、要從小說或劇本拆起時，用 novel-to-storyboard。
 ---
 
 # 分鏡做好之後：換工具、修改、生成結果不對
@@ -33,7 +33,7 @@ node <這個技能的資料夾>/../novel-to-storyboard/scripts/build_storyboard.
 
 使用者選定（或換了）圖像、影片工具時，做一次適配。設定檔的外貌、場景、風格和分鏡的走位都不用動，改的是工具欄位和少數鏡頭的拍法：
 
-1. 查 `tool-capabilities.md`，填 `project` 的工具欄位：`image_tool`、`video_tool`、`prompt_langs`、`use_last_frame`、`clip_range` 或 `clip_lengths`、`prompt_limits`、`ref_mode` 與 `ref_syntax`、`ref_max`、要接在提示詞最後的 `image_suffix`、`video_suffix`、`audio_suffix`，以及 `tool_limits`（這個工具做不好的事）。工具沒有負面詞欄位就清空 `negative_global`。查不到、或表裡寫「未查證」的項目先不填，請使用者生成一兩鏡測試，做壞了再補上。
+1. 查 `tool-capabilities.md`。使用者說的工具或版本不在表裡，或今天距離表上的查證日期超過三個月，而且能上網搜尋：先查那個工具的官方文件。然後照表裡的「怎麼填」填 `project` 的工具欄位：`image_tool`、`video_tool`、`prompt_langs`、`use_last_frame`、`clip_range` 或 `clip_lengths`、`prompt_limits`、`ref_mode` 與 `ref_syntax`、`ref_max`、`video_mode`（全能參考這類只吃文字加參考圖的模式填 `t2v`）、`speech_lang`（原生音訊時台詞語言和提示詞語言不同才填）、要接在提示詞最後的 `image_suffix`、`asset_suffix`（Midjourney 這類把參數寫在提示詞裡的工具）、`video_suffix`、`audio_suffix`，以及 `tool_limits`（這個工具做不好的事）。工具沒有負面詞欄位就清空 `negative_global`。查不到、或表裡寫「未查證」的項目先不填，請使用者生成一兩鏡測試，做壞了再補上；不能上網時照表填，交付時請使用者確認三件事：單次可生成幾秒、有沒有負面詞欄位、支不支援首尾幀。
 2. 每一集重跑腳本，照檢查結果修：超過單次秒數的拆鏡；提示詞超過長度上限的照 `prompt-writing.md` 第六節縮；參考圖超過張數的減少引用。
 3. `tool_limits` 裡是 `false` 的項目，照 `anti-ai-rules.md` 第二部分換拍法：快速動作拆成預備、結果與反應；字改成後製；甩鏡改成轉場、環繞改成推近。`risk` 寫了備案的鏡頭，先看備案是不是就是答案。
 4. 提示詞語言變了（中文改英文），片段要重寫成新語言，不是逐字翻譯，見 `prompt-writing.md` 第五節。
