@@ -77,8 +77,10 @@ function project(t, { epName = 'EP01.json', editBible, editEp } = {}) {
   if (editBible) editBible(bible);
   if (editEp) editEp(ep);
   save();
-  const run = () => {
-    const r = spawnSync(process.execPath, [SCRIPT, files.bible, files.ep], { encoding: 'utf8' });
+  // fail：讓這幾個檔案寫入或刪除時故意失敗（腳本的 STORYBOARD_TEST_FAIL_FILES）
+  const run = ({ fail = [] } = {}) => {
+    const env = { ...process.env, STORYBOARD_TEST_FAIL_FILES: fail.join(',') };
+    const r = spawnSync(process.execPath, [SCRIPT, files.bible, files.ep], { encoding: 'utf8', env });
     return { code: r.status, out: `${r.stdout}${r.stderr}` };
   };
   return { dir, bible, ep, files, save, run, csv: (name) => path.join(files.out, name) };
@@ -336,4 +338,232 @@ test('鏡號不是這一集開頭：警告', (t) => {
   });
   const r = p.run();
   assert.match(r.out, /\[警告\] 分鏡檔：有 8 鏡的鏡號不是 EP02- 開頭/);
+});
+
+// ---------- 第二輪：重新審查後找到的問題 ----------
+const rowsOf = (file, id) => readTable(file).filter((x) => x[0] === id);
+const removedRows = (p, id) => (fs.existsSync(p.csv('EP01-shots-已移除.csv')) ? rowsOf(p.csv('EP01-shots-已移除.csv'), id) : []);
+/** 模擬 Excel「另存成 Unicode 文字」：UTF-16、Tab 分隔，腳本讀不懂。 */
+const utf16 = (file) => {
+  const text = readTable(file).map((r) => r.join('\t')).join('\r\n');
+  fs.writeFileSync(file, Buffer.from(`\uFEFF${text}`, 'utf16le'));
+};
+
+test('R1：使用者自己加的「參考圖路徑」「影片提示詞（改）」不會被當成腳本產生的欄位刪掉', (t) => {
+  const p = project(t);
+  p.run();
+  const file = p.csv('EP01-shots.csv');
+  setCell(file, 'EP01-003', '參考圖路徑', 'D:/refs/EP01-003.png');
+  setCell(file, 'EP01-004', '影片提示詞（改）', '動作再慢一點');
+  p.ep.shots[0].duration = 4;
+  p.save();
+  const r = p.run();
+  assert.equal(cellOf(readTable(file), 'EP01-003', '參考圖路徑'), 'D:/refs/EP01-003.png', r.out);
+  assert.equal(cellOf(readTable(file), 'EP01-004', '影片提示詞（改）'), '動作再慢一點');
+  // 那一鏡刪掉時，紀錄要搬到已移除
+  p.ep.shots = p.ep.shots.filter((s) => s.id !== 'EP01-003');
+  p.save();
+  p.run();
+  assert.equal(cellOf(readTable(p.csv('EP01-shots-已移除.csv')), 'EP01-003', '參考圖路徑'), 'D:/refs/EP01-003.png');
+});
+
+test('R1：animatic.csv 裡叫「參考圖」「影片提示詞」的欄是使用者的，要保留', (t) => {
+  const p = project(t);
+  p.run();
+  const file = p.csv('EP01-animatic.csv');
+  setCell(file, 'EP01-002', '參考圖', 'ref.png');
+  setCell(file, 'EP01-002', '影片提示詞', '自己寫的');
+  p.run();
+  assert.equal(cellOf(readTable(file), 'EP01-002', '參考圖'), 'ref.png');
+  assert.equal(cellOf(readTable(file), 'EP01-002', '影片提示詞'), '自己寫的');
+});
+
+test('R2：已移除檔刪不掉時，下次重跑不會變成兩列', (t) => {
+  const p = project(t);
+  p.run();
+  setCell(p.csv('EP01-shots.csv'), 'EP01-008', 'seed', '888');
+  const last = p.ep.shots.pop();
+  p.save();
+  p.run();
+  p.ep.shots.push(last);
+  p.save();
+  const r = p.run({ fail: ['EP01-shots-已移除.csv'] });
+  assert.equal(r.code, 0, r.out);
+  assert.match(r.out, /刪不掉/);
+  assert.equal(cellOf(readTable(p.csv('EP01-shots.csv')), 'EP01-008', 'seed'), '888');
+  p.run();
+  assert.equal(rowsOf(p.csv('EP01-shots.csv'), 'EP01-008').length, 1);
+  assert.ok(!fs.existsSync(p.csv('EP01-shots-已移除.csv')));
+});
+
+test('R2：主檔寫到一半失敗，紀錄不丟、也不重複', (t) => {
+  const p = project(t);
+  p.run();
+  setCell(p.csv('EP01-shots.csv'), 'EP01-007', 'seed', '777');
+  p.ep.shots = p.ep.shots.filter((s) => s.id !== 'EP01-007');
+  p.save();
+  const r = p.run({ fail: ['EP01-shots.csv'] });
+  assert.equal(r.code, 1);
+  assert.equal(cellOf(readTable(p.csv('EP01-shots-已移除.csv')), 'EP01-007', 'seed'), '777', '要離開主檔的紀錄要先進已移除檔');
+  const r2 = p.run();
+  assert.equal(r2.code, 0, r2.out);
+  assert.equal(rowsOf(p.csv('EP01-shots.csv'), 'EP01-007').length, 0);
+  assert.equal(removedRows(p, 'EP01-007').length, 1, '已移除檔裡只能有一列');
+});
+
+test('R2：同一次有鏡頭刪掉、也有鏡頭加回來，主檔寫失敗後重跑，兩邊都對', (t) => {
+  const p = project(t);
+  p.run();
+  setCell(p.csv('EP01-shots.csv'), 'EP01-007', 'seed', '777');
+  setCell(p.csv('EP01-shots.csv'), 'EP01-008', 'seed', '888');
+  const s8 = p.ep.shots.find((s) => s.id === 'EP01-008');
+  p.ep.shots = p.ep.shots.filter((s) => s.id !== 'EP01-008');
+  p.save();
+  p.run(); // 008 到已移除
+  p.ep.shots = p.ep.shots.filter((s) => s.id !== 'EP01-007').concat([s8]);
+  p.save();
+  assert.equal(p.run({ fail: ['EP01-shots.csv'] }).code, 1);
+  assert.equal(removedRows(p, 'EP01-008').length, 1, '還沒寫進主檔的 008 不能先從已移除拿掉');
+  p.run();
+  const main = readTable(p.csv('EP01-shots.csv'));
+  assert.deepEqual(main.filter((x) => x[0] === 'EP01-008').map((x) => x[col(main, 'seed')]), ['888']);
+  assert.equal(removedRows(p, 'EP01-007').length, 1);
+  assert.equal(removedRows(p, 'EP01-008').length, 0);
+});
+
+test('R3：已移除檔讀不懂時不刪也不覆蓋，主檔也不更新', (t) => {
+  const p = project(t);
+  p.run();
+  setCell(p.csv('EP01-shots.csv'), 'EP01-008', 'seed', '888');
+  const last = p.ep.shots.pop();
+  p.save();
+  p.run();
+  utf16(p.csv('EP01-shots-已移除.csv'));
+  const before = fs.readFileSync(p.csv('EP01-shots-已移除.csv'));
+  const mainBefore = fs.readFileSync(p.csv('EP01-shots.csv'));
+  p.ep.shots.push(last);
+  p.save();
+  const r = p.run();
+  assert.equal(r.code, 1);
+  assert.match(r.out, /讀不懂 EP01-shots-已移除\.csv/);
+  assert.ok(fs.readFileSync(p.csv('EP01-shots-已移除.csv')).equals(before));
+  assert.ok(fs.readFileSync(p.csv('EP01-shots.csv')).equals(mainBefore));
+});
+
+test('R4：標題列上面多插一列，紀錄照樣搬', (t) => {
+  const p = project(t);
+  p.run();
+  const file = p.csv('EP01-shots.csv');
+  setCell(file, 'EP01-002', 'seed', '222');
+  writeTable(file, [['第一集抽卡紀錄'], ...readTable(file)]);
+  const r = p.run();
+  assert.equal(r.code, 0, r.out);
+  assert.equal(cellOf(readTable(file), 'EP01-002', 'seed'), '222');
+  assert.match(r.out, /標題列上面的 1 列/);
+});
+
+test('R4：主檔讀不懂時不覆蓋', (t) => {
+  const p = project(t);
+  p.run();
+  const file = p.csv('EP01-shots.csv');
+  setCell(file, 'EP01-002', 'seed', '222');
+  utf16(file);
+  const before = fs.readFileSync(file);
+  const r = p.run();
+  assert.equal(r.code, 1);
+  assert.match(r.out, /讀不懂 EP01-shots\.csv/);
+  assert.ok(fs.readFileSync(file).equals(before));
+});
+
+test('R4：有手填紀錄卻備份不起來時不覆蓋', (t) => {
+  const p = project(t);
+  p.run();
+  const file = p.csv('EP01-shots.csv');
+  setCell(file, 'EP01-002', 'seed', '222');
+  fs.writeFileSync(path.join(p.files.out, '備份'), '這是一個檔案，不是資料夾');
+  p.ep.shots[0].duration = 4;
+  p.save();
+  const before = fs.readFileSync(file);
+  const r = p.run();
+  assert.equal(r.code, 1);
+  assert.match(r.out, /備份不起來/);
+  assert.ok(fs.readFileSync(file).equals(before));
+});
+
+test('R5：兩欄都叫「備註」時，兩欄的內容都留著', (t) => {
+  const p = project(t);
+  p.run();
+  const file = p.csv('EP01-shots.csv');
+  const rows = readTable(file);
+  rows[0].push('備註');
+  rows.slice(1).forEach((r) => { while (r.length < rows[0].length) r.push(''); });
+  rows.find((r) => r[0] === 'EP01-001')[col(rows, '備註')] = '第一欄的備註';
+  rows.find((r) => r[0] === 'EP01-002')[rows[0].length - 1] = '第二欄的備註';
+  writeTable(file, rows);
+  p.run();
+  const after = readTable(file);
+  assert.equal(cellOf(after, 'EP01-001', '備註'), '第一欄的備註');
+  assert.equal(cellOf(after, 'EP01-002', '備註(2)'), '第二欄的備註');
+});
+
+test('R6：同一個資產有兩列紀錄，換了提示詞語言也一起跟過去', (t) => {
+  const p = project(t, { editBible: (b) => { b.project.prompt_langs = ['zh']; } });
+  p.run();
+  const file = p.csv('assets.csv');
+  const rows = readTable(file);
+  const name = col(rows, '定稿檔名');
+  const kindCol = col(rows, '類型');
+  const copy = [...rows[1]];
+  rows[1][name] = 'v1.png';
+  copy[name] = 'v2.png';
+  rows.splice(2, 0, copy);
+  writeTable(file, rows);
+  const [id, kind] = [rows[1][0], rows[1][kindCol]];
+  p.bible.project.prompt_langs = ['en'];
+  p.save();
+  const r = p.run();
+  const after = readTable(file).filter((x) => x[0] === id && x[kindCol] === kind).map((x) => x[name]);
+  assert.deepEqual(after, ['v1.png', 'v2.png'], r.out);
+  assert.ok(!fs.existsSync(p.csv('assets-已移除.csv')));
+});
+
+test('R7：EP01-2.json 寫 EP01-2、EP101.json 寫 S1E01，都不擋', (t) => {
+  const a = project(t, { epName: 'EP01-2.json', editEp: (e) => { e.episode = 'EP01-2'; } });
+  assert.doesNotMatch(a.run().out, /檔名卻是/);
+  assert.ok(fs.existsSync(a.csv('EP01-2-shots.csv')));
+  const b = project(t, { epName: 'EP101.json', editEp: (e) => { e.episode = 'S1E01'; } });
+  assert.doesNotMatch(b.run().out, /檔名卻是/);
+  assert.ok(fs.existsSync(b.csv('S1E01-shots.csv')));
+});
+
+test('R7：episode 有控制字元就擋', (t) => {
+  const p = project(t, { editEp: (e) => { e.episode = 'EP01\u0001'; } });
+  const r = p.run();
+  assert.equal(r.code, 1);
+  assert.match(r.out, /不能放進檔名的字/);
+  assert.doesNotMatch(r.out, /ENOENT/);
+});
+
+test('R8：沒填 episode 時，照檔名找分集表的那一集', (t) => {
+  const p = project(t, { editEp: (e) => { delete e.episode; } });
+  fs.writeFileSync(path.join(p.dir, 'series.json'), JSON.stringify({
+    episodes: [{ episode: 'EP01', title: '信', logline: '她把信交給他', hook: '鉤子測試：桌上那封沒拆的信', payoff: '她把信推給他', cliff: '信裡寫了什麼？' }],
+  }));
+  const r = p.run();
+  assert.doesNotMatch(r.out, /series\.json 裡沒有/);
+  assert.match(fs.readFileSync(p.csv('EP01-storyboard.md'), 'utf8'), /鉤子測試：桌上那封沒拆的信/);
+});
+
+test('R9：舊檔內容和最新一份備份一樣時，不再多一份備份', (t) => {
+  const p = project(t);
+  p.run();
+  const file = p.csv('EP01-shots.csv');
+  const v1 = fs.readFileSync(file);
+  p.ep.shots[0].duration = 4;
+  p.save();
+  p.run(); // 備份 v1
+  assert.equal(backups(p, 'EP01-shots').length, 1);
+  fs.writeFileSync(file, v1); // 使用者從備份還原了 v1，又照同樣的分鏡重跑
+  p.run();
+  assert.equal(backups(p, 'EP01-shots').length, 1, '內容和最新一份備份一樣，不該再備份');
 });
