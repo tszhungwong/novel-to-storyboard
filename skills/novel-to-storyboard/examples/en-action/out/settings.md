@@ -68,7 +68,7 @@ A girl of about sixteen, round face, chin-length black bob with blunt bangs, lar
 ### C01-b　設定圖（由 C01-a 改）（畫幅 16:9）
 
 ```text
-Edit the C01-a character reference sheet: keep the face, hairstyle and build unchanged; change the look to: an oversized brick-red hooded sweatshirt, dark denim shorts, white canvas sneakers, hair and shoulders wet from rain, the right sleeve torn open along the shoulder seam.
+Edit the C01-a character reference sheet: keep the face and build unchanged; change the look to: an oversized brick-red hooded sweatshirt, dark denim shorts, white canvas sneakers, hair and shoulders wet from rain, the right sleeve torn open along the shoulder seam.
 ```
 
 ### C01　頭像（畫幅 3:2）

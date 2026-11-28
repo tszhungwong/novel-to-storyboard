@@ -92,7 +92,7 @@ node skills/novel-to-storyboard/scripts/build_storyboard.mjs skills/outline-to-e
 node --test
 ```
 
-`tests/` 裡有八份：
+`tests/` 裡有九份：
 
 - `csv-records.test.mjs`：重跑時 CSV 手填紀錄的保留、備份、已移除檔（包含寫到一半失敗時紀錄不丟、不重複），以及集數和檔名的檢查。寫入失敗用環境變數 `STORYBOARD_TEST_FAIL_FILES` 模擬，只給測試用。
 - `prompt-assembly.test.mjs`：提示詞怎麼組合（參考圖指稱、表情、尾幀的做法、嘴型、環境動態、聲音、運鏡、負面詞⋯）。
@@ -102,6 +102,7 @@ node --test
 - `docs-sync.test.mjs`：`references/fields.md` 的欄位與用詞表和腳本認得的一致；只改了一邊會失敗。
 - `examples.test.mjs`：每個範例重新產生一次，和 repo 裡的 `out/` 比對。改了腳本卻沒重跑範例，這裡會失敗：照上一節的指令重跑，再把 `out/` 一起提交。
 - `plugin.test.mjs`：三份 manifest 的版號一致，技能與代理的名稱和檔名對得上。發新版時三份的 `version` 要一起改。
+- `reviewer-defects.test.mjs`：審查代理埋錯測試的資料（`tests/reviewer-defects/defects.json`）還套得上現在的範例，而且每一條埋的錯腳本都抓不到。不跑審查代理本身，見下一節。
 
 測試只在暫存資料夾裡建專案，不動範例的 `out/`。
 
@@ -114,3 +115,19 @@ node tests/coverage-gate.mjs
 它會跑一次完整的 `node --test` 並記下覆蓋率，列出沒有任何測試觸發過的檢查；有就失敗。
 
 每次推送到 main、每個 PR，GitHub Actions 都會在 Ubuntu 與 Windows、Node 18 與 22 上跑一次 `node --test`，在 Node 22 跑一次 `tests/coverage-gate.mjs`，另外用 Node 16 跑一次每個範例（README 寫的最低版本），設定在 `.github/workflows/test.yml`。
+
+## 審查代理的埋錯測試
+
+三個審查代理（攝影與連戲、表演、美術）是模型照審查檔做事，`node --test` 測不到它們準不準。這個測試在 `live-action` 範例裡故意埋 15 個已知的錯（每個角色 5 個，全是腳本抓不到的），請審查代理去審，算它們抓到幾個、另外報了什麼。每一條錯、埋在哪裡、怎樣算抓到，寫在 `tests/reviewer-defects/defects.json`。
+
+1. 做兩份分鏡，一份埋錯、一份不埋當對照組。資料夾名稱不要看得出哪份有埋錯：
+
+   ```
+   node tests/reviewer-defects/build.mjs <工作區>/run-a
+   node tests/reviewer-defects/build.mjs <工作區>/run-b --clean
+   ```
+
+2. 兩份各開三個審查代理（Claude Code 裝了這個 plugin 時用 `storyboard-camera-reviewer`、`storyboard-acting-reviewer`、`storyboard-art-reviewer`；其他環境開一般的子代理，給它代理檔的內容），照 SKILL.md 第七步的交辦方式給完整路徑：審查檔、`bible.json`、`EP01.json`、`out/EP01-storyboard.md`（美術加 `out/settings.md`）。不要給 `defects.json` 的路徑，也不要說這是測試。
+3. 對照 `defects.json` 的 `expect` 判定每一條有沒有抓到；埋錯那份多報的、和對照組都報的，分開記。
+
+改了審查檔、代理檔或參考文件之後重跑一次。範例改了、`reviewer-defects.test.mjs` 失敗時，照訊息更新 `defects.json` 的 `from`；如果腳本新加的檢查抓得到某一條，把那一條換掉。

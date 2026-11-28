@@ -333,3 +333,43 @@ test('運鏡的終點：會改變取景的運鏡 end 沒寫取景會提示；鏡
   // 範例裡寫了取景的不提示
   assert.doesNotMatch(r.checks, /EP01-008：運鏡/);
 });
+
+test('參照標放在第一句後面：局部入鏡的片段以道具結尾時，不會接在道具的編號後面', (t) => {
+  const r = run(t, { example: 'live-action' });
+  const md = r.file('EP01-storyboard.md');
+  const zh = promptOf(md, 'EP01-008', '首幀圖像提示詞（中文）');
+  const en = promptOf(md, 'EP01-008', '首幀圖像提示詞（English）');
+  assert.match(zh, /栗色大波浪長髮的年輕女子（顏色與質感參照圖\d），虛焦/);
+  assert.match(en, /The young woman \(colours and textures as in image \d\) with long chestnut waves in the right background/);
+  assert.doesNotMatch(zh, /（圖\d）（顏色與質感/);
+  assert.doesNotMatch(en, /\(image \d\) \(colours and textures/);
+});
+
+test('參照標放在第一句後面：英文的第一句是「名詞 with 修飾語」時標在 with 前面，不從修飾語的逗號切開', (t) => {
+  const r = run(t, {
+    example: 'live-action',
+    editBible: (b) => { b.characters[1].look.en = 'a woman of about twenty-five with sharp, delicate features, long chestnut waves falling down her back'; },
+  });
+  const en = promptOf(r.file('EP01-storyboard.md'), 'EP01-002', '首幀圖像提示詞（English）');
+  assert.match(en, /A woman of about twenty-five \(as in image \d\) with sharp, delicate features, long chestnut waves/);
+  assert.doesNotMatch(en, /with sharp \(as in image/);
+});
+
+test('造型的設定圖從第一個造型改：改到頭髮時不再要求髮型不變', (t) => {
+  // live-action 的 C01-b 只改衣服：臉、髮型與體型都不變
+  const a = run(t, { example: 'live-action' });
+  assert.match(a.file('settings.md'), /以 C01-a 的定妝照為底圖做圖像編輯，臉、髮型與體型保持不變/);
+  // 狀態加了濕髮：只留臉與體型
+  const b = run(t, {
+    example: 'live-action',
+    editBible: (bb) => {
+      const v = bb.characters[0].variants[1];
+      v.state = { zh: `${v.state.zh}，一縷濕髮貼在右臉頰上`, en: `${v.state.en}, a damp strand of hair stuck to her right cheek` };
+    },
+  });
+  assert.match(b.file('settings.md'), /以 C01-a 的定妝照為底圖做圖像編輯，臉與體型保持不變/);
+  assert.match(b.file('settings.md'), /Edit the C01-a costume test photos: keep the face and build unchanged/);
+  // en-action 的 C01-b 淋濕了頭髮
+  const c = run(t, { example: 'en-action' });
+  assert.match(c.file('settings.md'), /Edit the C01-a character reference sheet: keep the face and build unchanged/);
+});

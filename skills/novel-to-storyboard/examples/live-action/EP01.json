@@ -5,8 +5,9 @@
     "新增：EP01-005 西裝酒漬的插入鏡頭，原文只有一句「酒順著翻領往下滴」，拉成獨立鏡頭",
     "新增：EP01-009 最後一秒定格加人物字卡，短劇常用的出場手法；不要的話拿掉這一鏡的 speed 與 post",
     "第 004 鏡：原文是兩人面對面，改成越過沈知意的肩拍；9:16 放不下並排的兩個人",
-    "第 007 鏡：原文「許曼回頭」改成頭也不回、抬手往身後一指；後配口型的說話鏡頭要臉朝鏡頭",
-    "第 008 鏡：原文是彎腰時說「沈董，您到了」，改成站定說完再鞠躬；鞠躬時看不到嘴，對不上口型"
+    "第 007 鏡：原文「許曼回頭」改成頭也不回、手在腰邊往身後一擺；後配口型的說話鏡頭要臉朝鏡頭，手也不抬高擋到嘴",
+    "第 008 鏡：原文是彎腰時說「沈董，您到了」，改成站定說完再鞠躬；鞠躬時看不到嘴，對不上口型",
+    "第 010 鏡：原文「空杯子停在半空」當卡點，固定鏡頭停在許曼的臉上；空杯從 004 起一直舉在胸前，這一拍才有東西停住"
   ],
   "plan": [
     {
@@ -133,6 +134,10 @@
       "motion": {
         "zh": "栗色大波浪長髮的年輕女子把下巴再抬高一點，視線上下打量，手中的杯子輕輕晃了一下",
         "en": "the young woman with long chestnut waves lifts her chin a little higher and looks the other woman up and down; the glass in her hand tilts slightly"
+      },
+      "bg": {
+        "zh": "挑高的宴會廳，水晶吊燈與鋪白色桌布的圓桌，幾位端著酒杯的賓客散站在桌邊，背景虛化",
+        "en": "the high-ceilinged banquet hall, crystal chandeliers and round tables in white cloth, a few guests holding glasses standing among the tables, softly out of focus"
       }
     },
     {
@@ -181,8 +186,8 @@
             "en": "staring at the woman opposite"
           },
           "hands": {
-            "zh": "右手端著{P01}，左手扠在腰上",
-            "en": "right hand holding {P01}, left hand on her hip"
+            "zh": "右手端著{P01}，左手垂在身側",
+            "en": "right hand holding {P01}, left hand at her side"
           },
           "face": {
             "zh": "一邊嘴角上揚，眼睛微微瞇起",
@@ -203,8 +208,8 @@
         "en": "the two women face each other a step apart, the guests behind them all watching"
       },
       "motion": {
-        "zh": "栗色大波浪長髮的年輕女子往前半步擋住去路，黑色及肩直髮的高瘦女子停下腳步，背景的賓客慢慢轉頭",
-        "en": "the young woman with long chestnut waves steps half a pace forward to block the way; the tall slim woman with straight shoulder-length black hair stops; guests in the background slowly turn their heads"
+        "zh": "栗色大波浪長髮的年輕女子把重心移到前腳，上身往前逼近一點；黑色及肩直髮的高瘦女子站在原地，垂在身側的手指輕輕收了一下；背景的賓客慢慢轉頭看過來",
+        "en": "the young woman with long chestnut waves shifts her weight onto her front foot and leans in a little; the tall slim woman with straight shoulder-length black hair holds her ground, the fingers at her sides curling slightly; guests in the background slowly turn to look"
       }
     },
     {
@@ -322,15 +327,19 @@
         }
       ],
       "end": {
-        "zh": "栗色大波浪長髮的年輕女子手中的杯子空了，手腕停在往前甩出去的位置，酒液在兩人之間的空中散開",
-        "en": "the glass in the young woman's hand is empty, her wrist stopped at the end of the flick, champagne scattering through the air between them"
+        "zh": "栗色大波浪長髮的年輕女子手中的杯子空了，手腕停在往前甩出去的位置，前景女子的肩頭濕了一片，幾顆酒珠從肩旁飛過",
+        "en": "the glass in the young woman's hand is empty, her wrist stopped at the end of the flick, the shoulder of the woman in the foreground wet, a few drops of champagne flying past it"
       },
       "motion": {
-        "zh": "栗色大波浪長髮的年輕女子手腕一甩，杯中的香檳整片潑向黑色及肩直髮的高瘦女子，酒液在白色西裝前襟上濺開；黑色及肩直髮的高瘦女子閉了一下眼，身體沒有後退",
-        "en": "the young woman with long chestnut waves flicks her wrist and throws the champagne at the tall slim woman with straight shoulder-length black hair; it splashes across the front of the white jacket; the tall slim woman shuts her eyes for a moment and does not step back"
+        "zh": "栗色大波浪長髮的年輕女子手腕一甩，嘴角跟著往上一扯，杯中的香檳整片潑向黑色及肩直髮的高瘦女子，打在前景女子身前、從肩旁濺開；黑色及肩直髮的高瘦女子的肩膀輕輕一頓，站在原地",
+        "en": "the young woman with long chestnut waves flicks her wrist, the corner of her mouth jerking up, and throws the champagne at the tall slim woman with straight shoulder-length black hair; it hits the woman in the foreground and splashes past her shoulder; the tall slim woman's shoulders give a small jolt and she stands her ground"
       },
-      "risk": "液體潑出去、又要落在人身上，動作快。工具做不好時拆成兩鏡：只拍杯子與手腕一甩，切到西裝上的酒漬與她閉眼的反應",
-      "continuity": "軸線同 001：沈知意在左前景、許曼在右；潑出去的酒落在沈知意的前襟，下一鏡的插入拍到"
+      "risk": "液體潑出去、又要落在人身上，動作快。工具做不好時拆成兩鏡：只拍杯子與手腕一甩，再切到 005 西裝上的濕痕",
+      "continuity": "軸線同 001：沈知意在左前景、許曼在右；潑出去的酒落在沈知意的前襟，下一鏡的插入拍到",
+      "bg": {
+        "zh": "挑高的宴會廳，水晶吊燈與鋪白色桌布的圓桌，幾位端著酒杯的賓客散站在桌邊，背景虛化",
+        "en": "the high-ceilinged banquet hall, crystal chandeliers and round tables in white cloth, a few guests holding glasses standing among the tables, softly out of focus"
+      }
     },
     {
       "id": "EP01-005",
@@ -353,8 +362,8 @@
             "en": "filling the centre of the frame"
           },
           "partial": {
-            "zh": "白色西裝的翻領與前襟，濕透的布料半透明、帶著淡淡的金黃色",
-            "en": "the lapel and front of a white wool jacket, the soaked fabric translucent with a faint golden tinge"
+            "zh": "白色羊毛西裝外套的翻領，一片顏色變深的濕痕，帶著淡淡的金黃色，酒珠掛在布料邊緣",
+            "en": "the lapel of the white wool jacket, a darkened wet patch with a faint golden tinge, beads of champagne hanging at its edge"
           }
         }
       ],
@@ -363,8 +372,8 @@
         "en": "blurred warm bokeh"
       },
       "end": {
-        "zh": "濕痕擴到了胸前",
-        "en": "the wet patch has spread down to the chest"
+        "zh": "濕痕從翻領往下擴到胸前",
+        "en": "the wet patch has spread from the lapel down over the chest"
       },
       "motion": {
         "zh": "香檳沿著翻領的布料一滴一滴往下落，濕痕慢慢擴開",
@@ -412,8 +421,8 @@
         "en": "the tall slim woman with straight shoulder-length black hair has raised her head and looks calmly ahead"
       },
       "motion": {
-        "zh": "黑色及肩直髮的高瘦女子低頭看了一眼胸前的酒漬，停了一拍，再慢慢抬起眼睛",
-        "en": "the tall slim woman with straight shoulder-length black hair glances down at the stain on her chest, pauses a beat, then slowly lifts her eyes"
+        "zh": "黑色及肩直髮的高瘦女子低頭看了一眼胸前的濕痕，停了一拍，再慢慢抬起眼睛",
+        "en": "the tall slim woman with straight shoulder-length black hair glances down at the wet patch on her chest, pauses a beat, then slowly lifts her eyes"
       }
     },
     {
@@ -427,7 +436,7 @@
       "lens": "標準",
       "camera": "固定",
       "link": "切",
-      "action": "周經理從廳裡快步走來，許曼頭也不回，抬手往身後一指，要他趕人",
+      "action": "周經理從廳裡快步走來，許曼頭也不回，手往身後一擺要他趕人；周經理走近時，許曼讓開半步",
       "line": {
         "type": "對白",
         "who": "C02",
@@ -439,19 +448,36 @@
       },
       "cast": [
         {
+          "char": "C01-b",
+          "facing": "背面",
+          "pos": {
+            "zh": "畫面左側前景，只露出肩膀與後腦，虛焦",
+            "en": "in the left foreground, only her shoulder and the back of her head visible, out of focus"
+          },
+          "gaze": {
+            "zh": "看著對面的人",
+            "en": "looking at the person opposite"
+          },
+          "hands": {
+            "zh": "手不在畫面內",
+            "en": "hands out of frame"
+          },
+          "partial": true
+        },
+        {
           "char": "C02-a",
           "facing": "半側朝左",
           "pos": {
-            "zh": "站在畫面右側前景，臉朝前景的女子，下巴揚起",
-            "en": "standing in the right foreground, facing the woman by the camera, chin raised"
+            "zh": "站在畫面中央偏右的中景，臉朝前景的女子",
+            "en": "standing in the midground just right of centre, facing the woman by the camera"
           },
           "gaze": {
             "zh": "斜眼看著鏡頭這一側的女子",
             "en": "looking sidelong at the woman on the camera side"
           },
           "hands": {
-            "zh": "右手拿著{P01:空}垂在身側，左手往身後的宴會廳一指",
-            "en": "right hand holding {P01:空} at her side, left hand pointing back over her shoulder toward the hall"
+            "zh": "右手拿著{P01:空}停在胸前，左手在腰邊往身後的宴會廳一擺",
+            "en": "right hand holding {P01:空} at chest height, left hand sweeping back toward the hall at waist level"
           },
           "face": {
             "zh": "下巴揚起，嘴角帶著得意的笑",
@@ -462,8 +488,8 @@
           "char": "C03-a",
           "facing": "正面",
           "pos": {
-            "zh": "從畫面左後方的宴會廳深處快步走來，在背景，略虛",
-            "en": "walking briskly out of the depths of the hall in the left background, slightly soft"
+            "zh": "從畫面右後方的宴會廳深處快步走來，在背景，略虛",
+            "en": "walking briskly out of the depths of the hall in the right background, slightly soft"
           },
           "gaze": {
             "zh": "看向門口",
@@ -480,13 +506,18 @@
         }
       ],
       "end": {
-        "zh": "戴細框眼鏡的灰髮中年男子走到畫面中景，栗色大波浪長髮的年輕女子的左手還指著身後的宴會廳",
-        "en": "the grey-haired middle-aged man in thin-framed glasses has reached the midground, the young woman's left hand still pointing back toward the hall"
+        "zh": "戴細框眼鏡的灰髮中年男子從栗色大波浪長髮的年輕女子身側走過，停在前景女子面前；栗色大波浪長髮的年輕女子退到他身後右側，空杯還舉在胸前",
+        "en": "the grey-haired middle-aged man in thin-framed glasses has passed the young woman and stopped in front of the woman in the foreground; the young woman now stands behind him to the right, the empty glass still held at her chest"
       },
       "motion": {
-        "zh": "栗色大波浪長髮的年輕女子頭也不回，下巴揚起，嘴角掛著得意的笑，左手往身後的宴會廳一指；戴細框眼鏡的灰髮中年男子從背景快步走近",
-        "en": "without turning around, the young woman with long chestnut waves lifts her chin with a smug smile and points back over her shoulder toward the hall with her left hand; the grey-haired middle-aged man in thin-framed glasses walks briskly forward from the background"
-      }
+        "zh": "栗色大波浪長髮的年輕女子頭也不回，下巴揚起，嘴角掛著得意的笑，左手在腰邊往身後的宴會廳一擺；戴細框眼鏡的灰髮中年男子從背景快步走近，栗色大波浪長髮的年輕女子往後讓了半步",
+        "en": "without turning around, the young woman with long chestnut waves lifts her chin with a smug smile and sweeps her left hand back toward the hall at waist level; the grey-haired middle-aged man in thin-framed glasses walks briskly forward from the background and the young woman steps half a pace back to let him pass"
+      },
+      "bg": {
+        "zh": "挑高的宴會廳，水晶吊燈與鋪白色桌布的圓桌，幾位端著酒杯的賓客散站在桌邊，背景虛化",
+        "en": "the high-ceilinged banquet hall, crystal chandeliers and round tables in white cloth, a few guests holding glasses standing among the tables, softly out of focus"
+      },
+      "continuity": "許曼的空杯從 004 甩完之後一直舉在胸前，008 在後景也舉著，010 停在半空"
     },
     {
       "id": "EP01-008",
@@ -552,8 +583,8 @@
         {
           "char": "C02-a",
           "partial": {
-            "zh": "畫面右側背景、比中年男子遠的栗色大波浪長髮女子，虛焦，手裡還拿著{P01:空}",
-            "en": "the young woman with long chestnut waves in the right background, further back than the man, out of focus, still holding {P01:空}"
+            "zh": "畫面右側背景、比中年男子遠的栗色大波浪長髮的年輕女子，虛焦，右手把{P01:空}舉在胸前",
+            "en": "the young woman with long chestnut waves in the right background, further back than the man, out of focus, holding {P01:空} at her chest"
           }
         }
       ],
@@ -564,6 +595,10 @@
       "motion": {
         "zh": "戴細框眼鏡的灰髮中年男子站定，臉朝前景的女子，眼神放低，頭部保持穩定，停一拍之後上半身彎下鞠躬",
         "en": "the grey-haired middle-aged man in thin-framed glasses stands still facing the woman in the foreground, eyes lowered, head steady, then after a beat bows from the waist"
+      },
+      "bg": {
+        "zh": "挑高的宴會廳，水晶吊燈與鋪白色桌布的圓桌，幾位端著酒杯的賓客散站在桌邊，背景虛化",
+        "en": "the high-ceilinged banquet hall, crystal chandeliers and round tables in white cloth, a few guests holding glasses standing among the tables, softly out of focus"
       }
     },
     {
@@ -626,7 +661,7 @@
       "duration": 3,
       "size": "近景",
       "lens": "中長焦",
-      "camera": "緩慢拉遠",
+      "camera": "固定",
       "link": "切",
       "action": "許曼的笑垮下來，杯子停在半空",
       "line": null,
@@ -654,12 +689,16 @@
         }
       ],
       "end": {
-        "zh": "取景拉寬到中景，看得到她身後的賓客都看著她；栗色大波浪長髮的年輕女子的手慢慢垂下，空杯放低到腰間，嘴唇閉上",
-        "en": "the framing has widened to a medium shot, showing the guests behind her all watching; the young woman's hand slowly lowers, the empty glass dropping to her waist, her lips closing"
+        "zh": "栗色大波浪長髮的年輕女子的笑已經垮掉，嘴角往下，嘴唇微張，舉著空杯的手停在半空，身後的賓客都看著她",
+        "en": "the smile has drained from the face of the young woman with long chestnut waves, the corners of her mouth turned down, lips parted, the hand with the empty glass frozen in mid-air, the guests behind her all watching"
       },
       "motion": {
         "zh": "栗色大波浪長髮的年輕女子臉上的笑一點一點垮下來，舉著杯子的手停在半空，忘了放下",
         "en": "the smile slowly drains from the face of the young woman with long chestnut waves; the hand holding the glass stays frozen in mid-air"
+      },
+      "bg": {
+        "zh": "挑高的宴會廳，水晶吊燈與鋪白色桌布的圓桌，幾位端著酒杯的賓客散站在桌邊，背景虛化",
+        "en": "the high-ceilinged banquet hall, crystal chandeliers and round tables in white cloth, a few guests holding glasses standing among the tables, softly out of focus"
       }
     }
   ]

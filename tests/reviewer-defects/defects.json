@@ -1,0 +1,186 @@
+{
+  "_說明": "審查代理的埋錯測試。拿 examples/live-action 當底，照下面每一條改掉某些欄位，做出一份埋了已知錯誤的分鏡，再請三個審查代理去審，算它們抓到幾條。每一條都是腳本抓不到的（tests/reviewer-defects.test.mjs 會確認），所以只能靠審查代理。from 是範例現在的值（範例改了，測試會失敗，要跟著更新這裡）；from 為 null 表示原本沒有這個欄位。expect 是判定「抓到」的標準：回報要指到對的鏡號或資產，並說出這個問題。",
+  "base": "skills/novel-to-storyboard/examples/live-action",
+  "defects": [
+    {
+      "id": "C1",
+      "reviewer": "camera",
+      "where": "EP01-002",
+      "title": "兩人左右對調，越過軸線",
+      "expect": "指出 002 的沈知意與許曼左右位置（或朝向）和 001、003 相反，越過了軸線",
+      "edits": [
+        { "file": "EP01.json", "path": ["shots", { "id": "EP01-002" }, "cast", { "char": "C01-a" }, "facing"], "from": "側面朝右", "to": "側面朝左" },
+        { "file": "EP01.json", "path": ["shots", { "id": "EP01-002" }, "cast", { "char": "C01-a" }, "pos"],
+          "from": { "zh": "站在畫面左側，剛走進敞開的木門", "en": "standing on the left of the frame, just inside the open wooden doors" },
+          "to": { "zh": "站在畫面右側，剛走進敞開的木門", "en": "standing on the right of the frame, just inside the open wooden doors" } },
+        { "file": "EP01.json", "path": ["shots", { "id": "EP01-002" }, "cast", { "char": "C02-a" }, "facing"], "from": "側面朝左", "to": "側面朝右" },
+        { "file": "EP01.json", "path": ["shots", { "id": "EP01-002" }, "cast", { "char": "C02-a" }, "pos"],
+          "from": { "zh": "站在畫面右側，攔在她面前一步遠", "en": "standing on the right of the frame, blocking her way a step away" },
+          "to": { "zh": "站在畫面左側，攔在她面前一步遠", "en": "standing on the left of the frame, blocking her way a step away" } }
+      ]
+    },
+    {
+      "id": "C2",
+      "reviewer": "camera",
+      "where": "EP01-007",
+      "title": "潑空的杯子又變回半杯香檳",
+      "expect": "指出 007 許曼手上的杯子是滿的（{P01} 而不是 {P01:空}），但 004 已經潑空，後面 008、010 又是空杯",
+      "edits": [
+        { "file": "EP01.json", "path": ["shots", { "id": "EP01-007" }, "cast", { "char": "C02-a" }, "hands"],
+          "from": { "zh": "右手拿著{P01:空}停在胸前，左手在腰邊往身後的宴會廳一擺", "en": "right hand holding {P01:空} at chest height, left hand sweeping back toward the hall at waist level" },
+          "to": { "zh": "右手拿著{P01}停在胸前，左手在腰邊往身後的宴會廳一擺", "en": "right hand holding {P01} at chest height, left hand sweeping back toward the hall at waist level" } }
+      ]
+    },
+    {
+      "id": "C3",
+      "reviewer": "camera",
+      "where": "EP01-010",
+      "title": "揭示之後的反應鏡用全景",
+      "expect": "指出 010 是揭示（「沈董」）之後許曼的反應，用全景看不清臉色變化，應該是近景或特寫",
+      "edits": [
+        { "file": "EP01.json", "path": ["shots", { "id": "EP01-010" }, "size"], "from": "近景", "to": "全景" }
+      ]
+    },
+    {
+      "id": "C4",
+      "reviewer": "camera",
+      "where": "EP01-009",
+      "title": "沒有來源的冷藍色逆光",
+      "expect": "指出 009 的冷藍色逆光（輪廓光）在宴會廳裡找不到來源：場景只有暖黃的吊燈，走廊偏暗",
+      "edits": [
+        { "file": "EP01.json", "path": ["shots", { "id": "EP01-009" }, "light"], "from": null,
+          "to": { "zh": "一道冷藍色的強光從她身後打過來，勾出髮絲與肩膀的輪廓，臉的正面偏暗", "en": "a strong cold blue light from behind her, rimming her hair and shoulders, the front of her face in shadow" } }
+      ]
+    },
+    {
+      "id": "C5",
+      "reviewer": "camera",
+      "where": "EP01-006",
+      "title": "近景用廣角",
+      "expect": "指出 006 是近景卻用廣角，臉會變形（或和同一場其他近景的焦段不一致）",
+      "edits": [
+        { "file": "EP01.json", "path": ["shots", { "id": "EP01-006" }, "lens"], "from": "中長焦", "to": "廣角" }
+      ]
+    },
+    {
+      "id": "A1",
+      "reviewer": "acting",
+      "where": "EP01-004",
+      "title": "潑酒時表情溫和放鬆",
+      "expect": "指出 004 許曼潑酒時的臉是放鬆、柔和的，和這一鏡的狠勁（羞辱、潑酒的節拍）不合",
+      "edits": [
+        { "file": "EP01.json", "path": ["shots", { "id": "EP01-004" }, "cast", { "char": "C02-a" }, "face"],
+          "from": { "zh": "咬著下唇，眼神發狠", "en": "biting her lower lip, eyes hard" },
+          "to": { "zh": "眉眼舒展，嘴角放鬆地上揚，眼神柔和", "en": "brows relaxed, the corners of her mouth lifting easily, eyes soft" } }
+      ]
+    },
+    {
+      "id": "A2",
+      "reviewer": "acting",
+      "where": "EP01-008",
+      "title": "經理叫「沈董」時卻看著許曼",
+      "expect": "指出 008 經理對沈知意說「沈董，您到了」，視線卻落在身後的許曼身上",
+      "edits": [
+        { "file": "EP01.json", "path": ["shots", { "id": "EP01-008" }, "cast", { "char": "C03-a" }, "gaze"],
+          "from": { "zh": "看著前景的女子", "en": "looking at the woman in the foreground" },
+          "to": { "zh": "看著身後那個拿著空杯的女子", "en": "looking at the woman with the empty glass behind him" } }
+      ]
+    },
+    {
+      "id": "A3",
+      "reviewer": "acting",
+      "where": "EP01-010",
+      "title": "hands 說雙手垂著，motion 說手舉在半空",
+      "expect": "指出 010 的 hands（雙手垂在身側）和 motion、end（舉著杯子的手停在半空）互相矛盾",
+      "edits": [
+        { "file": "EP01.json", "path": ["shots", { "id": "EP01-010" }, "cast", { "char": "C02-a" }, "hands"],
+          "from": { "zh": "右手舉著{P01:空}停在半空", "en": "right hand holding {P01:空} frozen in mid-air" },
+          "to": { "zh": "雙手垂在身側，{P01:空}握在右手裡", "en": "both hands hanging at her sides, {P01:空} held in her right hand" } }
+      ]
+    },
+    {
+      "id": "A4",
+      "reviewer": "acting",
+      "where": "EP01-001",
+      "title": "後配口型的說話鏡頭用手擋住嘴",
+      "expect": "指出 001 許曼說台詞時左手掩著嘴，後配口型要看得到嘴（對不上口型）",
+      "edits": [
+        { "file": "EP01.json", "path": ["shots", { "id": "EP01-001" }, "cast", { "char": "C02-a" }, "hands"],
+          "from": { "zh": "右手端著{P01}停在胸前，左手垂在身側", "en": "right hand holding {P01} at chest height, left hand at her side" },
+          "to": { "zh": "右手端著{P01}停在胸前，左手手背掩著嘴", "en": "right hand holding {P01} at chest height, the back of her left hand covering her mouth" } }
+      ]
+    },
+    {
+      "id": "A5",
+      "reviewer": "acting",
+      "where": "EP01-003",
+      "title": "沒有原因地含淚發抖",
+      "expect": "指出 003 沈知意含淚、嘴唇發抖，和前後鏡（002 平穩、006 眉頭沒有動）與這一鏡的 motion（呼吸平穩）不連貫",
+      "edits": [
+        { "file": "EP01.json", "path": ["shots", { "id": "EP01-003" }, "cast", { "char": "C01-a" }, "face"],
+          "from": { "zh": "眼神不閃躲，嘴唇自然閉合，下顎放鬆", "en": "eyes steady, lips closed, jaw relaxed" },
+          "to": { "zh": "眼眶泛紅含著淚，嘴唇微微發抖", "en": "eyes red-rimmed and wet with tears, lips trembling slightly" } }
+      ]
+    },
+    {
+      "id": "R1",
+      "reviewer": "art",
+      "where": "EP01-006",
+      "title": "香檳漬變成紅酒漬",
+      "expect": "指出 006 寫的是紅酒漬，但潑的是香檳（P01、C01-b 帶淡金黃色的濕痕）",
+      "edits": [
+        { "file": "EP01.json", "path": ["shots", { "id": "EP01-006" }, "motion"],
+          "from": { "zh": "黑色及肩直髮的高瘦女子低頭看了一眼胸前的濕痕，停了一拍，再慢慢抬起眼睛", "en": "the tall slim woman with straight shoulder-length black hair glances down at the wet patch on her chest, pauses a beat, then slowly lifts her eyes" },
+          "to": { "zh": "黑色及肩直髮的高瘦女子低頭看了一眼胸前的紅酒漬，停了一拍，再慢慢抬起眼睛", "en": "the tall slim woman with straight shoulder-length black hair glances down at the red wine stain on her chest, pauses a beat, then slowly lifts her eyes" } }
+      ]
+    },
+    {
+      "id": "R2",
+      "reviewer": "art",
+      "where": "C02",
+      "title": "真人寫實的外貌寫了「精緻完美」「光滑無瑕」",
+      "expect": "指出許曼的 look 用了「精緻完美」「光滑無瑕」這類會變成塑膠臉的詞",
+      "edits": [
+        { "file": "bible.json", "path": ["characters", { "id": "C02" }, "look"],
+          "from": { "zh": "二十五歲左右的女性，尖下巴，栗色大波浪長髮披在背後，濃眉，眼尾上挑，身形纖細", "en": "a woman of about twenty-five, pointed chin, long chestnut waves falling down her back, thick brows, upswept eyes, slender build" },
+          "to": { "zh": "二十五歲左右的女性，五官精緻完美，皮膚光滑無瑕，尖下巴，栗色大波浪長髮披在背後，濃眉，眼尾上挑，身形纖細", "en": "a woman of about twenty-five with flawless, perfect features and smooth poreless skin, pointed chin, long chestnut waves falling down her back, thick brows, upswept eyes, slender build" } }
+      ]
+    },
+    {
+      "id": "R3",
+      "reviewer": "art",
+      "where": "S01-B",
+      "title": "機位背景出現場景裡沒有的落地窗",
+      "expect": "指出 S01-B 的 bg 是落地玻璃窗與城市夜景，但場景 space 只有雙開木門與走廊（也和機位 desc 矛盾）",
+      "edits": [
+        { "file": "EP01.json", "path": ["setups", { "id": "S01-B" }, "bg"],
+          "from": { "zh": "敞開的雙開木門，門外是深紅地毯的走廊，背景虛化", "en": "the open double wooden doors and the deep red carpeted corridor beyond, softly out of focus" },
+          "to": { "zh": "整面落地玻璃窗，窗外是城市夜景的燈海，背景虛化", "en": "a wall of floor-to-ceiling windows with the city lights at night beyond, softly out of focus" } }
+      ]
+    },
+    {
+      "id": "R4",
+      "reviewer": "art",
+      "where": "C01",
+      "title": "detail 多了一道外貌裡沒有的疤",
+      "expect": "指出沈知意的 detail 加了「右臉頰的舊疤」這個新的辨識特徵：設定圖會畫，look、marks 和鏡頭裡都沒有",
+      "edits": [
+        { "file": "bible.json", "path": ["characters", { "id": "C01" }, "detail"],
+          "from": { "zh": "皮膚白而略乾，看得到細小的毛孔，眼角有很淡的細紋，指甲修短沒有塗色", "en": "pale, slightly dry skin with visible fine pores, faint lines at the corners of her eyes, short unpainted nails" },
+          "to": { "zh": "皮膚白而略乾，看得到細小的毛孔，眼角有很淡的細紋，右臉頰有一道明顯的舊疤，指甲修短沒有塗色", "en": "pale, slightly dry skin with visible fine pores, faint lines at the corners of her eyes, a prominent old scar on her right cheek, short unpainted nails" } }
+      ]
+    },
+    {
+      "id": "R5",
+      "reviewer": "art",
+      "where": "C02-a",
+      "title": "造型細節寫「氣質」「氛圍」",
+      "expect": "指出許曼晚禮服的 detail 用了「氣質高貴優雅」「名媛的氛圍」這類畫不出固定樣子的詞",
+      "edits": [
+        { "file": "bible.json", "path": ["characters", { "id": "C02" }, "variants", { "id": "C02-a" }, "detail"],
+          "from": { "zh": "緞面在光下有柔和的反光，裙擺垂墜，腰線收得很緊", "en": "the satin catching soft highlights, a fluid draped skirt, a tightly fitted waist" },
+          "to": { "zh": "整體氣質高貴優雅，散發出名媛的氛圍，緞面在光下有柔和的反光，裙擺垂墜", "en": "an air of elegance and high-society glamour, the satin catching soft highlights, a fluid draped skirt" } }
+      ]
+    }
+  ]
+}
