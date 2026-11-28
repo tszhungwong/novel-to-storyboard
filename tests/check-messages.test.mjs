@@ -385,6 +385,12 @@ const CASES = [
     },
     expect: [/\[警告\] EP01-007：line 沒有 text/, /EP01-006：line\.type 請用/, /EP01-005：這句是「對白」，但說話的 C02 沒有正面入鏡/, /\[警告\] EP01-003：成片 40 秒加上裁頭尾 1 秒，超過工具單次可生成的 30 秒/],
   },
+  {
+    name: '轉場不在用詞表裡；用詞後面補說明照收',
+    ep: (e) => { shot(e, '005').transition = '慢慢轉過去'; shot(e, '007').transition = '疊化，兩秒'; },
+    expect: [/EP01-005：transition「慢慢轉過去」不在用詞表裡/],
+    absent: [/EP01-007：transition/],
+  },
   { name: '沒有嘴的角色說「對白」', example: 'creature-fx', ep: (e) => { shot(e, '003').line.type = '對白'; }, expect: [/EP01-003：C03 .*沒有嘴（mouthless），不會對口型/] },
 
   // ---------- 跨鏡頭、整場、整集 ----------
@@ -501,6 +507,7 @@ for (const c of CASES) {
   test(c.name, (t) => {
     const r = run(t, c);
     for (const re of c.expect) assert.match(r.checks, re, `${c.name}\n沒有出現：${re}\n${r.out}`);
+    for (const re of c.absent || []) assert.doesNotMatch(r.checks, re, `${c.name}\n不該出現：${re}`);
     for (const [name, res] of Object.entries(c.files || {})) for (const re of res) assert.match(r.file(name), re);
   });
 }

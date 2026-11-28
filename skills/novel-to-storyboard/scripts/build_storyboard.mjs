@@ -545,6 +545,8 @@ const MOODS = '難過|悲傷|傷心|生氣|憤怒|開心|高興|快樂|害怕|�
 const FACE_MOOD_RE = new RegExp(`(神情|表情|神色|臉色|面色|一臉|滿臉)(很|非常|有點|有些|略微|略顯|十分)?(${MOODS})|^(very |slightly |a bit )?(respectful|smug|arrogant|serious|determined|confident|worried|nervous|calm|sad|angry|happy|proud|polite|stern|cold)(,|$| expression| look)`, 'i');
 // 生成方式（render）：靜幀只出首幀圖、不跑影片；靜幀運鏡是剪接時在那張圖上推拉或搖移
 const RENDERS = ['影片', '靜幀運鏡', '靜幀'];
+// 轉場（transition）：剪接時做，不進提示詞。用詞後面可以補說明（「疊化，兩秒」）
+const TRANSITIONS = ['動作剪輯', '視線剪輯', '匹配剪輯', '疊化', '淡入', '淡出', '黑場', '閃白', '聲音先入', '聲音延後', '甩鏡', '跳接'];
 const STILL_MOVES = new Set(['固定', '推近', '拉遠', '左搖', '右搖', '上搖', '下搖', '左移', '右移', '變焦推近', '變焦拉遠', '手持']);
 const SIZE_RANK = Object.fromEntries(Object.keys(SIZES).map((k, i) => [k, i])); // 越大越近
 const WIDE = new Set(['大遠景', '遠景', '全景']);
@@ -1954,6 +1956,11 @@ if (ep) {
       if (same && !/跳接/.test(s.transition || '')) {
         warn(id, `和上一鏡的主體、景別（${sizeLabel(s)}）、角度都一樣，直接切會像跳接；景別差一級以上、換角度或機位，或中間插一個反應／插入鏡頭。真的是同一個鏡頭延續就用「接續」，刻意要跳接就在 transition 寫「跳接」`);
       }
+    }
+
+    const tr = String(s.transition ?? '').trim();
+    if (tr && !TRANSITIONS.some((w) => tr.startsWith(w))) {
+      hint(id, `transition「${tr}」不在用詞表裡（${TRANSITIONS.join('、')}）；剪接的人只能照字面猜，腳本也不會替它做跳接、甩鏡這類檢查。用表裡的詞，要補充的寫在後面（「疊化，兩秒」）`);
     }
 
     // 時長
