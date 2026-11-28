@@ -1,2 +1,4 @@
 # 範例 CSV 保留腳本輸出的原樣（UTF-8 BOM 與 CRLF），Excel 開啟才不會亂碼
 *.csv -text
+# Markdown 一律用 LF：腳本產出的是 LF，Windows 取出時也不要轉成 CRLF
+*.md text eol=lf

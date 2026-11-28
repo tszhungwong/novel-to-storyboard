@@ -92,13 +92,25 @@ node skills/novel-to-storyboard/scripts/build_storyboard.mjs skills/outline-to-e
 node --test
 ```
 
-`tests/` 裡有四份：
+`tests/` 裡有八份：
 
 - `csv-records.test.mjs`：重跑時 CSV 手填紀錄的保留、備份、已移除檔（包含寫到一半失敗時紀錄不丟、不重複），以及集數和檔名的檢查。寫入失敗用環境變數 `STORYBOARD_TEST_FAIL_FILES` 模擬，只給測試用。
-- `script-checks.test.mjs`：腳本的檢查與產出（打錯的欄位與值、寫壞的 JSON、字幕時間⋯）。
+- `prompt-assembly.test.mjs`：提示詞怎麼組合（參考圖指稱、表情、尾幀的做法、嘴型、環境動態、聲音、運鏡、負面詞⋯）。
+- `check-messages.test.mjs`：腳本的每一個檢查（錯誤、警告、提示）各觸發一次。一筆是一個範例加上要改的欄位與預期的訊息。
+- `script-checks.test.mjs`：其他檢查與產出（打錯的欄位與值、寫壞的 JSON、字幕時間⋯）。
+- `hook.test.mjs`：自動檢查的 hook：只檢查改到的那一集、改了 bible.json 時連帶檢查最近改過的幾集、沒問題時不出聲、同樣的錯誤只列一次、時間上限、Codex 的 apply_patch。
+- `docs-sync.test.mjs`：`references/fields.md` 的欄位與用詞表和腳本認得的一致；只改了一邊會失敗。
 - `examples.test.mjs`：每個範例重新產生一次，和 repo 裡的 `out/` 比對。改了腳本卻沒重跑範例，這裡會失敗：照上一節的指令重跑，再把 `out/` 一起提交。
 - `plugin.test.mjs`：三份 manifest 的版號一致，技能與代理的名稱和檔名對得上。發新版時三份的 `version` 要一起改。
 
 測試只在暫存資料夾裡建專案，不動範例的 `out/`。
 
-每次推送到 main、每個 PR，GitHub Actions 都會在 Ubuntu 與 Windows、Node 18 與 22 上跑一次 `node --test`，另外用 Node 16 跑一次每個範例（README 寫的最低版本），設定在 `.github/workflows/test.yml`。
+腳本加了新的檢查，就要在 `check-messages.test.mjs` 加一筆會觸發它的案例。跑這個看有沒有漏：
+
+```
+node tests/coverage-gate.mjs
+```
+
+它會跑一次完整的 `node --test` 並記下覆蓋率，列出沒有任何測試觸發過的檢查；有就失敗。
+
+每次推送到 main、每個 PR，GitHub Actions 都會在 Ubuntu 與 Windows、Node 18 與 22 上跑一次 `node --test`，在 Node 22 跑一次 `tests/coverage-gate.mjs`，另外用 Node 16 跑一次每個範例（README 寫的最低版本），設定在 `.github/workflows/test.yml`。

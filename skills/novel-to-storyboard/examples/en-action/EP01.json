@@ -30,7 +30,7 @@
       "id": "S01-A",
       "scene": "S01",
       "desc": "巷子入口，沿著巷子朝磚牆方向拍：兩排攤車的縱深。人物朝遠離鏡頭的方向跑",
-      "bg": "two rows of food carts with canvas awnings receding down the lane toward a brick wall, strings of bare bulbs overhead, wet asphalt",
+      "bg": "two rows of food carts with canvas awnings receding down the lane toward a brick wall, red and blue neon signs on the cart fronts, strings of bare bulbs overhead, wet asphalt",
       "detail": "awning fringes dripping, plastic stools stacked beside the carts, puddles catching the bulb light"
     },
     {
@@ -38,6 +38,7 @@
       "scene": "S01",
       "desc": "兩台攤車之間，側面拍：男人在畫面左、小滿在畫面右。軸線在兩人之間，鏡頭在靠巷子入口的一側",
       "bg": "the side of a food cart with a canvas awning, out-of-focus warm bulbs behind",
+      "light": "warm bulbs glowing behind the awning, a red neon glow reflected on the wet ground",
       "detail": "the cart's steel counter dented and dulled with grease, a coil of extension cord hanging on a hook"
     },
     {
@@ -65,7 +66,8 @@
       "transition": "淡入",
       "action": "雨中的夜市巷子，鏡頭從燈泡的高度降到攤車的高度",
       "line": null,
-      "sound": "steady rain drumming on canvas awnings, a pan sizzling somewhere down the lane",
+      "sound": "a pan sizzling somewhere down the lane",
+      "ambient": false,
       "cast": [],
       "frame": "the lane runs straight away from the camera, vanishing point in the centre of the frame",
       "end": "the camera has lowered to cart height and looks straight down the lane",
@@ -86,7 +88,7 @@
       "link": "切",
       "action": "小滿的腳踩過積水，從畫面左跑向畫面右",
       "line": null,
-      "sound": "wet footsteps, rain",
+      "sound": "wet footsteps",
       "cast": [
         {
           "char": "C01-a",
@@ -116,7 +118,7 @@
       "link": "切",
       "action": "小滿抱著鐵盒沿巷子跑遠，身後有更重的腳步聲",
       "line": null,
-      "sound": "her footsteps fading down the lane, heavier footsteps approaching from behind the camera, rain",
+      "sound": "her footsteps fading down the lane, heavier footsteps approaching from behind the camera",
       "cast": [
         {
           "char": "C01-a",
@@ -129,7 +131,7 @@
       ],
       "frame": "the girl is small in the middle of the frame, the two rows of carts lead the eye toward her",
       "end": "the girl with the short black bob is farther down the lane and smaller in the frame",
-      "motion": "the girl with the short black bob jogs away from the camera down the lane at a steady pace, her hood bouncing on her back; rain falls through the light of the bulbs",
+      "motion": "the girl with the short black bob jogs away from the camera down the lane at a steady pace, her hood bouncing on her back",
       "refs": [
         "EP01-001 的尾幀圖"
       ],
@@ -145,11 +147,11 @@
       "duration": 2,
       "size": "中景",
       "angle": "平視",
-      "camera": "固定",
+      "camera": "輕微手持推近",
       "link": "切",
       "action": "小滿鑽進攤車之間，一隻手從後面伸向她的帽兜",
       "line": null,
-      "sound": "rain on canvas, two people breathing hard",
+      "sound": "two people breathing hard",
       "cast": [
         {
           "char": "C01-a",
@@ -166,8 +168,8 @@
         }
       ],
       "frame": "the girl's head in the upper right third of the frame, open space behind her on the left for the hand to enter",
-      "end": "the hand in the green sleeve is a few centimetres from the hood of the girl with the short black bob, who has taken one more step toward frame right",
-      "motion": "the girl with the short black bob takes one more step toward frame right, shoulders rising with her breath; the hand in the green sleeve reaches steadily closer to her hood",
+      "end": "the framing has tightened slightly on the two of them; the hand in the green sleeve is a few centimetres from the hood of the girl with the short black bob, who has taken one more step toward frame right",
+      "motion": "the girl with the short black bob takes one more step toward frame right, shoulders rising with her breath, her eyes flicking toward the edge of the frame; the hand in the green sleeve reaches steadily closer to her hood",
       "risk": "肢體接觸：這一鏡停在抓到之前，下一鏡直接切到抓住之後，不拍接觸的瞬間",
       "continuity": "運動方向：左到右。軸線：男人在畫面左、小滿在畫面右"
     },
@@ -203,7 +205,7 @@
       "light": "warm bulbs behind him as a rim light on the hood, his face lit from below by red neon reflected off the wet ground",
       "frame": "his face in the upper half of the frame, shallow depth of field",
       "end": "the tall man in the green raincoat has finished speaking, mouth closed, head still tilted down",
-      "motion": "the tall man in the green raincoat tilts his head down a little further and speaks, rain dripping steadily from the brim of his hood; his fist stays closed on the red fabric",
+      "motion": "the tall man in the green raincoat tilts his head down a little further and speaks, his eyes narrowing, rain dripping steadily from the brim of his hood; his fist stays closed on the red fabric",
       "risk": "口型：原生音訊，一鏡只說一句短話；臉朝鏡頭、頭部動作小",
       "continuity": "接觸之後：他的右拳抓著小滿的帽兜，小滿在畫面外的右下方；軸線不變，他看向畫面右。仰拍：他佔上風"
     },
@@ -244,7 +246,7 @@
       "link": "切",
       "action": "兩個人僵住，同時低頭看向攤車底下",
       "line": null,
-      "sound": "rain, the last rattle of the tin dying away",
+      "sound": "the last rattle of the tin dying away",
       "cast": [
         {
           "char": "C02-a",
@@ -265,7 +267,7 @@
       ],
       "frame": "a clear gap of empty space between the two figures in the centre of the frame",
       "end": "both figures hold still; the tall man in the green raincoat has lowered his right arm",
-      "motion": "the tall man in the green raincoat and the girl with the short black bob both stand frozen, looking down toward the lower right; his raised arm lowers, her shoulders rise and fall with her breath, rain keeps falling between them",
+      "motion": "the tall man in the green raincoat and the girl with the short black bob both stand frozen, looking down toward the lower right; his raised arm lowers, her lips part as her shoulders rise and fall with her breath",
       "refs": [
         "EP01-004 的首幀圖"
       ],
@@ -290,7 +292,7 @@
       "line": null,
       "sound": "rain dripping on the tin lid, then a sharp whistle blast far away",
       "cast": [],
-      "props": "{P01} lying flat on the wet asphalt in the shadow under the cart",
+      "props": "{P01:凹痕} lying flat on the wet asphalt in the shadow under the cart",
       "frame": "the tin in the centre of the frame",
       "end": "the framing is slightly tighter on the tin, a bead of water running across its lid",
       "motion": "raindrops land on the lid of the tin and run off its edge, the neon reflection on the asphalt wavers; everything else stays still",
@@ -313,7 +315,7 @@
       "transition": "聲音先入",
       "action": "雨衣男朝哨聲的方向看了一眼，退進攤車之間的暗處",
       "line": null,
-      "sound": "the whistle again, closer; rain",
+      "sound": "the whistle again, closer",
       "cast": [
         {
           "char": "C02-a",
@@ -345,13 +347,15 @@
       "action": "小滿跪在積水裡，抱著撈回來的鐵盒，看著盒蓋上的凹痕",
       "line": null,
       "sound": "the rain easing, water dripping from the awning, her unsteady breathing",
+      "ambient": "the rain thins to a light drizzle through the light of the bulbs",
+      "ambient_sound": false,
       "cast": [
         {
           "char": "C01-b",
           "facing": "正面",
           "pos": "kneeling in the centre of the frame beside a cart wheel, shoulders hunched",
           "gaze": "looking down at the lid of the tin in her hands",
-          "hands": "both hands holding {P01} in front of her chest, right thumb resting on a fresh dent across its lid",
+          "hands": "both hands holding {P01:凹痕} in front of her chest, right thumb resting on the new dent in the lid",
           "face": "brows pinched, lower lip caught between her teeth"
         }
       ],

@@ -1,5 +1,6 @@
 # 每次推送到 main、每個 PR 都跑一次：
 # - node --test：CSV 紀錄的保留與備份、腳本的檢查、範例的 out/ 和腳本產出一致、plugin 設定檔
+# - 腳本裡每一個檢查都有測試觸發過（tests/coverage-gate.mjs）
 # - 腳本在 Node 16 也能跑（README 寫的最低版本）
 name: 測試
 
@@ -27,6 +28,17 @@ jobs:
           node-version: ${{ matrix.node }}
       - name: 跑測試
         run: node --test
+
+  coverage:
+    name: 每一個檢查都有測試
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: 跑測試並看每一個檢查有沒有被觸發過
+        run: node tests/coverage-gate.mjs
 
   node16:
     name: 腳本在 Node 16 也能跑
