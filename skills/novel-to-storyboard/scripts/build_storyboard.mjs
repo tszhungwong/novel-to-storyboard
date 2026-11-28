@@ -150,8 +150,8 @@ function closest(v, list) {
 }
 // 這幾個參數打錯時會被默默當成預設值（原生音訊整個關掉、文生影片變成圖生影片），所以要說出來。
 // 常見的簡體與別名直接認，並提示改成正式的寫法。
-const AUDIO_PLANS = ['旁白', '後配口型', '原生音訊', '配樂'];
-const AUDIO_ALIASES = { 原生音频: '原生音訊', 原生音頻: '原生音訊', 后配口型: '後配口型', 後期配音: '後配口型', 后期配音: '後配口型', 配乐: '配樂' };
+const AUDIO_PLANS = ['旁白', '後配口型', '原生音效', '原生音訊', '配樂'];
+const AUDIO_ALIASES = { 原生音频: '原生音訊', 原生音頻: '原生音訊', 后配口型: '後配口型', 後期配音: '後配口型', 后期配音: '後配口型', 配乐: '配樂', 原生音效後配台詞: '原生音效', 原生音效后配台词: '原生音效' };
 if (P.audio_plan != null && !AUDIO_PLANS.includes(String(P.audio_plan).trim())) {
   const raw = String(P.audio_plan).trim();
   const fix = AUDIO_ALIASES[raw];
@@ -192,6 +192,10 @@ if (P.prompt_langs != null) {
 if (!langs.length) langs = ['zh', 'en'];
 const USE_LAST = P.use_last_frame !== false;
 const NATIVE_AUDIO = P.audio_plan === '原生音訊';
+// 原生音效：環境音與音效由影片工具一起生成，台詞之後另外配、另外對口型（短劇常見的做法）
+const NATIVE_SFX = P.audio_plan === '原生音效';
+const NATIVE_SOUND = NATIVE_AUDIO || NATIVE_SFX; // 影片工具會生成聲音：環境聲與 sound 寫進影片提示詞
+const DUB_LIPS = P.audio_plan === '後配口型' || NATIVE_SFX; // 台詞之後另外配音、另外對口型
 // 工具可生成的秒數是連續範圍時用 clip_range: [最短, 最長]；是固定幾種時用 clip_lengths
 const CLIPS = (Array.isArray(P.clip_lengths) ? P.clip_lengths : []).map(Number).filter((n) => n > 0).sort((a, b) => a - b);
 const RANGE = Array.isArray(P.clip_range) && P.clip_range.length === 2 && P.clip_range.every((n) => Number(n) > 0)
@@ -215,6 +219,11 @@ const REF_MAX = Number(P.ref_max) > 0 ? Number(P.ref_max) : 0; // 工具一次�
 const IMAGE_SUFFIX = String(P.image_suffix ?? "").trim().replace(/\{ar\}/g, P.aspect || '16:9'); // 每一鏡的首幀、尾幀與機位背景圖；{ar} 換成影片畫幅
 const ASSET_SUFFIX = String(P.asset_suffix ?? "").trim(); // 角色設定圖、場景定稿圖、道具圖等資產
 const withSuffix = (p, sfx) => (sfx && p ? `${p.trim()} ${sfx}` : p);
+// 會自己把一段影片切成好幾個鏡頭的工具（可靈的多鏡頭、Gemini Omni）：沒填 video_suffix 時預設寫「單一連續鏡頭」
+const AUTO_CUT = /可靈|kling|omni/i.test(String(P.video_tool || ''));
+const VIDEO_SUFFIX = P.video_suffix ?? (AUTO_CUT ? { zh: '單一連續鏡頭，中間不切換鏡頭', en: 'a single continuous shot with no scene cuts' } : '');
+// 工具會生成聲音時，沒填 audio_suffix 就預設擋掉字幕與配樂：配樂一鏡各生一段接不起來，剪接時再統一鋪
+const AUDIO_SUFFIX = P.audio_suffix ?? (NATIVE_SOUND ? { zh: '不要字幕，不要背景音樂', en: 'no subtitles, no background music' } : '');
 // 工具限制：使用者定了圖像或影片工具之後才填，只檢查那個工具確定做不好的事。沒填＝不套用任何工具限制，
 // 提示詞照故事需要寫完整（快速的動作、畫面裡的字、複雜的運鏡、負面詞都不擋）
 const TL = P.tool_limits && typeof P.tool_limits === 'object' && !Array.isArray(P.tool_limits) ? P.tool_limits : {};
@@ -287,6 +296,11 @@ const T = {
     // 沒有原生音訊時，不讓工具自己開口：後配口型的口型之後另外做，旁白與畫外音的鏡頭畫面裡的人不說話
     lipsDub: (who) => `${who}的嘴唇保持閉合、嘴不動（口型之後另外做）`,
     lipsShut: (n) => (n > 1 ? '畫面裡的人嘴唇自然閉合，沒有人說話' : '人物嘴唇自然閉合，沒有說話'),
+    // 影片提示詞：表情延續、特效的光跟著動、一致性提醒、原生音效不要人聲
+    faceHold: (who, face) => `${who}的表情維持首幀的樣子：${face}`,
+    fxGlow: '照在周圍的光也跟著明暗晃動',
+    keep: (people) => (people ? '除了上面寫到的變化，人物的長相、服裝與背景都和首幀一致' : '除了上面寫到的變化，畫面裡的東西與背景都和首幀一致'),
+    noVoice: '沒有人聲對白',
     reuse: (id) => `沿用 ${id} 的最後一幀當首幀，不另外生成。`,
     sheet: (pose) => `角色設定圖，同一角色的${pose}，純淺灰背景，均勻柔光`,
     pose: '正面、四分之三側面、側面、背面全身四視圖，自然站姿，表情平靜',
@@ -336,6 +350,10 @@ const T = {
     endsWith: (end) => `at the end, ${end}`,
     lipsDub: (who) => `the lips of ${who} stay closed and still (lip sync is added later)`,
     lipsShut: (n) => (n > 1 ? 'everyone in frame keeps their lips closed, no one speaks' : 'lips stay closed, not speaking'),
+    faceHold: (who, face) => `${who} holds the expression from the first frame: ${face}`,
+    fxGlow: 'the light it casts flickers along with it',
+    keep: (people) => (people ? 'apart from the changes described, faces, outfits and the background stay as in the first frame' : 'apart from the changes described, objects and the background stay as in the first frame'),
+    noVoice: 'no dialogue or voices',
     reuse: (id) => `Use the last frame of ${id} as the first frame.`,
     sheet: (pose) => `character reference sheet, the same character shown as ${pose}, plain light grey background, soft even lighting`,
     pose: 'front, three-quarter, side and back full-body views, natural standing pose, calm expression',
@@ -475,7 +493,8 @@ const MOVE_VAGUE = {
   搖臂: { zh: '搖臂', en: 'crane shot', fix: '「搖臂上升」或「搖臂下降」' },
   航拍: { zh: '航拍', en: 'aerial drone shot', fix: '「航拍前進」或「航拍上升」' },
 };
-const MOVE_PREFIX = { 緩慢: 'slow', 輕微: 'gentle' };
+// 前綴可以疊在運鏡前面：「緩慢推近」「手持跟拍」「緩慢手持推近」。只寫「手持」是原地的手持晃動
+const MOVE_PREFIX = { 緩慢: 'slow', 輕微: 'gentle', 手持: 'handheld' };
 // 生成工具做不穩的運鏡：這一鏡沒寫 risk 時提示
 const WHIP = '甩鏡很快，生成工具常糊成一片或停不下來；多半改成前後兩鏡各自固定、這一鏡的 transition 填「甩鏡」，剪接時加動態模糊接起來。保留就在 risk 寫備案';
 const ARC = '環繞要整個背景跟著轉，人物和背景都容易變形；人物保持幾乎不動，在 risk 寫備案（例如改成緩慢推近），並多抽幾次';
@@ -665,6 +684,8 @@ const SLOW_RE = /緩慢|慢慢|緩緩|慢速|\bslow(ly)?\b/i;
 // 替後製留位置時說出空白是給什麼的：「給後製的數字」寫進提示詞，工具會試著把數字畫出來
 // 配樂是畫外聲，只有觀眾聽得到；寫進 sound，原生音訊時會被當成畫內的聲音生成出來
 const MUSIC_RE = /配樂|背景音樂|BGM|\b(background music|score|soundtrack)\b/i;
+// 場景裡一直在動的東西：天氣、火、霓虹、水、人群。只寫在時間與光線裡，影片裡就是凍住的
+const AMBIENT_RE = /雨|雪|(?<!屏)風(?!格)|霧|煙|燭|爐火|火光|篝火|霓虹|瀑布|海浪|浪花|河水|溪水|人群|車流|\b(rain\w*|snow\w*|wind(?!ows?)\w*|fog\w*|mist\w*|smoke|candle\w*|fire\w*|neon|waves?|river|stream|crowds?|traffic)\b/i;
 // 連戲備註寫了道具被收走或拿出來：這個變化要拍到，或寫進 motion、end，只寫在備註裡生成時不會發生
 const PROP_MOVE_RE = /收走|收起|收進|拿走|拿起|拿出|抽出|放回|放下|塞進|不見了|畫面外|\b(off[- ]screen|pocket(s|ed)?|put away|picks? up|taken away)\b/i;
 // 暖光配上以冷色為主的 palette：同一句提示詞裡會打架
@@ -704,6 +725,21 @@ const PERSON_RE = /臉|人物|人影|他的|她的|頭髮|肩膀|眼睛|身上|�
 const PERSON_OK_RE = /(男子|女子)(宿舍|學校|學院|中學|高中|監獄|浴室|廁所|更衣室|會館|會所)|洗臉[台檯盆]?|臉盆|老人(院|中心|之家|會)|少年(宮|院|隊)|\bhair[- ]?(dryers?|salons?|dresser'?s?)\b/gi;
 // motion 裡寫到臉上的變化：眉、眼、嘴、笑、表情
 const MOTION_FACE_RE = /眉|眼|嘴|唇|笑|表情|神情|視線|目光|咬|瞪|瞇|吞嚥|淚|\b(face|brows?|eyes?|mouth|lips?|smil\w*|frown\w*|jaw|grin\w*|wince\w*|squint\w*|blink\w*|swallow\w*|tears?|gaze\w*|glanc\w*)\b/i;
+// 表情本身的變化（眉、嘴、笑）；眨眼、吞嚥、視線移動是臉上的微動作，不會改變表情
+const EXPR_RE = /眉|嘴|唇|笑|表情|神情|咬|瞪|瞇|淚|哭|皺|\b(brows?|mouth|lips?|smil\w*|frown\w*|jaw|grin\w*|wince\w*|squint\w*|tears?|expression|sneer\w*|scowl\w*)\b/i;
+/**
+ * 片段（motion、end）有沒有寫到臉上的變化：預設連微動作也算，re 給 EXPR_RE 只看表情本身。
+ * 先拿掉短稱與名字（「戴細框眼鏡的男子」的「眼」不算），再拿掉「臉朝」這類方向。
+ */
+function faceCue(v, re = MOTION_FACE_RE) {
+  return langs.some((l) => {
+    const txt = charList.flatMap(({ c, vs }) => [pick(c.tag, l), c.name, ...vs.map((x) => pick(x.tag, l))]).filter(Boolean)
+      .sort((a, b) => b.length - a.length)
+      .reduce((t, tg) => t.split(tg).join(' '), pick(v, l))
+      .replace(/臉(朝|轉|向)|turn(s|ing)? (his|her|their) face/g, '');
+    return re.test(txt);
+  });
+}
 // 41：說話的人臉沒朝鏡頭、嘴被擋住：後配口型時對不上嘴型
 const TURNED_RE = /回頭|轉頭|轉身|低頭|垂下頭|鞠躬|彎腰|背對|埋頭|\b(turn(s|ing|ed)? (away|around|back)|bow(s|ing|ed)?|looks? down|head down|back to)\b/i;
 // 42：end 寫的是和首幀一樣的狀態，尾幀和首幀就一樣
@@ -734,7 +770,7 @@ function checkFrag(where, v, required = false) {
     }
     const unknown = s.match(PROP_RE);
     const stray = [...new Set([...s.matchAll(/\{[^{}\n]{0,40}\}/g)].map((m) => m[0]))]
-      .filter((x) => !/^\{[PF][0-9A-Za-z_-]*(?:[:：][^{}]+?)?\}$/.test(x) && !/^\{(n|ar)\}$/.test(x));
+      .filter((x) => !/^\{[PF][0-9A-Za-z_-]*(?:[:：][^{}]+?)?\}$/.test(x) && !/^\{(n|ar|dur)\}$/.test(x));
     if (stray.length) warn(where, `有沒換掉的 ${stray.join('、')}，會原樣進提示詞；道具寫成 {P01}、特效寫成 {F01}（大寫的 P 或 F 加編號），有狀態寫成 {P01:拆開}，冒號後面要有狀態名稱`);
     if (unknown) err(where, `用了設定檔裡沒有的道具或特效編號，或沒有登記的狀態：${[...new Set(unknown)].join('、')}`);
     for (const m of rawPick(v, l).matchAll(PROP_RE)) {
@@ -776,8 +812,8 @@ function mentionsCharacter(vals) {
 // 分鏡檔各層認得的欄位。寫錯名字或放錯層的欄位腳本不會用，寫在裡面的內容也不會進提示詞
 const EP_KEYS = ['episode', 'source_title', 'changes', 'plan', 'setups', 'shots'];
 const PLAN_KEYS = ['id', 'scene', 'purpose', 'pov', 'beats', 'peak', 'blocking', 'mood'];
-const SETUP_KEYS = ['id', 'scene', 'desc', 'bg', 'light', 'detail'];
-const SHOT_KEYS = ['id', 'scene', 'beat', 'source', 'duration', 'setup', 'size', 'type', 'angle', 'height', 'lens', 'camera', 'speed', 'render', 'link', 'transition', 'action', 'line', 'sound', 'music', 'cast', 'props', 'fx', 'bg', 'light', 'palette', 'frame', 'end', 'last_frame', 'motion', 'refs', 'negative', 'risk', 'continuity', 'post', 'cut'];
+const SETUP_KEYS = ['id', 'scene', 'desc', 'bg', 'light', 'detail', 'ambient', 'ambient_sound'];
+const SHOT_KEYS = ['id', 'scene', 'beat', 'source', 'duration', 'setup', 'size', 'type', 'angle', 'height', 'lens', 'camera', 'speed', 'render', 'link', 'transition', 'action', 'line', 'sound', 'ambient', 'ambient_sound', 'music', 'cast', 'props', 'fx', 'bg', 'light', 'palette', 'frame', 'end', 'last_frame', 'motion', 'refs', 'negative', 'risk', 'continuity', 'post', 'cut'];
 const CAST_KEYS = ['char', 'facing', 'pos', 'gaze', 'hands', 'face', 'partial'];
 /** 不認得的欄位。名稱以 _ 開頭的當成給人看的備註，不檢查。 */
 function checkKeys(where, obj, known, level = 'shot') {
@@ -823,9 +859,25 @@ checkFrag('project.negative_global', P.negative_global);
 if (NO_NEGATIVE && langs.some((l) => pick(P.negative_global, l))) {
   warn('project.negative_global', '選定的工具沒有負面詞欄位（tool_limits.negative 是 false），通用負面詞用不到；清空它，要避開的東西改寫成正面描述（「空蕩的街道」，不寫「沒有人」）');
 }
+// 影片專用的負面詞：閃爍、變臉、畫面抖動是影片才有的毛病，貼進圖像工具沒有用
+checkFrag('project.negative_video', P.negative_video);
+if (NO_NEGATIVE && langs.some((l) => pick(P.negative_video, l))) {
+  warn('project.negative_video', '選定的工具沒有負面詞欄位（tool_limits.negative 是 false），影片負面詞用不到；清空它，要避開的東西改寫成正面描述（「畫面穩定，臉和手的形狀前後一致」）');
+} else if (!NO_NEGATIVE && langs.some((l) => pick(P.negative_global, l)) && !langs.some((l) => pick(P.negative_video, l))) {
+  hint('project.negative_video', '填了通用負面詞，還沒有影片專用的；影片有自己的毛病（閃爍、畫面抖動、臉部變形、肢體扭曲、人物變臉），寫在 negative_video，只會加到影片的負面詞');
+}
 checkFrag('project.speech_lang', P.speech_lang);
 checkFrag('project.audio_suffix', P.audio_suffix);
 checkFrag('project.video_suffix', P.video_suffix);
+if (P.audio_suffix != null && !NATIVE_SOUND && langs.some((l) => pick(P.audio_suffix, l))) {
+  hint('project.audio_suffix', `audio_suffix 只在聲音方案是「原生音訊」或「原生音效」時用得到；目前是「${P.audio_plan || '未填'}」，它不會進提示詞`);
+}
+if (NATIVE_SOUND && langs.some((l) => pick(P.audio_suffix, l)) && !langs.some((l) => /配樂|音樂|music|score/i.test(pick(P.audio_suffix, l)))) {
+  hint('project.audio_suffix', 'audio_suffix 沒有擋掉配樂；工具會生成聲音時常自己加背景音樂（Seedance 預設開啟），一鏡一段配樂剪起來接不上。加上「不要背景音樂」，配樂剪接時統一鋪');
+}
+if (AUTO_CUT && langs.some((l) => pick(P.video_suffix, l)) && !langs.some((l) => /單一連續|一鏡到底|不切換鏡頭|single continuous|no (scene )?cuts|one continuous/i.test(pick(P.video_suffix, l)))) {
+  hint('project.video_suffix', `${P.video_tool} 會自己把一段影片切成好幾個鏡頭，video_suffix 卻沒寫「單一連續鏡頭」；這份分鏡是一鏡一段生成，關掉工具的多鏡頭，或在 video_suffix 加上「單一連續鏡頭」`);
+}
 for (const p of propDefs.values()) {
   checkFrag(`${p.id}.desc`, p.desc, true);
   checkPropPhrase(`${p.id}.desc`, p.desc, false);
@@ -956,6 +1008,17 @@ for (const s of bible.scenes || []) {
   checkFrag(`${s.id}.time`, s.time);
   checkFrag(`${s.id}.palette`, s.palette);
   checkFrag(`${s.id}.detail`, s.detail);
+  checkFrag(`${s.id}.ambient`, s.ambient);
+  checkFrag(`${s.id}.ambient_sound`, s.ambient_sound);
+  // 環境的動態：時間、天氣、光源寫在首幀裡，影片提示詞卻沒寫它們在動，生成出來雨停在半空、燭火凍住
+  const filmed = (Array.isArray(ep?.shots) ? ep.shots : []).some((x) => x && x.scene === s.id && !isStill(x));
+  if (filmed && !s.ambient) {
+    const moving = langs.map((l) => AMBIENT_RE.exec(joinC([pick(s.time, l), pick(s.light, l), pick(s.space, l)], l))?.[0]).find(Boolean);
+    if (moving) hint(`${s.id}.ambient`, `場景寫了「${moving}」，卻沒有 ambient；影片提示詞不會寫它在動，生成出來會凍住，背景像一張貼圖。寫一句這個場景一直在動的東西（「窗外的雨絲斜斜落下，竹燈罩輕輕晃動」），會接在這個場景每一鏡的影片提示詞裡（插入鏡頭與特寫除外）`);
+  }
+  if (filmed && NATIVE_SOUND && !s.ambient_sound) {
+    hint(`${s.id}.ambient_sound`, '影片工具會生成聲音，場景卻沒寫 ambient_sound（一直都在的環境聲，例如「細雨打在屋簷上，遠處偶爾有車聲」）；每一鏡要自己在 sound 重寫，漏寫的那一鏡環境聲就斷了');
+  }
   for (const k of ['space', 'light']) {
     const hit = mentionsPerson(s[k]);
     if (hit) warn(`${s.id}.${k}`, `場景的 ${k} 寫到了人（「${hit}」）；它會進到沒有人物的場景定稿圖，也會進每一鏡。人身上的光寫在各鏡的 light，人在哪裡寫在 pos`);
@@ -986,6 +1049,8 @@ for (const u of (ep && Array.isArray(ep.setups) ? ep.setups : [])) {
   checkFrag(`${u.id}.bg`, u.bg, true);
   checkFrag(`${u.id}.light`, u.light);
   checkFrag(`${u.id}.detail`, u.detail);
+  if (u.ambient !== false) checkFrag(`${u.id}.ambient`, u.ambient);
+  if (u.ambient_sound !== false) checkFrag(`${u.id}.ambient_sound`, u.ambient_sound);
   if (!u.light && scenes.has(u.scene)) {
     const sc = scenes.get(u.scene);
     const unseen = langs.flatMap((l) => sourcesIn(pick(sc.light, l)).filter((w) => !new RegExp(w, 'i').test(`${pick(u.bg, l)} ${pick(u.detail, l)}`)));
@@ -1078,8 +1143,52 @@ function fxField(e, d, key, l) {
 }
 /** 會發光的特效照亮周圍：接在這一鏡的光線後面。 */
 const fxLights = (shot, l) => fxGen(shot).map(({ e, d }) => fxField(e, d, 'light', l));
-/** 特效怎麼動：接在這一鏡的 motion 後面。 */
-const fxMotions = (shot, l) => fxGen(shot).map(({ e, d }) => fxField(e, d, 'motion', l));
+/** 特效怎麼動：接在這一鏡的 motion 後面。會動又會發光的特效，光也要跟著動，否則照在臉上的光是死的；motion 已經寫到光就不重複。 */
+const fxMotions = (shot, l) => fxGen(shot).map(({ e, d }) => {
+  const m = fxField(e, d, 'motion', l);
+  const glow = m && fxField(e, d, 'light', l) && !/光|light|glow/i.test(m) ? T[l].fxGlow : '';
+  return joinC([m, glow], l);
+});
+/** 一層一層找：這一鏡 → 機位 → 場景。這一鏡或機位填 false 表示這裡沒有。 */
+function layered(shot, key, l, withScene = true) {
+  for (const o of [shot, setupOf(shot), withScene ? scenes.get(shot.scene) || {} : {}]) {
+    if (o[key] === false) return '';
+    const v = pick(o[key], l);
+    if (v) return v;
+  }
+  return '';
+}
+/** 插入鏡頭、特寫與大特寫：通常看不到環境。 */
+const isTight = (shot) => spec(shot).type === '插入' || ['特寫', '大特寫'].includes(spec(shot).size);
+/**
+ * 環境的動態（雨絲、燭火、霓虹、人群）：接在影片提示詞裡，背景才不會凍住。
+ * 插入鏡頭與特寫不套用場景這一層，免得工具為了畫出雨絲多加一扇窗；機位或這一鏡寫了才用。
+ */
+const ambientOf = (shot, l) => layered(shot, 'ambient', l, !isTight(shot));
+/** 這一鏡聽得到的聲音：一直都在的環境聲＋這一鏡自己的音效。 */
+const soundOf = (shot, l) => joinC([layered(shot, 'ambient_sound', l), pick(shot.sound, l)], l);
+const isPerson = (e) => ['人', '半人'].includes(kindOf(chars.get(e.char)?.c || {}));
+/**
+ * 表情延續：表情只畫在首幀上，影片提示詞只寫身體的動作時，工具常讓臉凍住，或慢慢變回沒有表情。
+ * 中景以內看得清楚臉，motion 與 end 都沒寫表情本身的變化（眨眼、吞嚥、視線移動不算）時，帶上首幀的表情。
+ */
+function faceHolds(shot, l) {
+  const sp = spec(shot);
+  if ((SIZE_RANK[sp.size] ?? -1) < SIZE_RANK['中景'] || sp.type === '插入') return [];
+  if (faceCue(shot.motion, EXPR_RE) || faceCue(shot.end, EXPR_RE)) return [];
+  return (shot.cast || [])
+    .filter((e) => !e.partial && e.face && zhOf(e.facing) !== '背面' && isPerson(e))
+    .map((e) => {
+      const h = chars.get(e.char);
+      return T[l].faceHold(tagOf(h.c, h.v, l) || h.c.name, strip(pick(e.face, l)));
+    });
+}
+/** 一致性提醒：圖生影片時，工具越往後越容易改掉長相、服裝與背景。project.consistency_line 填 false 關掉。 */
+const keepLine = (shot, l) => (P.consistency_line === false ? '' : T[l].keep((shot.cast || []).some(isPerson)));
+/** video_suffix 的 {ar} 換成畫幅、{dur} 換成這一鏡的建議生成秒數（沒填工具秒數就用成片秒數）。 */
+const videoSuffix = (shot, l) => pick(VIDEO_SUFFIX, l)
+  .replace(/\{ar\}/g, P.aspect || '16:9')
+  .replace(/\{dur\}/g, () => String(genLength(Number(shot.duration) || 0) || shot.duration || ''));
 
 /**
  * 這一鏡要掛哪些參考圖、依什麼順序：角色的造型設定圖 → 背景（機位背景圖，沒有機位就用場景定稿圖）→ 道具圖 → 特效參考圖 → refs 裡額外寫的。
@@ -1182,6 +1291,9 @@ const END_CROP = new Set(['推近', '變焦推近']);
 const END_WIDEN = new Set(['拉遠', '變焦拉遠']);
 const END_SHIFT = { 左搖: '左', 左移: '左', 右搖: '右', 右移: '右', 上搖: '上', 下搖: '下' };
 const END_NONE = new Set(['上升', '下降', '跟拍', '左環繞', '右環繞', '滑動變焦', '搖臂上升', '搖臂下降', '航拍前進', '航拍上升', '左甩', '右甩', '升降', '環繞', '搖臂', '航拍', '甩鏡']);
+// 會改變取景的運鏡：end 要寫出運鏡之後的取景（推到多近、拉到多寬、升到多高、繞到哪一側），否則工具不知道停在哪裡
+const FRAMING_MOVES = new Set([...END_CROP, ...END_WIDEN, '上升', '下降', '左環繞', '右環繞', '搖臂上升', '搖臂下降', '航拍前進', '航拍上升', '升降', '環繞', '搖臂', '航拍']);
+const FRAMING_RE = /取景|景別|畫面|鏡頭|機位|視角|特寫|近景|中景|全景|遠景|拉寬|推到|俯瞰|\b(framing|frame|camera|close-up|wide|wider|tighter|closer|medium|view|overhead)\b/i;
 /** 這一鏡的尾幀怎麼做：off＝不用尾幀；none＝運鏡改變透視、做不出來；crop／widen／shift＝先裁切或擴圖；edit＝直接圖像編輯。 */
 function endMode(shot) {
   if (!USE_LAST || shot.last_frame === false || isStill(shot) || !rawPick(shot.end, langs[0])) return 'off';
@@ -1218,10 +1330,10 @@ function lastFramePrompt(shot, l) {
   return withSuffix(text + T[l].stop.trim(), IMAGE_SUFFIX);
 }
 function audioParts(shot, l) {
-  if (!NATIVE_AUDIO) return [];
+  if (!NATIVE_SOUND) return [];
   const out = [];
   const ln = shot.line;
-  if (ln && ln.text && ln.type === '對白') {
+  if (NATIVE_AUDIO && ln && ln.text && ln.type === '對白') {
     const hit = chars.get(ln.who);
     // 說話的人在這一鏡是哪個形態，就用那個形態的短稱
     const inShot = hit && (shot.cast || []).map((e) => chars.get(e.char)).find((h) => h && h.c.id === hit.c.id);
@@ -1229,8 +1341,11 @@ function audioParts(shot, l) {
     const voice = hit ? voiceOf(hit.c, (inShot || hit).v, l) : '';
     out.push(T[l].says(who, strip(pick(ln.text, langs[0])), pick(P.speech_lang, l), strip(pick(ln.tone, l)), strip(voice)));
   }
-  if (shot.sound) out.push(T[l].sound(pick(shot.sound, l)));
-  if (P.audio_suffix) out.push(pick(P.audio_suffix, l));
+  const snd = soundOf(shot, l);
+  if (snd) out.push(T[l].sound(snd));
+  // 原生音效：工具只生成環境音與音效，台詞之後另外配
+  if (NATIVE_SFX) out.push(T[l].noVoice);
+  if (pick(AUDIO_SUFFIX, l)) out.push(pick(AUDIO_SUFFIX, l));
   return out;
 }
 /** 靜幀鏡頭不跑影片：剪接時怎麼處理那張首幀圖。 */
@@ -1249,7 +1364,7 @@ function mouthNote(shot, l) {
   if (!people.length) return '';
   const speakerId = shot.line.type === '對白' ? chars.get(shot.line.who)?.c.id : null;
   const sp = speakerId ? people.find((e) => chars.get(e.char)?.c.id === speakerId) : null;
-  if (sp && P.audio_plan === '後配口型') {
+  if (sp && DUB_LIPS) {
     const h = chars.get(sp.char);
     return T[l].lipsDub(tagOf(h.c, h.v, l));
   }
@@ -1258,10 +1373,22 @@ function mouthNote(shot, l) {
 function videoPrompt(shot, l) {
   if (isStill(shot)) return '';
   const cam = joinC([T[l].cam(camTerm(shot, l)), speedTerm(shot, l)], l);
+  // 沒有尾幀圖（運鏡改變透視、工具只吃首幀、這一鏡關掉尾幀）時，結束的樣子寫進影片提示詞，工具才知道動作與運鏡停在哪裡
+  const ends = !hasEndFrame(shot) && pick(shot.end, l) ? T[l].endsWith(strip(pick(shot.end, l))) : '';
   if (MODE === 'i2v') {
-    // 圖生影片：首幀圖已經決定了外貌與場景，這裡只寫「怎麼動」
-    const ends = endMode(shot) === 'none' && pick(shot.end, l) ? T[l].endsWith(strip(pick(shot.end, l))) : '';
-    return joinS([pick(shot.motion, l), ...fxMotions(shot, l), ends, mouthNote(shot, l), cam, pick(P.video_suffix, l), ...audioParts(shot, l)], l);
+    // 圖生影片：首幀圖已經決定了外貌與場景，這裡寫「怎麼動」：動作、特效、表情、環境，再加運鏡與一致性提醒
+    return joinS([
+      pick(shot.motion, l),
+      ...fxMotions(shot, l),
+      ...faceHolds(shot, l),
+      ambientOf(shot, l),
+      ends,
+      mouthNote(shot, l),
+      cam,
+      keepLine(shot, l),
+      videoSuffix(shot, l),
+      ...audioParts(shot, l),
+    ], l);
   }
   // 文字生影片：影片工具自己掛參考圖，參考圖模式的指稱寫在這裡
   const sc = scenes.get(shot.scene) || {};
@@ -1273,17 +1400,21 @@ function videoPrompt(shot, l) {
     ...fxLooks(shot, l, tok),
     pick(shot.motion, l),
     ...fxMotions(shot, l),
-    endMode(shot) === 'none' && pick(shot.end, l) ? T[l].endsWith(strip(pick(shot.end, l))) : '',
+    ends,
     mouthNote(shot, l),
     bgOf(shot, sc, l, tok),
+    ambientOf(shot, l),
     joinC([lightOf(shot, sc, l), ...fxLights(shot, l), paletteOf(shot, sc, l)], l),
     joinC([framing(shot, l, false), cam], l),
     pick(P.style_lock, l),
-    pick(P.video_suffix, l),
+    videoSuffix(shot, l),
     ...audioParts(shot, l),
   ], l);
 }
+/** 負面詞：通用＋這一鏡的，首幀與尾幀用。影片另外加 negative_video（閃爍、變臉這類影片才有的毛病）。 */
 const negativePrompt = (shot, l) => joinC([pick(P.negative_global, l), pick(shot.negative, l)], l);
+const HAS_VIDEO_NEG = !NO_NEGATIVE && langs.some((l) => pick(P.negative_video, l));
+const videoNegative = (shot, l) => joinC([pick(P.negative_global, l), pick(P.negative_video, l), pick(shot.negative, l)], l);
 /** 建議生成秒數：undefined＝沒填工具秒數；null＝超過工具上限。 */
 const genLength = (d) => {
   if (!HAS_CLIP) return undefined;
@@ -1605,7 +1736,7 @@ if (ep) {
       } else if (!isStatic(s)) hint(id, `靜幀的畫面不動，運鏡「${cam.raw}」不會用到；要在圖上推拉就把 render 改成「靜幀運鏡」`);
       if (speedOf(s)?.zh) warn(id, `靜幀不跑影片，做不出 speed「${zhOf(s.speed)}」；要這個效果就把 render 改回「影片」`);
       else if (zhOf(s.speed) === '定格') hint(id, '靜幀本來就不動，不用再標定格');
-      if (s.line?.text && s.line.type === '對白' && ['後配口型', '原生音訊'].includes(P.audio_plan)) {
+      if (s.line?.text && s.line.type === '對白' && (DUB_LIPS || NATIVE_AUDIO)) {
         hint(id, '靜幀不跑影片，說話的人嘴不會動；說話的鏡頭用影片，或把這句改成畫外音、配在聽的人身上');
       }
     } else {
@@ -1667,20 +1798,14 @@ if (ep) {
     });
     for (const k of ['props', 'frame', 'bg', 'light', 'palette', 'negative', 'end']) checkFrag(`${id}.${k}`, s[k]);
     // 看得清楚臉的鏡頭，motion 卻完全沒寫臉：影片裡的表演只剩身體，表情不會變
-    if (!still && (SIZE_RANK[sp.size] ?? -1) >= SIZE_RANK['中景'] && cast.some((e) => !e.partial && ['人', '半人'].includes(kindOf(chars.get(e.char)?.c || {})))) {
-      // 先拿掉短稱與名字（「戴細框眼鏡的男子」的「眼」不算），再拿掉「臉朝」這類方向
-      const bare = (l) => charList.flatMap(({ c, vs }) => [pick(c.tag, l), c.name, ...vs.map((x) => pick(x.tag, l))]).filter(Boolean)
-        .sort((a, b) => b.length - a.length)
-        .reduce((txt, tg) => txt.split(tg).join(' '), pick(s.motion, l))
-        .replace(/臉(朝|轉|向)|turn(s|ing)? (his|her|their) face/g, '');
-      const noFace = langs.every((l) => !MOTION_FACE_RE.test(bare(l)));
-      if (noFace) hint(id, 'motion 沒寫臉上的變化；這一鏡看得清楚臉，影片裡的表演只剩身體。寫一個看得見的表情變化（「說完嘴角微微上揚」「眼神暗下來」），或一個臉上的微動作（眨眼、吞嚥）');
+    if (!still && (SIZE_RANK[sp.size] ?? -1) >= SIZE_RANK['中景'] && cast.some((e) => !e.partial && isPerson(e)) && !faceCue(s.motion)) {
+      hint(id, 'motion 沒寫臉上的變化；腳本會在影片提示詞帶上首幀的表情，臉不會變回沒有表情，但表演只剩身體。寫一個看得見的表情變化（「說完嘴角微微上揚」「眼神暗下來」），或一個臉上的微動作（眨眼、吞嚥）');
     }
-    // 41：後配口型的台詞，說話的人要臉朝鏡頭、嘴看得見
-    if (P.audio_plan === '後配口型' && !still && s.line?.text && s.line.type === '對白') {
+    // 41：台詞之後另外對口型（後配口型、原生音效），說話的人要臉朝鏡頭、嘴看得見
+    if (DUB_LIPS && !still && s.line?.text && s.line.type === '對白') {
       const sp = cast.find((e) => chars.get(e.char)?.c.id === chars.get(s.line.who)?.c.id);
       const turned = sp && (sp.partial || /背面|側面/.test(zhOf(sp.facing)) || langs.some((l) => TURNED_RE.test(joinC([pick(sp.pos, l), pick(sp.gaze, l), pick(sp.face, l)], l))));
-      if (turned) warn(id, `後配口型的台詞，說話的 ${sp.char} 卻${sp.partial ? '只有背影或局部入鏡' : '側著、背著，或低頭、回頭、鞠躬'}；嘴型要另外對上，臉要朝鏡頭、嘴不能被擋住。讓說話的人先站定、臉朝鏡頭說完再做動作，或把這句改成畫外音、鏡頭給聽的人`);
+      if (turned) warn(id, `這句台詞之後另外配音、對口型（${P.audio_plan}），說話的 ${sp.char} 卻${sp.partial ? '只有背影或局部入鏡' : '側著、背著，或低頭、回頭、鞠躬'}；嘴型要另外對上，臉要朝鏡頭、嘴不能被擋住。讓說話的人先站定、臉朝鏡頭說完再做動作，或把這句改成畫外音、鏡頭給聽的人`);
     }
     // 42：尾幀和首幀一樣，動作做不出來
     if (endMode(s) !== 'off') {
@@ -1735,7 +1860,20 @@ if (ep) {
       if (NO_FAST && e.motion && langs.some((l) => FAST_RE.test(pick(e.motion, l)))) warn(id, `特效 ${e.id} 的 motion 用了「爆發／瞬間」這類字眼，選定的工具做不好快速的動作；寫成慢慢擴散、明暗起伏，快的留給後製`);
     });
     checkFrag(`${id}.motion`, s.motion, !still);
-    if (NATIVE_AUDIO) checkFrag(`${id}.sound`, s.sound);
+    if (NATIVE_SOUND) checkFrag(`${id}.sound`, s.sound);
+    if (s.ambient !== false) checkFrag(`${id}.ambient`, s.ambient);
+    if (NATIVE_SOUND && s.ambient_sound !== false) checkFrag(`${id}.ambient_sound`, s.ambient_sound);
+    // 運鏡的終點：沒有尾幀圖時，end 是影片工具知道鏡頭停在哪裡的唯一依據
+    if (!still && !isStatic(s)) {
+      const endless = !langs.some((l) => pick(s.end, l));
+      const warned = USE_LAST && cast.length && s.last_frame !== false; // 這種情況上面已經警告缺少 end
+      if (endless && !warned && !hasEndFrame(s)) {
+        hint(id, `鏡頭在動（${zhOf(s.camera)}），這一鏡卻沒有尾幀，也沒寫 end；影片工具不知道運鏡停在哪裡，常推過頭或停不下來。在 end 寫運鏡之後看到的樣子（「取景推到近景，只剩她的臉和肩膀」），它會寫進影片提示詞`);
+      } else if (!endless && !cam.custom && FRAMING_MOVES.has(cam.base) && !langs.some((l) => FRAMING_RE.test(pick(s.end, l)))) {
+        hint(id, `運鏡「${cam.raw}」會改變取景，end 卻沒寫運鏡之後的取景（推到多近、拉到多寬、繞到哪一側）；寫出來，尾幀或影片才知道鏡頭停在哪裡（「取景推到近景，只剩她的臉和肩膀」）`);
+      }
+    }
+    if (cam.pre.includes('手持') && cam.base === '固定') hint(id, '「手持固定」互相矛盾，腳本會當成固定鏡頭；原地的手持晃動只寫「手持」，要跟著動就寫「手持跟拍」「手持推近」');
     // 暖光的鏡頭沿用了不是為暖光寫的場景 palette：
     // 一是 palette 寫明以冷色為主；二是場景本身的光不暖、這一鏡（或機位）才換成暖光，而 palette 裡沒有任何暖色。
     // 後者常見於冷色調的夜戲裡點起燈籠、風燈：palette 是照月光寫的，燈光一亮，同一句提示詞就兩邊打架
@@ -2293,7 +2431,7 @@ function backup(name) {
 // 要整個欄名完全相符才算：使用者自己加的「參考圖路徑」「影片提示詞（改）」不能被當成產生的欄位刪掉。
 const LANG_SUFFIXES = ['', ...Object.values(T).map((x) => `（${x.name}）`)];
 const SHOT_GENERATED = new Set([
-  ...['首幀圖像提示詞', '尾幀提示詞（拿首幀圖做圖像編輯）', '影片提示詞', '負面詞'].flatMap((b) => LANG_SUFFIXES.map((s) => b + s)),
+  ...['首幀圖像提示詞', '尾幀提示詞（拿首幀圖做圖像編輯）', '影片提示詞', '負面詞', '影片負面詞'].flatMap((b) => LANG_SUFFIXES.map((s) => b + s)),
   '參考圖',
   '參考圖（依序上傳）',
 ]);
@@ -2593,7 +2731,7 @@ if (scriptText == null) {
     ['工具限制', toolLimitText()],
     ['影片生成方式', MODE === 'i2v' ? '圖生影片（先出首幀圖）' : '文字生影片'],
     ['首尾幀', USE_LAST ? '使用' : '不使用'],
-    ['聲音方案', P.audio_plan || ''],
+    ['聲音方案', P.audio_plan ? `${P.audio_plan}${{ 原生音效: '（環境音與音效由影片工具生成，台詞之後另外配音、對口型）', 原生音訊: '（台詞、環境音與音效都由影片工具生成）' }[P.audio_plan] || ''}` : ''],
     ['提示詞語言', langs.map((l) => T[l].name).join('＋')],
     ['參考圖模式', RM === '混合'
       ? `混合（外貌照文字完整寫，再標上「${langs.map((l) => T[l].refSee(refToken(1, l)).trim()).join('」「')}」這類編號；有掛圖就照分鏡表列的順序上傳${REF_MAX ? `，一次最多 ${REF_MAX} 張` : ''}，沒掛圖文字也完整）`
@@ -2607,6 +2745,9 @@ if (scriptText == null) {
     ...(P.music ? [['配樂方向', P.music]] : []),
     ...(IMAGE_SUFFIX ? [['圖像提示詞最後的參數', `\`${IMAGE_SUFFIX}\`（首幀、尾幀、機位背景圖）`]] : []),
     ...(ASSET_SUFFIX ? [['資產圖最後的參數', `\`${ASSET_SUFFIX}\``]] : []),
+    ...(show(VIDEO_SUFFIX) ? [['影片提示詞最後的短指令', `${show(VIDEO_SUFFIX)}${P.video_suffix == null ? `（${P.video_tool} 會自己切鏡頭，預設加上；不要就填 "video_suffix": ""）` : ''}`]] : []),
+    ...(NATIVE_SOUND && show(AUDIO_SUFFIX) ? [['聲音的短指令', `${show(AUDIO_SUFFIX)}${P.audio_suffix == null ? '（預設加上，配樂剪接時統一鋪；不要就填 "audio_suffix": ""）' : ''}`]] : []),
+    ...(MODE === 'i2v' ? [['一致性提醒', P.consistency_line === false ? '關掉' : `每一鏡的影片提示詞都會加上「${T[langs[0]].keep(true)}」（沒有人入鏡時改成畫面裡的東西）`]] : []),
   ]), '');
   if (Array.isArray(bible.pending) && bible.pending.length) {
     L.push('## 待確認設定', '', '以下是原文沒寫、先補上的暫定值。要改請直接說，改一處所有鏡頭會一起更新。', '');
@@ -2630,8 +2771,11 @@ if (scriptText == null) {
   })), '');
   L.push('## 場景', '');
   const hasPalette = [...scenes.values()].some((s) => show(s.palette));
-  L.push(table(['編號', '名稱', '空間', '光線', '時間／天氣', ...(hasPalette ? ['色彩'] : [])], [...scenes.values()].map((s) => [
+  const hasAmbient = [...scenes.values()].some((s) => show(s.ambient));
+  const hasAmbSound = [...scenes.values()].some((s) => show(s.ambient_sound));
+  L.push(table(['編號', '名稱', '空間', '光線', '時間／天氣', ...(hasPalette ? ['色彩'] : []), ...(hasAmbient ? ['環境的動態'] : []), ...(hasAmbSound ? ['環境聲'] : [])], [...scenes.values()].map((s) => [
     s.id, s.name || '', show(s.space), show(s.light), show(s.time), ...(hasPalette ? [show(s.palette)] : []),
+    ...(hasAmbient ? [show(s.ambient)] : []), ...(hasAmbSound ? [show(s.ambient_sound)] : []),
   ])), '');
   if (propDefs.size) {
     L.push('## 道具', '');
@@ -2656,6 +2800,9 @@ if (scriptText == null) {
   L.push('## 風格鎖定句', '', ...langs.map((l) => code(pick(P.style_lock, l))), '');
   if (langs.some((l) => pick(P.negative_global, l))) {
     L.push('## 通用負面詞', '', '貼在工具的負面提示詞欄位，整個專案共用。', '', ...langs.map((l) => code(pick(P.negative_global, l))), '');
+  }
+  if (HAS_VIDEO_NEG) {
+    L.push('## 影片負面詞', '', '貼在影片工具的負面提示詞欄位，已經包含通用負面詞；首幀與尾幀用上面的通用負面詞。', '', ...langs.map((l) => code(joinC([pick(P.negative_global, l), pick(P.negative_video, l)], l))), '');
   }
   L.push('## 資產提示詞', '', '先生成這些圖並定稿，之後每一鏡都掛它們當參考圖。標題後面是建議畫幅，在生成工具裡選：設定圖與組圖要橫幅才放得下幾個角度，道具與特效用方形。近景以內的鏡頭會另外掛角色的頭像，臉才撐得起特寫。', '');
   let last = '';
@@ -2759,7 +2906,10 @@ if (ep && !epBlocked) {
     const v = voiceOf(hit.c, (inShot || hit).v, langs[0]);
     return v ? `${v}${hit.c.voice_ref ? `（音色：${hit.c.voice_ref}）` : ''}` : '';
   };
-  const soundCell = (s) => [zhOf(s.sound), s.music ? `♪ ${zhOf(s.music)}` : ''].filter(Boolean).join('<br>');
+  // 聲音欄：場景的環境聲＋這一鏡的音效。給人看的欄位用中文（只出英文提示詞時用英文）
+  const HL = langs.includes('zh') ? 'zh' : langs[0];
+  const soundText = (s) => soundOf(s, HL);
+  const soundCell = (s) => [soundText(s), s.music ? `♪ ${zhOf(s.music)}` : ''].filter(Boolean).join('<br>');
   // 後製的特效不進提示詞，要提醒剪接的人加；生成加後製的要提醒加強
   const fxLabel = ({ e, d }) => `${d.name || d.id}${e.state ? `（${e.state}）` : ''}${zhOf(e.pos) ? `，${zhOf(e.pos)}` : ''}`;
   // 剪接時要做的事：靜幀的推拉、變速與定格、後製的字與漫劇效果、後製的特效
@@ -2804,6 +2954,8 @@ if (ep && !epBlocked) {
       if (NATIVE_AUDIO && speakerOnScreen) f.push('台詞一字不差、嘴型對得上，聲線和這個角色前面的鏡頭一致，沒有自己加字幕或配樂');
       else if (speakerOnScreen) f.push('嘴唇閉合（口型之後另外做），頭部動作小');
       else if (s.line?.text && full.some((e) => ['人', '半人'].includes(kindOf(chars.get(e.char).c)))) f.push('嘴唇閉合，沒有自己在說話');
+      if (NATIVE_SFX) f.push('聲音只有環境音與音效，沒有人聲、字幕或配樂');
+      if (ambientOf(s, langs[0])) f.push('背景裡的環境在動（雨、光、人群），沒有凍住');
     }
     for (const { e, d } of fxGen(s)) f.push(`特效「${d.name || d.id}」的位置、顏色${e.state ? `與狀態（${e.state}）` : ''}正確`);
     if (s.risk) f.push('風險項見備註，不行就照備案換拍法');
@@ -2967,16 +3119,18 @@ if (ep && !epBlocked) {
     head.push(`首幀圖像提示詞${langLabel(l)}`);
     if (USE_LAST) head.push(`尾幀提示詞（拿首幀圖做圖像編輯）${langLabel(l)}`);
     head.push(`影片提示詞${langLabel(l)}`, `負面詞${langLabel(l)}`);
+    if (HAS_VIDEO_NEG) head.push(`影片負面詞${langLabel(l)}`);
   }
   head.push(REF_NUM ? '參考圖（依序上傳）' : '參考圖', '風險', '連戲備註', '後製', '驗收重點', '模型', 'seed', '抽卡次數', '採用版本', '驗收結果', '備註');
   const rows = shots.map((s, i) => {
     const sp = spec(s);
     const gen = isStill(s) ? '' : genLength(Number(s.duration) || 0) ?? '';
-    const r = [s.id, s.source || '', beatLabel(s), s.scene, s.setup || '', who(s), s.duration, tc(ends[i]), renderOf(s), gen, sp.size || zhOf(s.size), sp.type, sp.angle || '', sp.height || '', sp.lens || '', zhOf(s.camera), zhOf(s.speed), s.link, s.transition || '', zhOf(s.action), lineText(s), zhOf(s.line?.tone), speakerVoice(s), zhOf(s.sound), zhOf(s.music), cutOf(s, i)];
+    const r = [s.id, s.source || '', beatLabel(s), s.scene, s.setup || '', who(s), s.duration, tc(ends[i]), renderOf(s), gen, sp.size || zhOf(s.size), sp.type, sp.angle || '', sp.height || '', sp.lens || '', zhOf(s.camera), zhOf(s.speed), s.link, s.transition || '', zhOf(s.action), lineText(s), zhOf(s.line?.tone), speakerVoice(s), soundText(s), zhOf(s.music), cutOf(s, i)];
     for (const l of langs) {
       r.push(firstFrame(s, i, l));
       if (USE_LAST) r.push(lastFramePrompt(s, l) || noEndNote(s, l));
       r.push(videoPrompt(s, l), negativePrompt(s, l));
+      if (HAS_VIDEO_NEG) r.push(isStill(s) ? '' : videoNegative(s, l));
     }
     const refs = REF_NUM && s.link === '接續' ? [] : refLabels(s);
     r.push(REF_NUM ? refs.map((x, k) => `${k + 1}. ${x}`).join('；') : refs.join('＋'), s.risk || '', s.continuity || '', postNote(s), focusOf(s, i).join('；'), '', '', '', '', '', '');
@@ -3005,7 +3159,7 @@ if (ep && !epBlocked) {
   };
   written.push(writeCsv(`${epId}-animatic.csv`, [
     ['鏡號', '開始', '結束', '秒數', '用哪張圖', '粗剪做法', '對白／旁白', '聲線', '聲音', '音樂', '轉場', '建議切點'],
-    ...shots.map((s, i) => [s.id, tc(startOf(i)), tc(ends[i]), s.duration, imageFor(s, i), roughOf(s), lineText(s), speakerVoice(s), zhOf(s.sound), zhOf(s.music), s.transition || '', cutOf(s, i)]),
+    ...shots.map((s, i) => [s.id, tc(startOf(i)), tc(ends[i]), s.duration, imageFor(s, i), roughOf(s), lineText(s), speakerVoice(s), soundText(s), zhOf(s.music), s.transition || '', cutOf(s, i)]),
   ], ANIMATIC_CSV));
   // 臨時字幕：每句台詞從鏡頭開始後 0.2 秒起，講完（字數 ÷ 語速）就收，不超過這一鏡
   const srtTime = (sec) => {

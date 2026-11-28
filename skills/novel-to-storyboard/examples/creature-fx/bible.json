@@ -12,7 +12,7 @@
     "video_mode": "i2v",
     "use_last_frame": true,
     "tool_limits": {},
-    "audio_plan": "後配口型",
+    "audio_plan": "原生音效",
     "narrator_voice": "沉穩的中年男聲，說書人的語氣",
     "clip_range": [
       3,
@@ -101,6 +101,8 @@
       "light": "櫃台上方的吊燈是主要光源，暖橘色的光照亮櫃台一帶，大堂其餘地方偏暗，木格窗透進一點青藍色的夜光",
       "time": "深夜，下著小雨",
       "palette": "暗部偏青藍",
+      "ambient": "窗外的雨絲斜斜落下，吊燈的竹燈罩輕輕晃動",
+      "ambient_sound": "細雨打在木格窗上",
       "detail": "木櫃台的邊角磨得圓滑發亮，長凳的漆剝落，木格窗的窗紙有幾處補過，地上是磨舊的青磚"
     }
   ],

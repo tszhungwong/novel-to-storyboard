@@ -108,7 +108,7 @@ test('#52：頭像與表情組圖不寫手與身形；沒寫 expressions 會提�
 
 test('#41：後配口型的台詞，說話的人在鞠躬或背對鏡頭要警告', (t) => {
   const r = run(t, { editEp: (e) => { shot(e, 'EP01-006').cast[1].pos = '坐在畫面左側中景的桌前，低頭鞠躬'; } });
-  assert.match(r.checks, /\[警告\] EP01-006：後配口型的台詞，說話的 C01-a/);
+  assert.match(r.checks, /\[警告\] EP01-006：這句台詞之後另外配音、對口型（後配口型），說話的 C01-a/);
 });
 
 test('#42、#43：尾幀和首幀一樣、首幀寫了先後兩個動作，都會提示', (t) => {
@@ -214,4 +214,121 @@ test('#48：9:16 的中景並排兩個人會提示；過肩或有前後縱深就
   assert.match(a.checks, /EP01-007：9:16 的中景裡並排兩個人/);
   const b = run(t, { editEp: (e) => { twoShot(e); shot(e, 'EP01-007').cast[1].pos = '站在畫面右側後景'; } });
   assert.doesNotMatch(b.checks, /EP01-007：9:16/);
+});
+
+// ---------- 影片提示詞的其他要素：結束時、表情延續、環境、一致性、聲音、運鏡、負面詞 ----------
+
+test('沒有尾幀圖時，end 寫進影片提示詞（工具不吃尾幀，或這一鏡關掉尾幀）', (t) => {
+  const a = run(t, { editBible: (b) => { b.project.use_last_frame = false; } });
+  assert.match(promptOf(a.file('EP01-storyboard.md'), 'EP01-002', '影片提示詞'), /結束時：頭微微低下，視線從窗外落到桌上的信封/);
+  const b = run(t, { editEp: (e) => { shot(e, 'EP01-002').last_frame = false; } });
+  const md = b.file('EP01-storyboard.md');
+  assert.match(promptOf(md, 'EP01-002', '影片提示詞'), /結束時：頭微微低下/);
+  // 有尾幀圖的鏡頭不重複寫
+  assert.doesNotMatch(promptOf(md, 'EP01-004', '影片提示詞'), /結束時/);
+});
+
+test('表情延續：motion 只寫視線與身體時帶上首幀的表情；寫了表情變化就不加', (t) => {
+  const a = run(t, { example: 'live-action' });
+  const p = promptOf(a.file('EP01-storyboard.md'), 'EP01-008', '影片提示詞（中文）');
+  assert.match(p, /戴細框眼鏡的灰髮中年男子的表情維持首幀的樣子：眼神放低，嘴角帶著客氣的淺笑，嘴唇閉著/);
+  assert.match(promptOf(a.file('EP01-storyboard.md'), 'EP01-008', '影片提示詞（English）'), /holds the expression from the first frame: eyes lowered politely/);
+  const b = run(t, { example: 'live-action', editEp: (e) => { shot(e, 'EP01-008').motion = { zh: '戴細框眼鏡的灰髮中年男子站定，嘴角的笑收起來，上半身彎下鞠躬', en: 'the grey-haired man stops, his smile fading, and bows from the waist' }; } });
+  assert.doesNotMatch(promptOf(b.file('EP01-storyboard.md'), 'EP01-008', '影片提示詞（中文）'), /表情維持/);
+});
+
+test('環境的動態：場景的 ambient 進每一鏡，插入與特寫不套用，機位與鏡頭可以覆寫或關掉', (t) => {
+  const r = run(t, { example: 'creature-fx' });
+  const md = r.file('EP01-storyboard.md');
+  assert.match(promptOf(md, 'EP01-005', '影片提示詞'), /窗外的雨絲斜斜落下，吊燈的竹燈罩輕輕晃動/);
+  assert.doesNotMatch(promptOf(md, 'EP01-001', '影片提示詞'), /雨絲/); // 特寫的插入鏡頭
+  assert.match(promptOf(md, 'EP01-004', '影片提示詞'), /門外的雨絲斜斜落下/); // 這一鏡覆寫
+  assert.doesNotMatch(promptOf(md, 'EP01-004', '影片提示詞'), /窗外的雨絲/);
+  assert.doesNotMatch(promptOf(md, 'EP01-007', '影片提示詞'), /雨絲/); // 這一鏡填 false
+  // 首幀不受影響
+  assert.doesNotMatch(promptOf(md, 'EP01-005', '首幀圖像提示詞'), /雨絲斜斜落下/);
+  // 主範例：朝玄關拍的機位填了 false
+  const m = run(t);
+  assert.match(promptOf(m.file('EP01-storyboard.md'), 'EP01-005', '影片提示詞'), /窗簾被微風輕輕帶動/);
+  assert.doesNotMatch(promptOf(m.file('EP01-storyboard.md'), 'EP01-004', '影片提示詞'), /窗簾/);
+});
+
+test('場景寫了雨卻沒有 ambient 會提示；原生音效、原生音訊沒有 ambient_sound 也會提示', (t) => {
+  const r = run(t, { example: 'creature-fx', editBible: (b) => { delete b.scenes[0].ambient; delete b.scenes[0].ambient_sound; } });
+  assert.match(r.checks, /S01\.ambient：場景寫了「雨」，卻沒有 ambient/);
+  assert.match(r.checks, /S01\.ambient_sound：影片工具會生成聲音/);
+});
+
+test('會動又會發光的特效，影片提示詞加一句光跟著晃動', (t) => {
+  const r = run(t, { example: 'creature-fx' });
+  assert.match(promptOf(r.file('EP01-storyboard.md'), 'EP01-006', '影片提示詞'), /火焰在原地輕輕搖晃，上下浮動，照在周圍的光也跟著明暗晃動/);
+});
+
+test('一致性提醒：有人入鏡寫長相與服裝，沒有人寫畫面裡的東西；consistency_line: false 關掉', (t) => {
+  const r = run(t, { example: 'creature-fx' });
+  const md = r.file('EP01-storyboard.md');
+  assert.match(promptOf(md, 'EP01-005', '影片提示詞'), /除了上面寫到的變化，人物的長相、服裝與背景都和首幀一致/);
+  assert.match(promptOf(md, 'EP01-001', '影片提示詞'), /除了上面寫到的變化，畫面裡的東西與背景都和首幀一致/);
+  const off = run(t, { editBible: (b) => { b.project.consistency_line = false; } });
+  assert.doesNotMatch(promptOf(off.file('EP01-storyboard.md'), 'EP01-002', '影片提示詞'), /和首幀一致/);
+});
+
+test('原生音效：環境聲與音效進影片提示詞，加「沒有人聲對白」，台詞不進去，說話的人嘴唇閉合', (t) => {
+  const r = run(t, { example: 'creature-fx' });
+  const md = r.file('EP01-storyboard.md');
+  const p = promptOf(md, 'EP01-005', '影片提示詞');
+  assert.match(p, /聲音：細雨打在木格窗上。沒有人聲對白。不要字幕，不要背景音樂。$/);
+  assert.match(p, /短髮瘦臉的青年的嘴唇保持閉合、嘴不動（口型之後另外做）/);
+  assert.doesNotMatch(p, /說：/);
+  // 這一鏡的環境聲填 false：雨聲遠去
+  assert.match(promptOf(md, 'EP01-008', '影片提示詞'), /聲音：一聲很輕的鈴響，雨聲遠去。/);
+  // 導演表的聲音欄也接上環境聲
+  assert.match(md, /\| 細雨打在木格窗上，壺蓋輕碰壺身的喀一聲 \|/);
+});
+
+test('音訊與影片的短指令：預設擋配樂與自動切鏡，填空字串關掉，自己寫的沒擋到會提示', (t) => {
+  const off = run(t, { example: 'creature-fx', editBible: (b) => { b.project.audio_suffix = ''; b.project.video_suffix = ''; } });
+  const p = promptOf(off.file('EP01-storyboard.md'), 'EP01-005', '影片提示詞');
+  assert.doesNotMatch(p, /不要背景音樂|單一連續鏡頭/);
+  const own = run(t, { example: 'creature-fx', editBible: (b) => { b.project.audio_suffix = '不要字幕'; b.project.video_suffix = '畫面穩定'; } });
+  assert.match(own.checks, /project\.audio_suffix：audio_suffix 沒有擋掉配樂/);
+  assert.match(own.checks, /project\.video_suffix：可靈 會自己把一段影片切成好幾個鏡頭/);
+});
+
+test('video_suffix 的 {ar} 換成畫幅、{dur} 換成建議生成秒數', (t) => {
+  const r = run(t, { editBible: (b) => { b.project.video_suffix = '--ar {ar} --duration {dur}'; } });
+  assert.match(promptOf(r.file('EP01-storyboard.md'), 'EP01-002', '影片提示詞'), /--ar 9:16 --duration \d+。$/);
+  assert.doesNotMatch(r.checks, /沒換掉的/);
+});
+
+test('影片負面詞：只進影片的負面詞欄，接在通用負面詞後面；沒填會提示', (t) => {
+  const r = run(t, { example: 'live-action' });
+  const settings = r.file('settings.md');
+  assert.match(settings, /## 影片負面詞[\s\S]*多餘的手指，變形的手，浮水印，磨皮過度的皮膚，閃爍，畫面抖動/);
+  const csv = r.file('EP01-shots.csv');
+  assert.match(csv.split('\n')[0], /"負面詞（中文）","影片負面詞（中文）"/);
+  const none = run(t, { example: 'live-action', editBible: (b) => { delete b.project.negative_video; } });
+  assert.match(none.checks, /project\.negative_video：填了通用負面詞，還沒有影片專用的/);
+  assert.doesNotMatch(none.file('EP01-shots.csv').split('\n')[0], /影片負面詞/);
+});
+
+test('手持可以疊在運鏡前面；「手持固定」會提示', (t) => {
+  const en = run(t, { example: 'en-action' });
+  assert.match(promptOf(en.file('EP01-storyboard.md'), 'EP01-004', '影片提示詞'), /Gentle handheld push-in\./);
+  const r = run(t, { editEp: (e) => { shot(e, 'EP01-004').camera = '手持跟拍'; shot(e, 'EP01-007').camera = '手持固定'; } });
+  assert.match(promptOf(r.file('EP01-storyboard.md'), 'EP01-004', '影片提示詞'), /鏡頭手持跟拍主體/);
+  assert.match(r.checks, /EP01-007：「手持固定」互相矛盾/);
+});
+
+test('運鏡的終點：會改變取景的運鏡 end 沒寫取景會提示；鏡頭在動卻沒有尾幀也沒有 end 會提示', (t) => {
+  const r = run(t, {
+    editEp: (e) => {
+      shot(e, 'EP01-007').camera = '緩慢推近';
+      Object.assign(shot(e, 'EP01-003'), { camera: '左移', last_frame: false });
+    },
+  });
+  assert.match(r.checks, /EP01-007：運鏡「緩慢推近」會改變取景，end 卻沒寫運鏡之後的取景/);
+  assert.match(r.checks, /EP01-003：鏡頭在動（左移），這一鏡卻沒有尾幀，也沒寫 end/);
+  // 範例裡寫了取景的不提示
+  assert.doesNotMatch(r.checks, /EP01-008：運鏡/);
 });

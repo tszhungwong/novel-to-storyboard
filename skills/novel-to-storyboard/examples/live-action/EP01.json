@@ -52,6 +52,7 @@
         "zh": "敞開的雙開木門，門外是深紅地毯的走廊，背景虛化",
         "en": "the open double wooden doors and the deep red carpeted corridor beyond, softly out of focus"
       },
+      "ambient": false,
       "light": {
         "zh": "吊燈的暖黃光從上方照下，門外的走廊偏暗",
         "en": "warm chandelier light from above, the corridor beyond the doors darker"
@@ -73,7 +74,7 @@
       "size": "近景",
       "type": "過肩",
       "lens": "中長焦",
-      "camera": "固定",
+      "camera": "緩慢推近",
       "link": "切",
       "action": "許曼攔在沈知意面前，冷笑著開口",
       "line": {
@@ -126,8 +127,8 @@
         }
       ],
       "end": {
-        "zh": "栗色大波浪長髮的年輕女子下巴抬得更高，冷笑更明顯",
-        "en": "the young woman with long chestnut waves has her chin raised higher, the sneer more pronounced"
+        "zh": "取景推近到她的臉與肩膀，栗色大波浪長髮的年輕女子下巴抬得更高，冷笑更明顯",
+        "en": "the framing has pushed in to her face and shoulders; the young woman with long chestnut waves has her chin raised higher, the sneer more pronounced"
       },
       "motion": {
         "zh": "栗色大波浪長髮的年輕女子把下巴再抬高一點，視線上下打量，手中的杯子輕輕晃了一下",
@@ -625,7 +626,7 @@
       "duration": 3,
       "size": "近景",
       "lens": "中長焦",
-      "camera": "固定",
+      "camera": "緩慢拉遠",
       "link": "切",
       "action": "許曼的笑垮下來，杯子停在半空",
       "line": null,
@@ -653,8 +654,8 @@
         }
       ],
       "end": {
-        "zh": "栗色大波浪長髮的年輕女子的手慢慢垂下，空杯放低到腰間，嘴唇閉上",
-        "en": "the young woman's hand slowly lowers, the empty glass dropping to her waist, her lips closing"
+        "zh": "取景拉寬到中景，看得到她身後的賓客都看著她；栗色大波浪長髮的年輕女子的手慢慢垂下，空杯放低到腰間，嘴唇閉上",
+        "en": "the framing has widened to a medium shot, showing the guests behind her all watching; the young woman's hand slowly lowers, the empty glass dropping to her waist, her lips closing"
       },
       "motion": {
         "zh": "栗色大波浪長髮的年輕女子臉上的笑一點一點垮下來，舉著杯子的手停在半空，忘了放下",

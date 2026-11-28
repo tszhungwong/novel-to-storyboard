@@ -21,6 +21,10 @@
     "negative_global": {
       "zh": "多餘的手指，變形的手，浮水印，磨皮過度的皮膚",
       "en": "extra fingers, deformed hands, watermark, airbrushed skin"
+    },
+    "negative_video": {
+      "zh": "閃爍，畫面抖動，臉部變形，人物變臉，肢體扭曲，多出來的人",
+      "en": "flicker, camera shake, warped faces, face changing between frames, twisted limbs, extra people"
     }
   },
   "characters": [
@@ -199,6 +203,10 @@
       "palette": {
         "zh": "暗部偏深棕，點綴色是地毯的深紅",
         "en": "shadows leaning deep brown, the deep red of the carpet as the accent"
+      },
+      "ambient": {
+        "zh": "背景的賓客有細微的動作，換一下重心、手裡的酒杯輕輕晃動，水晶吊燈的光在杯子上微微閃動",
+        "en": "the guests in the background shift their weight and their glasses sway slightly, the chandelier light glints softly on the glasses"
       },
       "detail": {
         "zh": "木門有深色的拼花與黃銅把手，地毯的絨毛被踩得有點倒伏，牆上是淺金色的絲質壁布",

@@ -84,6 +84,8 @@
       "light": "warm bulbs overhead, red and blue neon tubes reflected on the wet ground, deep shadows between the carts",
       "time": "night, steady rain",
       "palette": "saturated red and blue neon accents against deep blue-grey shadows",
+      "ambient": "rain falls steadily through the light of the bulbs, water drips from the edges of the canvas awnings, the neon reflections waver on the wet asphalt",
+      "ambient_sound": "steady rain drumming on the canvas awnings",
       "detail": "canvas awnings stained and patched, bulb wires taped to the poles, puddles collecting in the dips of the asphalt, the brick wall streaked with damp"
     }
   ],

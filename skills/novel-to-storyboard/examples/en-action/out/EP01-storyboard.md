@@ -71,15 +71,15 @@ The dark underside of a food cart, one wheel at the left edge of the frame, wet 
 
 | 鏡號 | 原文對應 | 節拍 | 場景 | 機位 | 角色 | 秒 | 累計 | 景別 | 運鏡 | 銜接 | 動作 | 對白／旁白 | 聲音 | 備註 | 切點 |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| EP01-001 | 「夜市收攤前下起了雨」 | 1.1 | S01 | S01-A | — | 3 | 0:03 | 空鏡・遠景（微俯） | 緩慢下降 | 切（淡入） | 雨中的夜市巷子，鏡頭從燈泡的高度降到攤車的高度 |  | steady rain drumming on canvas awnings, a pan sizzling somewhere down the lane | 連戲：建立鏡頭：巷子的走向是遠離鏡頭；之後人物都朝畫面右或遠離鏡頭的方向跑 |  |
-| EP01-002 | 「小滿抱著那只鐵盒從巷口衝出來」 | 1.1 | S01 | — | C01-a | 1.5 | 0:04.5 | 插入・特寫（地面） | 固定 | 切 | 小滿的腳踩過積水，從畫面左跑向畫面右 |  | wet footsteps, rain | 風險：奔跑：只拍腳，兩步就出畫；速度靠 1.5 秒的短鏡頭和前後的剪接；連戲：運動方向：左到右 |  |
-| EP01-003 | 「身後的腳步聲越來越近」 | 1.1 | S01 | S01-A | C01-a | 2 | 0:06.5 | 背後・全景 | 固定 | 切 | 小滿抱著鐵盒沿巷子跑遠，身後有更重的腳步聲 |  | her footsteps fading down the lane, heavier footsteps approaching from behind the camera, rain | 風險：奔跑：背影全景、只拍兩秒，寫成穩定的小跑；腿部變形就縮短到 1.5 秒，或改用 002 那種腳步插入鏡頭；連戲：小滿雙手抱著鐵盒；和 001 同機位，背景沿用 001 結束時的畫面 |  |
-| EP01-004 | 「穿雨衣的男人伸手抓住她的後領」 | 1.2 | S01 | S01-B | C01-a、C02-a | 2 | 0:08.5 | 中景 | 固定 | 切 | 小滿鑽進攤車之間，一隻手從後面伸向她的帽兜 |  | rain on canvas, two people breathing hard | 風險：肢體接觸：這一鏡停在抓到之前，下一鏡直接切到抓住之後，不拍接觸的瞬間；連戲：運動方向：左到右。軸線：男人在畫面左、小滿在畫面右 |  |
-| EP01-005 | 「東西給我。」 | 1.2 | S01 | — | C02-a | 3 | 0:11.5 | 近景（仰拍） | 固定 | 切 | 雨衣男抓著小滿的帽兜，低頭開口 | 對白 雨衣男：「東西給我。」 | rain pattering on the rubber hood | 風險：口型：原生音訊，一鏡只說一句短話；臉朝鏡頭、頭部動作小；連戲：接觸之後：他的右拳抓著小滿的帽兜，小滿在畫面外的右下方；軸線不變，他看向畫面右。仰拍：他佔上風 |  |
-| EP01-006 | 「袖子裂開，鐵盒掉在地上，滾進攤車底下」 | 1.3 | S01 | S01-C | — | 2 | 0:13.5 | 插入・特寫（地面） | 固定 | 切 | 布料撕裂聲中，鐵盒掉在地上，滾進攤車底下 |  | fabric tearing, then the tin clanging on asphalt and rattling to a stop | 風險：掙脫與撕裂是高風險動作，不拍過程：用撕裂聲加鐵盒落地的結果帶過；連戲：從這一鏡之後小滿換成 C01-b（右袖從肩線裂開）；鐵盒在攤車底下 |  |
-| EP01-007 | 「兩個人同時看向那只鐵盒」 | 1.4 ★ | S01 | S01-B | C02-a、C01-b | 2 | 0:15.5 | 雙人・中景 | 固定 | 切 | 兩個人僵住，同時低頭看向攤車底下 |  | rain, the last rattle of the tin dying away | 風險：雙人同框、兩張臉都入鏡：兩人都是側臉、中間留空、幾乎不動；做不穩就拆成兩個特寫，各自低頭看向同一個方向；連戲：視線匹配：兩人都看向畫面右下，對應下一鏡攤車底下的鐵盒；小滿雙手已空，右袖裂開 |  |
-| EP01-008 | 「兩個人同時看向那只鐵盒」 | 1.4 ★ | S01 | S01-C | — | 4.5 | 0:20 | 插入・特寫（地面） | 緩慢推近・升格 | 切（視線剪輯） | 攤車底下的鐵盒，雨水滴在盒蓋上；遠處響起哨聲 |  | rain dripping on the tin lid, then a sharp whistle blast far away | 連戲：高點：全場最長的一鏡，升格讓雨滴變慢，時間像停住；沒有人、沒有動作，只有雨聲；結尾的哨聲帶出下一鏡 |  |
-| EP01-009 | 「男人鬆開手，退進人群」 | 1.5 | S01 | — | C02-a | 2.5 | 0:22.5 | 中全景 | 固定 | 切（聲音先入） | 雨衣男朝哨聲的方向看了一眼，退進攤車之間的暗處 |  | the whistle again, closer; rain | 風險：原文是退進人群，人群是高風險，改成退進暗處；只退兩步，幅度小；連戲：男人離場 |  |
+| EP01-001 | 「夜市收攤前下起了雨」 | 1.1 | S01 | S01-A | — | 3 | 0:03 | 空鏡・遠景（微俯） | 緩慢下降 | 切（淡入） | 雨中的夜市巷子，鏡頭從燈泡的高度降到攤車的高度 |  | steady rain drumming on the canvas awnings, a pan sizzling somewhere down the lane | 連戲：建立鏡頭：巷子的走向是遠離鏡頭；之後人物都朝畫面右或遠離鏡頭的方向跑 |  |
+| EP01-002 | 「小滿抱著那只鐵盒從巷口衝出來」 | 1.1 | S01 | — | C01-a | 1.5 | 0:04.5 | 插入・特寫（地面） | 固定 | 切 | 小滿的腳踩過積水，從畫面左跑向畫面右 |  | steady rain drumming on the canvas awnings, wet footsteps | 風險：奔跑：只拍腳，兩步就出畫；速度靠 1.5 秒的短鏡頭和前後的剪接；連戲：運動方向：左到右 |  |
+| EP01-003 | 「身後的腳步聲越來越近」 | 1.1 | S01 | S01-A | C01-a | 2 | 0:06.5 | 背後・全景 | 固定 | 切 | 小滿抱著鐵盒沿巷子跑遠，身後有更重的腳步聲 |  | steady rain drumming on the canvas awnings, her footsteps fading down the lane, heavier footsteps approaching from behind the camera | 風險：奔跑：背影全景、只拍兩秒，寫成穩定的小跑；腿部變形就縮短到 1.5 秒，或改用 002 那種腳步插入鏡頭；連戲：小滿雙手抱著鐵盒；和 001 同機位，背景沿用 001 結束時的畫面 |  |
+| EP01-004 | 「穿雨衣的男人伸手抓住她的後領」 | 1.2 | S01 | S01-B | C01-a、C02-a | 2 | 0:08.5 | 中景 | 輕微手持推近 | 切 | 小滿鑽進攤車之間，一隻手從後面伸向她的帽兜 |  | steady rain drumming on the canvas awnings, two people breathing hard | 風險：肢體接觸：這一鏡停在抓到之前，下一鏡直接切到抓住之後，不拍接觸的瞬間；連戲：運動方向：左到右。軸線：男人在畫面左、小滿在畫面右 |  |
+| EP01-005 | 「東西給我。」 | 1.2 | S01 | — | C02-a | 3 | 0:11.5 | 近景（仰拍） | 固定 | 切 | 雨衣男抓著小滿的帽兜，低頭開口 | 對白 雨衣男：「東西給我。」 | steady rain drumming on the canvas awnings, rain pattering on the rubber hood | 風險：口型：原生音訊，一鏡只說一句短話；臉朝鏡頭、頭部動作小；連戲：接觸之後：他的右拳抓著小滿的帽兜，小滿在畫面外的右下方；軸線不變，他看向畫面右。仰拍：他佔上風 |  |
+| EP01-006 | 「袖子裂開，鐵盒掉在地上，滾進攤車底下」 | 1.3 | S01 | S01-C | — | 2 | 0:13.5 | 插入・特寫（地面） | 固定 | 切 | 布料撕裂聲中，鐵盒掉在地上，滾進攤車底下 |  | steady rain drumming on the canvas awnings, fabric tearing, then the tin clanging on asphalt and rattling to a stop | 風險：掙脫與撕裂是高風險動作，不拍過程：用撕裂聲加鐵盒落地的結果帶過；連戲：從這一鏡之後小滿換成 C01-b（右袖從肩線裂開）；鐵盒在攤車底下 |  |
+| EP01-007 | 「兩個人同時看向那只鐵盒」 | 1.4 ★ | S01 | S01-B | C02-a、C01-b | 2 | 0:15.5 | 雙人・中景 | 固定 | 切 | 兩個人僵住，同時低頭看向攤車底下 |  | steady rain drumming on the canvas awnings, the last rattle of the tin dying away | 風險：雙人同框、兩張臉都入鏡：兩人都是側臉、中間留空、幾乎不動；做不穩就拆成兩個特寫，各自低頭看向同一個方向；連戲：視線匹配：兩人都看向畫面右下，對應下一鏡攤車底下的鐵盒；小滿雙手已空，右袖裂開 |  |
+| EP01-008 | 「兩個人同時看向那只鐵盒」 | 1.4 ★ | S01 | S01-C | — | 4.5 | 0:20 | 插入・特寫（地面） | 緩慢推近・升格 | 切（視線剪輯） | 攤車底下的鐵盒，雨水滴在盒蓋上；遠處響起哨聲 |  | steady rain drumming on the canvas awnings, rain dripping on the tin lid, then a sharp whistle blast far away | 連戲：高點：全場最長的一鏡，升格讓雨滴變慢，時間像停住；沒有人、沒有動作，只有雨聲；結尾的哨聲帶出下一鏡 |  |
+| EP01-009 | 「男人鬆開手，退進人群」 | 1.5 | S01 | — | C02-a | 2.5 | 0:22.5 | 中全景 | 固定 | 切（聲音先入） | 雨衣男朝哨聲的方向看了一眼，退進攤車之間的暗處 |  | steady rain drumming on the canvas awnings, the whistle again, closer | 風險：原文是退進人群，人群是高風險，改成退進暗處；只退兩步，幅度小；連戲：男人離場 |  |
 | EP01-010 | 「小滿跪在積水裡，把鐵盒撈出來。盒蓋上多了一道凹痕」 | 1.6 | S01 | — | C01-b | 4 | 0:26.5 | 近景（微俯） | 緩慢拉遠 | 切 | 小滿跪在積水裡，抱著撈回來的鐵盒，看著盒蓋上的凹痕 |  | the rain easing, water dripping from the awning, her unsteady breathing | 風險：手拿小物件：不拍撈的過程，從已經抱在手上開始；只動拇指；連戲：鐵盒蓋上多了一道凹痕；小滿是 C01-b；拉遠是這場戲的收尾，她一個人留在畫面裡 |  |
 
 ## 各鏡生成資料
@@ -103,7 +103,7 @@ Background as in image 1: two rows of food carts with canvas awnings receding do
 影片提示詞
 
 ```text
-Rain falls steadily through the light of the bulbs, the canvas awnings ripple in the wind, reflections shimmer on the wet asphalt. At the end, the camera has lowered to cart height and looks straight down the lane. Slow pedestal down. Audio: steady rain drumming on canvas awnings, a pan sizzling somewhere down the lane.
+Rain falls steadily through the light of the bulbs, the canvas awnings ripple in the wind, reflections shimmer on the wet asphalt. At the end, the camera has lowered to cart height and looks straight down the lane. Slow pedestal down. Apart from the changes described, objects and the background stay as in the first frame. A single continuous shot with no scene cuts. Audio: steady rain drumming on the canvas awnings, a pan sizzling somewhere down the lane. No subtitles, no background music.
 ```
 
 ### EP01-002
@@ -130,7 +130,7 @@ Edit the first-frame image of this shot and keep everything not mentioned here u
 影片提示詞
 
 ```text
-The sneakers land in the puddle one after the other and carry on out of the right edge of the frame, water splashing up and settling into ripples. Static camera. Audio: wet footsteps, rain.
+The sneakers land in the puddle one after the other and carry on out of the right edge of the frame, water splashing up and settling into ripples. Static camera. Apart from the changes described, faces, outfits and the background stay as in the first frame. A single continuous shot with no scene cuts. Audio: steady rain drumming on the canvas awnings, wet footsteps. No subtitles, no background music.
 ```
 
 ### EP01-003
@@ -140,7 +140,7 @@ The sneakers land in the puddle one after the other and carry on out of the righ
 - 看得到的背景（來自機位）：two rows of food carts with canvas awnings receding down the lane toward a brick wall, red and blue neon signs on the cart fronts, strings of bare bulbs overhead, wet asphalt
 - 參考圖（依這個順序上傳，提示詞裡的「image N」就是第 N 張）：1. C01-a 設定圖；2. S01-A 機位背景圖；3. P01 道具圖；4. EP01-001 的尾幀圖
 - 成片 2 秒，建議生成 3 秒段，只裁開頭、結尾留著（最後一幀就是設計好的尾幀）
-- 驗收重點：背景與光線和 EP01-001 一致；風險項見備註，不行就照備案換拍法
+- 驗收重點：背景與光線和 EP01-001 一致；背景裡的環境在動（雨、光、人群），沒有凍住；風險項見備註，不行就照備案換拍法
 
 首幀圖像提示詞
 
@@ -157,7 +157,7 @@ Edit the first-frame image of this shot and keep everything not mentioned here u
 影片提示詞
 
 ```text
-The girl with the short black bob jogs away from the camera down the lane at a steady pace, her hood bouncing on her back; rain falls through the light of the bulbs. Static camera. Audio: her footsteps fading down the lane, heavier footsteps approaching from behind the camera, rain.
+The girl with the short black bob jogs away from the camera down the lane at a steady pace, her hood bouncing on her back. Rain falls steadily through the light of the bulbs, water drips from the edges of the canvas awnings, the neon reflections waver on the wet asphalt. Static camera. Apart from the changes described, faces, outfits and the background stay as in the first frame. A single continuous shot with no scene cuts. Audio: steady rain drumming on the canvas awnings, her footsteps fading down the lane, heavier footsteps approaching from behind the camera. No subtitles, no background music.
 ```
 
 ### EP01-004
@@ -168,7 +168,7 @@ The girl with the short black bob jogs away from the camera down the lane at a s
 - 看得到的背景（來自機位）：the side of a food cart with a canvas awning, out-of-focus warm bulbs behind
 - 參考圖（依這個順序上傳，提示詞裡的「image N」就是第 N 張）：1. C01-a 設定圖；2. C02-a 設定圖；3. S01-B 機位背景圖；4. P01 道具圖
 - 成片 2 秒，建議生成 3 秒段，只裁開頭、結尾留著（最後一幀就是設計好的尾幀）
-- 驗收重點：手指數量，手上拿的東西沒有變形；背景和 S01-B 機位背景圖一致；風險項見備註，不行就照備案換拍法
+- 驗收重點：手指數量，手上拿的東西沒有變形；背景和 S01-B 機位背景圖一致；運鏡是「輕微手持推近」，方向沒有反，人物沒有跟著大動；背景裡的環境在動（雨、光、人群），沒有凍住；風險項見備註，不行就照備案換拍法
 
 首幀圖像提示詞
 
@@ -179,13 +179,13 @@ The girl with the short black bob from image 1, in profile, facing frame right, 
 尾幀提示詞（拿首幀圖做圖像編輯）
 
 ```text
-Edit the first-frame image of this shot and keep everything not mentioned here unchanged. End state: the hand in the green sleeve is a few centimetres from the hood of the girl with the short black bob, who has taken one more step toward frame right.
+Crop and enlarge the first-frame image of this shot to the framing after the camera move (gentle handheld push-in), keeping the original detail rather than recomposing; then edit it, keeping everything not mentioned here unchanged. End state: the framing has tightened slightly on the two of them; the hand in the green sleeve is a few centimetres from the hood of the girl with the short black bob, who has taken one more step toward frame right.
 ```
 
 影片提示詞
 
 ```text
-The girl with the short black bob takes one more step toward frame right, shoulders rising with her breath, her eyes flicking toward the edge of the frame; the hand in the green sleeve reaches steadily closer to her hood. Static camera. Audio: rain on canvas, two people breathing hard.
+The girl with the short black bob takes one more step toward frame right, shoulders rising with her breath, her eyes flicking toward the edge of the frame; the hand in the green sleeve reaches steadily closer to her hood. The girl with the short black bob holds the expression from the first frame: lips parted, breathing hard, brows drawn together. Rain falls steadily through the light of the bulbs, water drips from the edges of the canvas awnings, the neon reflections waver on the wet asphalt. Gentle handheld push-in. Apart from the changes described, faces, outfits and the background stay as in the first frame. A single continuous shot with no scene cuts. Audio: steady rain drumming on the canvas awnings, two people breathing hard. No subtitles, no background music.
 ```
 
 ### EP01-005
@@ -197,7 +197,7 @@ The girl with the short black bob takes one more step toward frame right, should
 - 聲線：a low, gravelly male voice
 - 參考圖（依這個順序上傳，提示詞裡的「image N」就是第 N 張）：1. C02-a 設定圖；2. C02 頭像；3. S01 場景定稿圖
 - 成片 3 秒，建議生成 4 秒段，只裁開頭、結尾留著（最後一幀就是設計好的尾幀）
-- 驗收重點：台詞一字不差、嘴型對得上，聲線和這個角色前面的鏡頭一致，沒有自己加字幕或配樂；風險項見備註，不行就照備案換拍法
+- 驗收重點：台詞一字不差、嘴型對得上，聲線和這個角色前面的鏡頭一致，沒有自己加字幕或配樂；背景裡的環境在動（雨、光、人群），沒有凍住；風險項見備註，不行就照備案換拍法
 
 首幀圖像提示詞
 
@@ -214,7 +214,7 @@ Edit the first-frame image of this shot and keep everything not mentioned here u
 影片提示詞
 
 ```text
-The tall man in the green raincoat tilts his head down a little further and speaks, his eyes narrowing, rain dripping steadily from the brim of his hood; his fist stays closed on the red fabric. Static camera. The tall man in the green raincoat says in Mandarin Chinese, in a low, gravelly male voice, flatly, barely above the rain: "東西給我". Audio: rain pattering on the rubber hood.
+The tall man in the green raincoat tilts his head down a little further and speaks, his eyes narrowing, rain dripping steadily from the brim of his hood; his fist stays closed on the red fabric. Rain falls steadily through the light of the bulbs, water drips from the edges of the canvas awnings, the neon reflections waver on the wet asphalt. Static camera. Apart from the changes described, faces, outfits and the background stay as in the first frame. A single continuous shot with no scene cuts. The tall man in the green raincoat says in Mandarin Chinese, in a low, gravelly male voice, flatly, barely above the rain: "東西給我". Audio: steady rain drumming on the canvas awnings, rain pattering on the rubber hood. No subtitles, no background music.
 ```
 
 ### EP01-006
@@ -241,7 +241,7 @@ Edit the first-frame image of this shot and keep everything not mentioned here u
 影片提示詞
 
 ```text
-A battered square pale-blue biscuit tin drops in from the top of the frame, lands on its edge on the wet asphalt, rolls under the cart and tips over flat, water rippling around it. Static camera. Audio: fabric tearing, then the tin clanging on asphalt and rattling to a stop.
+A battered square pale-blue biscuit tin drops in from the top of the frame, lands on its edge on the wet asphalt, rolls under the cart and tips over flat, water rippling around it. Static camera. Apart from the changes described, objects and the background stay as in the first frame. A single continuous shot with no scene cuts. Audio: steady rain drumming on the canvas awnings, fabric tearing, then the tin clanging on asphalt and rattling to a stop. No subtitles, no background music.
 ```
 
 ### EP01-007
@@ -252,7 +252,7 @@ A battered square pale-blue biscuit tin drops in from the top of the frame, land
 - 看得到的背景（來自機位）：the side of a food cart with a canvas awning, out-of-focus warm bulbs behind
 - 參考圖（依這個順序上傳，提示詞裡的「image N」就是第 N 張）：1. C02-a 設定圖；2. C01-b 設定圖；3. S01-B 機位背景圖；4. EP01-004 的首幀圖
 - 成片 2 秒，建議生成 3 秒段，只裁開頭、結尾留著（最後一幀就是設計好的尾幀）
-- 驗收重點：人數正確，兩人的髮色與服裝沒有互串；手指數量，手上拿的東西沒有變形；背景與光線和 EP01-004 一致；風險項見備註，不行就照備案換拍法
+- 驗收重點：人數正確，兩人的髮色與服裝沒有互串；手指數量，手上拿的東西沒有變形；背景與光線和 EP01-004 一致；背景裡的環境在動（雨、光、人群），沒有凍住；風險項見備註，不行就照備案換拍法
 
 首幀圖像提示詞
 
@@ -269,7 +269,7 @@ Edit the first-frame image of this shot and keep everything not mentioned here u
 影片提示詞
 
 ```text
-The tall man in the green raincoat and the girl with the short black bob both stand frozen, looking down toward the lower right; his raised arm lowers, her lips part as her shoulders rise and fall with her breath, rain keeps falling between them. Static camera. Audio: rain, the last rattle of the tin dying away.
+The tall man in the green raincoat and the girl with the short black bob both stand frozen, looking down toward the lower right; his raised arm lowers, her lips part as her shoulders rise and fall with her breath. Rain falls steadily through the light of the bulbs, water drips from the edges of the canvas awnings, the neon reflections waver on the wet asphalt. Static camera. Apart from the changes described, faces, outfits and the background stay as in the first frame. A single continuous shot with no scene cuts. Audio: steady rain drumming on the canvas awnings, the last rattle of the tin dying away. No subtitles, no background music.
 ```
 
 ### EP01-008
@@ -298,7 +298,7 @@ Crop and enlarge the first-frame image of this shot to the framing after the cam
 影片提示詞
 
 ```text
-Raindrops land on the lid of the tin and run off its edge, the neon reflection on the asphalt wavers; everything else stays still. Slow push-in, slow motion. Audio: rain dripping on the tin lid, then a sharp whistle blast far away.
+Raindrops land on the lid of the tin and run off its edge, the neon reflection on the asphalt wavers; everything else stays still. Slow push-in, slow motion. Apart from the changes described, objects and the background stay as in the first frame. A single continuous shot with no scene cuts. Audio: steady rain drumming on the canvas awnings, rain dripping on the tin lid, then a sharp whistle blast far away. No subtitles, no background music.
 ```
 
 ### EP01-009
@@ -309,7 +309,7 @@ Raindrops land on the lid of the tin and run off its edge, the neon reflection o
 - 轉場（從上一鏡進來的方式，剪接時做）：聲音先入
 - 參考圖（依這個順序上傳，提示詞裡的「image N」就是第 N 張）：1. C02-a 設定圖；2. S01 場景定稿圖
 - 成片 2.5 秒，建議生成 4 秒段，只裁開頭、結尾留著（最後一幀就是設計好的尾幀）
-- 驗收重點：手指數量，手上拿的東西沒有變形；風險項見備註，不行就照備案換拍法
+- 驗收重點：手指數量，手上拿的東西沒有變形；背景裡的環境在動（雨、光、人群），沒有凍住；風險項見備註，不行就照備案換拍法
 
 首幀圖像提示詞
 
@@ -326,7 +326,7 @@ Edit the first-frame image of this shot and keep everything not mentioned here u
 影片提示詞
 
 ```text
-The tall man in the green raincoat glances toward frame left, then takes two unhurried steps backward into the dark gap between the carts, the light sliding off his raincoat. Static camera. Audio: the whistle again, closer; rain.
+The tall man in the green raincoat glances toward frame left, then takes two unhurried steps backward into the dark gap between the carts, the light sliding off his raincoat. Rain falls steadily through the light of the bulbs, water drips from the edges of the canvas awnings, the neon reflections waver on the wet asphalt. Static camera. Apart from the changes described, faces, outfits and the background stay as in the first frame. A single continuous shot with no scene cuts. Audio: steady rain drumming on the canvas awnings, the whistle again, closer. No subtitles, no background music.
 ```
 
 ### EP01-010
@@ -335,7 +335,7 @@ The tall man in the green raincoat glances toward frame left, then takes two unh
 - 看得到的背景：a cart wheel and wet asphalt beside her, blurred warm bulbs far behind
 - 參考圖（依這個順序上傳，提示詞裡的「image N」就是第 N 張）：1. C01-b 設定圖；2. C01 頭像；3. S01 場景定稿圖；4. P01 道具圖・凹痕
 - 成片 4 秒，建議生成 5 秒段，只裁開頭、結尾留著（最後一幀就是設計好的尾幀）
-- 驗收重點：手指數量，手上拿的東西沒有變形；運鏡是「緩慢拉遠」，方向沒有反，人物沒有跟著大動；風險項見備註，不行就照備案換拍法
+- 驗收重點：手指數量，手上拿的東西沒有變形；運鏡是「緩慢拉遠」，方向沒有反，人物沒有跟著大動；背景裡的環境在動（雨、光、人群），沒有凍住；風險項見備註，不行就照備案換拍法
 
 首幀圖像提示詞
 
@@ -352,7 +352,7 @@ Outpaint the first-frame image of this shot on all sides to reveal what the came
 影片提示詞
 
 ```text
-The girl with the short black bob runs her right thumb once along the dent in the lid, blinks, and lets out a breath that lowers her shoulders; rain drips from the edge of the awning beside her. Slow pull-out. Audio: the rain easing, water dripping from the awning, her unsteady breathing.
+The girl with the short black bob runs her right thumb once along the dent in the lid, blinks, and lets out a breath that lowers her shoulders; rain drips from the edge of the awning beside her. The girl with the short black bob holds the expression from the first frame: brows pinched, lower lip caught between her teeth. The rain thins to a light drizzle through the light of the bulbs. Slow pull-out. Apart from the changes described, faces, outfits and the background stay as in the first frame. A single continuous shot with no scene cuts. Audio: the rain easing, water dripping from the awning, her unsteady breathing. No subtitles, no background music.
 ```
 
 ## 動態分鏡

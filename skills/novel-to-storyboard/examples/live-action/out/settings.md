@@ -17,6 +17,7 @@
 | 參考圖模式 | 混合（外貌照文字完整寫，再標上「（參照圖1）」「(as in image 1)」這類編號；有掛圖就照分鏡表列的順序上傳，沒掛圖文字也完整） |
 | 單次可生成秒數 | 未填 |
 | 配樂方向 | 低沉的弦樂鋪底，打臉的那一刻重拍落下，之後抽空 |
+| 一致性提醒 | 每一鏡的影片提示詞都會加上「除了上面寫到的變化，人物的長相、服裝與背景都和首幀一致」（沒有人入鏡時改成畫面裡的東西） |
 
 ## 待確認設定
 
@@ -37,9 +38,9 @@
 
 ## 場景
 
-| 編號 | 名稱 | 空間 | 光線 | 時間／天氣 | 色彩 |
-|---|---|---|---|---|---|
-| S01 | 酒店宴會廳入口 | 五星級酒店宴會廳的入口，兩扇高大的雙開木門敞開，門外是鋪著深紅地毯的走廊，門內是挑高的宴會廳，天花板垂著水晶吊燈，門內靠牆有一張鋪白布的簽到台<br>the entrance of a five-star hotel banquet hall, tall double wooden doors standing open onto a corridor with deep red carpet, a high-ceilinged hall inside with crystal chandeliers, a sign-in table draped in white cloth against the wall just inside the doors | 水晶吊燈的暖黃光從上方柔和地灑下，門外的走廊較暗<br>warm yellow light falling softly from the crystal chandeliers above, the corridor outside the doors dimmer | 晚上，室內<br>night, interior | 暗部偏深棕，點綴色是地毯的深紅<br>shadows leaning deep brown, the deep red of the carpet as the accent |
+| 編號 | 名稱 | 空間 | 光線 | 時間／天氣 | 色彩 | 環境的動態 |
+|---|---|---|---|---|---|---|
+| S01 | 酒店宴會廳入口 | 五星級酒店宴會廳的入口，兩扇高大的雙開木門敞開，門外是鋪著深紅地毯的走廊，門內是挑高的宴會廳，天花板垂著水晶吊燈，門內靠牆有一張鋪白布的簽到台<br>the entrance of a five-star hotel banquet hall, tall double wooden doors standing open onto a corridor with deep red carpet, a high-ceilinged hall inside with crystal chandeliers, a sign-in table draped in white cloth against the wall just inside the doors | 水晶吊燈的暖黃光從上方柔和地灑下，門外的走廊較暗<br>warm yellow light falling softly from the crystal chandeliers above, the corridor outside the doors dimmer | 晚上，室內<br>night, interior | 暗部偏深棕，點綴色是地毯的深紅<br>shadows leaning deep brown, the deep red of the carpet as the accent | 背景的賓客有細微的動作，換一下重心、手裡的酒杯輕輕晃動，水晶吊燈的光在杯子上微微閃動<br>the guests in the background shift their weight and their glasses sway slightly, the chandelier light glints softly on the glasses |
 
 ## 道具
 
@@ -65,6 +66,17 @@ photorealistic, digital cinema camera look, crisp detail, moderate saturation, s
 ```
 ```text
 extra fingers, deformed hands, watermark, airbrushed skin
+```
+
+## 影片負面詞
+
+貼在影片工具的負面提示詞欄位，已經包含通用負面詞；首幀與尾幀用上面的通用負面詞。
+
+```text
+多餘的手指，變形的手，浮水印，磨皮過度的皮膚，閃爍，畫面抖動，臉部變形，人物變臉，肢體扭曲，多出來的人
+```
+```text
+extra fingers, deformed hands, watermark, airbrushed skin, flicker, camera shake, warped faces, face changing between frames, twisted limbs, extra people
 ```
 
 ## 資產提示詞

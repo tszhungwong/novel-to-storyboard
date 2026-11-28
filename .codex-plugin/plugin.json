@@ -1,6 +1,6 @@
 {
   "name": "novel-to-storyboard",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "把小說、劇本或故事大綱做成 AI 影片的分鏡：大綱分集與分集劇本、角色與場景設定、資產圖提示詞、逐鏡的首尾幀與影片提示詞、連戲與風險檢查，以及攝影、表演、美術三個審查角色。適用 AI 漫劇、短劇、動畫、真人寫實劇與 MV、廣告。",
   "author": {
     "name": "tszhungwong"

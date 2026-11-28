@@ -12,10 +12,13 @@
 | 工具限制 | 單次秒數 3 到 10；參考圖最多 10 張；工具做不好：負面詞欄位 |
 | 影片生成方式 | 圖生影片（先出首幀圖） |
 | 首尾幀 | 使用 |
-| 聲音方案 | 原生音訊 |
+| 聲音方案 | 原生音訊（台詞、環境音與音效都由影片工具生成） |
 | 提示詞語言 | English |
 | 參考圖模式 | 參考圖（提示詞用「image 1」這類編號指向參考圖，每一鏡依分鏡表列的順序上傳，一次最多 10 張） |
 | 單次可生成秒數 | 3 到 10 |
+| 影片提示詞最後的短指令 | a single continuous shot with no scene cuts（Gemini Omni 1.2 Flash 會自己切鏡頭，預設加上；不要就填 "video_suffix": ""） |
+| 聲音的短指令 | no subtitles, no background music（預設加上，配樂剪接時統一鋪；不要就填 "audio_suffix": ""） |
+| 一致性提醒 | 每一鏡的影片提示詞都會加上「apart from the changes described, faces, outfits and the background stay as in the first frame」（沒有人入鏡時改成畫面裡的東西） |
 
 ## 待確認設定
 
@@ -36,9 +39,9 @@
 
 ## 場景
 
-| 編號 | 名稱 | 空間 | 光線 | 時間／天氣 | 色彩 |
-|---|---|---|---|---|---|
-| S01 | 夜市巷子 | a narrow night-market lane between two rows of wheeled food carts with canvas awnings, strings of bare bulbs hanging overhead along the lane, wet asphalt underfoot, a brick wall closing the far end of the lane | warm bulbs overhead, red and blue neon tubes reflected on the wet ground, deep shadows between the carts | night, steady rain | saturated red and blue neon accents against deep blue-grey shadows |
+| 編號 | 名稱 | 空間 | 光線 | 時間／天氣 | 色彩 | 環境的動態 | 環境聲 |
+|---|---|---|---|---|---|---|---|
+| S01 | 夜市巷子 | a narrow night-market lane between two rows of wheeled food carts with canvas awnings, strings of bare bulbs hanging overhead along the lane, wet asphalt underfoot, a brick wall closing the far end of the lane | warm bulbs overhead, red and blue neon tubes reflected on the wet ground, deep shadows between the carts | night, steady rain | saturated red and blue neon accents against deep blue-grey shadows | rain falls steadily through the light of the bulbs, water drips from the edges of the canvas awnings, the neon reflections waver on the wet asphalt | steady rain drumming on the canvas awnings |
 
 ## 道具
 

@@ -91,7 +91,7 @@ The open double wooden doors and the deep red carpeted corridor beyond, dark sol
 
 | 鏡號 | 原文對應 | 節拍 | 場景 | 機位 | 角色 | 秒 | 累計 | 景別 | 運鏡 | 銜接 | 動作 | 對白／旁白 | 聲音 | 備註 | 切點 |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| EP01-001 | 「這裡不是你這種人來的地方」 | 1.1 | S01 | S01-A | C01-a、C02-a | 3.5 | 0:03.5 | 過肩・近景（中長焦） | 固定 | 切 | 許曼攔在沈知意面前，冷笑著開口 | 對白 許曼：「這裡不是你這種人來的地方。」 | 宴會廳裡低低的交談聲，杯子相碰的輕響 |  |  |
+| EP01-001 | 「這裡不是你這種人來的地方」 | 1.1 | S01 | S01-A | C01-a、C02-a | 3.5 | 0:03.5 | 過肩・近景（中長焦） | 緩慢推近 | 切 | 許曼攔在沈知意面前，冷笑著開口 | 對白 許曼：「這裡不是你這種人來的地方。」 | 宴會廳裡低低的交談聲，杯子相碰的輕響 |  |  |
 | EP01-002 | 停在她面前一步遠 | 1.1 | S01 | — | C01-a、C02-a | 2.5 | 0:06 | 雙人・全景（廣角） | 固定 | 切 | 兩人在門口對峙，背景的賓客轉頭看 |  |  |  |  |
 | EP01-003 | 沈知意沒說話 | 1.1 | S01 | S01-B | C02-a、C01-a | 2.5 | 0:08.5 | 過肩・近景（中長焦） | 固定 | 切 | 沈知意不說話，平靜地看著許曼 |  |  |  |  |
 | EP01-004 | 手腕一甩，半杯香檳全潑在她的前襟上 | 1.2 | S01 | S01-A | C01-a、C02-a | 2.5 | 0:11 | 過肩・中景（標準） | 固定・升格 | 切 | 許曼手腕一甩，把香檳潑在沈知意的白西裝上 |  | 香檳潑出的嘩啦聲，四周的交談聲一下子停住 | 風險：液體潑出去、又要落在人身上，動作快。工具做不好時拆成兩鏡：只拍杯子與手腕一甩，切到西裝上的酒漬與她閉眼的反應；連戲：軸線同 001：沈知意在左前景、許曼在右；潑出去的酒落在沈知意的前襟，下一鏡的插入拍到 |  |
@@ -100,7 +100,7 @@ The open double wooden doors and the deep red carpeted corridor beyond, dark sol
 | EP01-007 | 「經理，把她趕出去」 | 1.3 | S01 | S01-A | C02-a、C03-a | 3 | 0:18 | 中景（標準） | 固定 | 切 | 周經理從廳裡快步走來，許曼頭也不回，抬手往身後一指，要他趕人 | 對白 許曼：「經理，把她趕出去。」 |  |  |  |
 | EP01-008 | 在沈知意面前停下，彎腰：「沈董，您到了」 | 1.4 ★ | S01 | S01-A | C01-b、C03-a、C02-a | 3 | 0:21 | 過肩・中景（標準） | 固定 | 切 | 周經理在沈知意面前站定，叫她沈董，說完鞠躬 | 對白 周經理：「沈董，您到了。」 | ♪ 配樂在這一鏡完全抽空 |  |  |
 | EP01-009 | 「沈董」 | 1.4 ★ | S01 | S01-B | C01-b | 4 | 0:25 | 特寫（中長焦） | 固定・定格 | 切 | 沈知意抬起下巴，看向許曼；最後一秒定格出字卡 |  | ♪ 定格的那一刻重拍落下 | 後製：定格：最後一幀停住，停的時間算在成片秒數裡；最後一秒定格，右側加人物字卡「沈知意｜沈氏集團董事長」，配一聲重音效 |  |
-| EP01-010 | 許曼手上的空杯子停在半空 | 1.5 | S01 | S01-A | C02-a | 3 | 0:28 | 近景（中長焦） | 固定 | 切 | 許曼的笑垮下來，杯子停在半空 |  | 四周一片安靜 |  |  |
+| EP01-010 | 許曼手上的空杯子停在半空 | 1.5 | S01 | S01-A | C02-a | 3 | 0:28 | 近景（中長焦） | 緩慢拉遠 | 切 | 許曼的笑垮下來，杯子停在半空 |  | 四周一片安靜 |  |  |
 
 ## 各鏡生成資料
 
@@ -113,7 +113,7 @@ The open double wooden doors and the deep red carpeted corridor beyond, dark sol
 - 台詞語氣：輕蔑，尾音上揚
 - 聲線：二十出頭的女聲，音調偏高，說話快，尾音上揚
 - 參考圖（依這個順序上傳，提示詞裡的「圖N」就是第 N 張）：1. C01-a 設定圖；2. C02-a 設定圖；3. C02 頭像；4. S01-A 機位背景圖；5. P01 道具圖
-- 驗收重點：手指數量，手上拿的東西沒有變形；人物在畫面的左右位置和分鏡一致（軸線）；背景和 S01-A 機位背景圖一致；嘴唇閉合（口型之後另外做），頭部動作小
+- 驗收重點：手指數量，手上拿的東西沒有變形；人物在畫面的左右位置和分鏡一致（軸線）；背景和 S01-A 機位背景圖一致；運鏡是「緩慢推近」，方向沒有反，人物沒有跟著大動；嘴唇閉合（口型之後另外做），頭部動作小；背景裡的環境在動（雨、光、人群），沒有凍住
 
 首幀圖像提示詞（中文）
 
@@ -124,13 +124,13 @@ The open double wooden doors and the deep red carpeted corridor beyond, dark sol
 尾幀提示詞（拿首幀圖做圖像編輯）（中文）
 
 ```text
-以這一鏡的首幀圖為底圖做圖像編輯，沒有提到的部分保持不變。結束時的畫面：栗色大波浪長髮的年輕女子下巴抬得更高，冷笑更明顯。
+以這一鏡的首幀圖為底圖：先照「緩慢推近」之後的取景裁切放大，保留原圖的細節，不要重新構圖；再做圖像編輯，沒有提到的部分保持不變。結束時的畫面：取景推近到她的臉與肩膀，栗色大波浪長髮的年輕女子下巴抬得更高，冷笑更明顯。
 ```
 
 影片提示詞（中文）
 
 ```text
-栗色大波浪長髮的年輕女子把下巴再抬高一點，視線上下打量，手中的杯子輕輕晃了一下。栗色大波浪長髮的年輕女子的嘴唇保持閉合、嘴不動（口型之後另外做）。鏡頭固定。
+栗色大波浪長髮的年輕女子把下巴再抬高一點，視線上下打量，手中的杯子輕輕晃了一下。背景的賓客有細微的動作，換一下重心、手裡的酒杯輕輕晃動，水晶吊燈的光在杯子上微微閃動。栗色大波浪長髮的年輕女子的嘴唇保持閉合、嘴不動（口型之後另外做）。鏡頭緩慢推近。除了上面寫到的變化，人物的長相、服裝與背景都和首幀一致。
 ```
 
 首幀圖像提示詞（English）
@@ -142,13 +142,13 @@ Medium close-up, framed from the chest up, over-the-shoulder shot, 85mm lens. A 
 尾幀提示詞（拿首幀圖做圖像編輯）（English）
 
 ```text
-Edit the first-frame image of this shot and keep everything not mentioned here unchanged. End state: the young woman with long chestnut waves has her chin raised higher, the sneer more pronounced.
+Crop and enlarge the first-frame image of this shot to the framing after the camera move (slow push-in), keeping the original detail rather than recomposing; then edit it, keeping everything not mentioned here unchanged. End state: the framing has pushed in to her face and shoulders; the young woman with long chestnut waves has her chin raised higher, the sneer more pronounced.
 ```
 
 影片提示詞（English）
 
 ```text
-The young woman with long chestnut waves lifts her chin a little higher and looks the other woman up and down; the glass in her hand tilts slightly. The lips of the young woman with long chestnut waves stay closed and still (lip sync is added later). Static camera.
+The young woman with long chestnut waves lifts her chin a little higher and looks the other woman up and down; the glass in her hand tilts slightly. The guests in the background shift their weight and their glasses sway slightly, the chandelier light glints softly on the glasses. The lips of the young woman with long chestnut waves stay closed and still (lip sync is added later). Slow push-in. Apart from the changes described, faces, outfits and the background stay as in the first frame.
 ```
 
 ### EP01-002
@@ -157,7 +157,7 @@ The young woman with long chestnut waves lifts her chin a little higher and look
 - C02-a　位置：站在畫面右側，攔在她面前一步遠｜視線：盯著對面的女子｜手部／道具：右手端著一只盛著半杯香檳的細長高腳杯，左手扠在腰上｜表情：一邊嘴角上揚，眼睛微微瞇起
 - 看得到的背景：敞開的雙開木門與挑高的宴會廳入口，背景裡虛化的賓客轉頭看過來
 - 參考圖（依這個順序上傳，提示詞裡的「圖N」就是第 N 張）：1. C01-a 設定圖；2. C02-a 設定圖；3. S01 場景定稿圖；4. P01 道具圖
-- 驗收重點：人數正確，兩人的髮色與服裝沒有互串；手指數量，手上拿的東西沒有變形；人物在畫面的左右位置和分鏡一致（軸線）
+- 驗收重點：人數正確，兩人的髮色與服裝沒有互串；手指數量，手上拿的東西沒有變形；人物在畫面的左右位置和分鏡一致（軸線）；背景裡的環境在動（雨、光、人群），沒有凍住
 
 首幀圖像提示詞（中文）
 
@@ -174,7 +174,7 @@ The young woman with long chestnut waves lifts her chin a little higher and look
 影片提示詞（中文）
 
 ```text
-栗色大波浪長髮的年輕女子往前半步擋住去路，黑色及肩直髮的高瘦女子停下腳步，背景的賓客慢慢轉頭。鏡頭固定。
+栗色大波浪長髮的年輕女子往前半步擋住去路，黑色及肩直髮的高瘦女子停下腳步，背景的賓客慢慢轉頭。背景的賓客有細微的動作，換一下重心、手裡的酒杯輕輕晃動，水晶吊燈的光在杯子上微微閃動。鏡頭固定。除了上面寫到的變化，人物的長相、服裝與背景都和首幀一致。
 ```
 
 首幀圖像提示詞（English）
@@ -192,7 +192,7 @@ Edit the first-frame image of this shot and keep everything not mentioned here u
 影片提示詞（English）
 
 ```text
-The young woman with long chestnut waves steps half a pace forward to block the way; the tall slim woman with straight shoulder-length black hair stops; guests in the background slowly turn their heads. Static camera.
+The young woman with long chestnut waves steps half a pace forward to block the way; the tall slim woman with straight shoulder-length black hair stops; guests in the background slowly turn their heads. The guests in the background shift their weight and their glasses sway slightly, the chandelier light glints softly on the glasses. Static camera. Apart from the changes described, faces, outfits and the background stay as in the first frame.
 ```
 
 ### EP01-003
@@ -213,7 +213,7 @@ The young woman with long chestnut waves steps half a pace forward to block the 
 影片提示詞（中文）
 
 ```text
-黑色及肩直髮的高瘦女子沒有說話，慢慢眨了一下眼，呼吸平穩。鏡頭固定。
+黑色及肩直髮的高瘦女子沒有說話，慢慢眨了一下眼，呼吸平穩。黑色及肩直髮的高瘦女子的表情維持首幀的樣子：眼神不閃躲，嘴唇自然閉合，下顎放鬆。鏡頭固定。除了上面寫到的變化，人物的長相、服裝與背景都和首幀一致。
 ```
 
 首幀圖像提示詞（English）
@@ -225,7 +225,7 @@ Medium close-up, framed from the chest up, over-the-shoulder shot, 85mm lens. A 
 影片提示詞（English）
 
 ```text
-The tall slim woman with straight shoulder-length black hair says nothing and blinks slowly, her breathing even. Static camera.
+The tall slim woman with straight shoulder-length black hair says nothing and blinks slowly, her breathing even. The tall slim woman with straight shoulder-length black hair holds the expression from the first frame: eyes steady, lips closed, jaw relaxed. Static camera. Apart from the changes described, faces, outfits and the background stay as in the first frame.
 ```
 
 ### EP01-004
@@ -236,7 +236,7 @@ The tall slim woman with straight shoulder-length black hair says nothing and bl
 - 看得到的背景（來自機位）：挑高的宴會廳，水晶吊燈與鋪白色桌布的圓桌，背景虛化
 - 速度：升格（影片提示詞寫了「慢動作」）
 - 參考圖（依這個順序上傳，提示詞裡的「圖N」就是第 N 張）：1. C01-a 設定圖；2. C02-a 設定圖；3. S01-A 機位背景圖；4. P01 道具圖
-- 驗收重點：手指數量，手上拿的東西沒有變形；人物在畫面的左右位置和分鏡一致（軸線）；背景與光線和 EP01-001 一致；整段都是慢動作，沒有忽快忽慢；風險項見備註，不行就照備案換拍法
+- 驗收重點：手指數量，手上拿的東西沒有變形；人物在畫面的左右位置和分鏡一致（軸線）；背景與光線和 EP01-001 一致；整段都是慢動作，沒有忽快忽慢；背景裡的環境在動（雨、光、人群），沒有凍住；風險項見備註，不行就照備案換拍法
 
 首幀圖像提示詞（中文）
 
@@ -253,7 +253,7 @@ The tall slim woman with straight shoulder-length black hair says nothing and bl
 影片提示詞（中文）
 
 ```text
-栗色大波浪長髮的年輕女子手腕一甩，杯中的香檳整片潑向黑色及肩直髮的高瘦女子，酒液在白色西裝前襟上濺開；黑色及肩直髮的高瘦女子閉了一下眼，身體沒有後退。鏡頭固定，慢動作。
+栗色大波浪長髮的年輕女子手腕一甩，杯中的香檳整片潑向黑色及肩直髮的高瘦女子，酒液在白色西裝前襟上濺開；黑色及肩直髮的高瘦女子閉了一下眼，身體沒有後退。栗色大波浪長髮的年輕女子的表情維持首幀的樣子：咬著下唇，眼神發狠。背景的賓客有細微的動作，換一下重心、手裡的酒杯輕輕晃動，水晶吊燈的光在杯子上微微閃動。鏡頭固定，慢動作。除了上面寫到的變化，人物的長相、服裝與背景都和首幀一致。
 ```
 
 首幀圖像提示詞（English）
@@ -271,7 +271,7 @@ Edit the first-frame image of this shot and keep everything not mentioned here u
 影片提示詞（English）
 
 ```text
-The young woman with long chestnut waves flicks her wrist and throws the champagne at the tall slim woman with straight shoulder-length black hair; it splashes across the front of the white jacket; the tall slim woman shuts her eyes for a moment and does not step back. Static camera, slow motion.
+The young woman with long chestnut waves flicks her wrist and throws the champagne at the tall slim woman with straight shoulder-length black hair; it splashes across the front of the white jacket; the tall slim woman shuts her eyes for a moment and does not step back. The young woman with long chestnut waves holds the expression from the first frame: biting her lower lip, eyes hard. The guests in the background shift their weight and their glasses sway slightly, the chandelier light glints softly on the glasses. Static camera, slow motion. Apart from the changes described, faces, outfits and the background stay as in the first frame.
 ```
 
 ### EP01-005
@@ -295,7 +295,7 @@ The young woman with long chestnut waves flicks her wrist and throws the champag
 影片提示詞（中文）
 
 ```text
-香檳沿著翻領的布料一滴一滴往下落，濕痕慢慢擴開。鏡頭固定。
+香檳沿著翻領的布料一滴一滴往下落，濕痕慢慢擴開。鏡頭固定。除了上面寫到的變化，人物的長相、服裝與背景都和首幀一致。
 ```
 
 首幀圖像提示詞（English）
@@ -313,7 +313,7 @@ Edit the first-frame image of this shot and keep everything not mentioned here u
 影片提示詞（English）
 
 ```text
-Champagne drips from the lapel one drop at a time as the wet patch slowly spreads. Static camera.
+Champagne drips from the lapel one drop at a time as the wet patch slowly spreads. Static camera. Apart from the changes described, faces, outfits and the background stay as in the first frame.
 ```
 
 ### EP01-006
@@ -339,7 +339,7 @@ Champagne drips from the lapel one drop at a time as the wet patch slowly spread
 影片提示詞（中文）
 
 ```text
-黑色及肩直髮的高瘦女子低頭看了一眼胸前的酒漬，停了一拍，再慢慢抬起眼睛。鏡頭固定。
+黑色及肩直髮的高瘦女子低頭看了一眼胸前的酒漬，停了一拍，再慢慢抬起眼睛。黑色及肩直髮的高瘦女子的表情維持首幀的樣子：眉頭沒有動，嘴唇抿平。鏡頭固定。除了上面寫到的變化，人物的長相、服裝與背景都和首幀一致。
 ```
 
 首幀圖像提示詞（English）
@@ -357,7 +357,7 @@ Edit the first-frame image of this shot and keep everything not mentioned here u
 影片提示詞（English）
 
 ```text
-The tall slim woman with straight shoulder-length black hair glances down at the stain on her chest, pauses a beat, then slowly lifts her eyes. Static camera.
+The tall slim woman with straight shoulder-length black hair glances down at the stain on her chest, pauses a beat, then slowly lifts her eyes. The tall slim woman with straight shoulder-length black hair holds the expression from the first frame: brows unmoved, mouth set in a flat line. Static camera. Apart from the changes described, faces, outfits and the background stay as in the first frame.
 ```
 
 ### EP01-007
@@ -369,7 +369,7 @@ The tall slim woman with straight shoulder-length black hair glances down at the
 - 台詞語氣：理直氣壯，聲音拔高
 - 聲線：二十出頭的女聲，音調偏高，說話快，尾音上揚
 - 參考圖（依這個順序上傳，提示詞裡的「圖N」就是第 N 張）：1. C02-a 設定圖；2. C03-a 設定圖；3. S01-A 機位背景圖；4. P01 道具圖・空
-- 驗收重點：人數正確，兩人的髮色與服裝沒有互串；手指數量，手上拿的東西沒有變形；人物在畫面的左右位置和分鏡一致（軸線）；背景與光線和 EP01-004 一致；嘴唇閉合（口型之後另外做），頭部動作小
+- 驗收重點：人數正確，兩人的髮色與服裝沒有互串；手指數量，手上拿的東西沒有變形；人物在畫面的左右位置和分鏡一致（軸線）；背景與光線和 EP01-004 一致；嘴唇閉合（口型之後另外做），頭部動作小；背景裡的環境在動（雨、光、人群），沒有凍住
 
 首幀圖像提示詞（中文）
 
@@ -386,7 +386,7 @@ The tall slim woman with straight shoulder-length black hair glances down at the
 影片提示詞（中文）
 
 ```text
-栗色大波浪長髮的年輕女子頭也不回，下巴揚起，嘴角掛著得意的笑，左手往身後的宴會廳一指；戴細框眼鏡的灰髮中年男子從背景快步走近。栗色大波浪長髮的年輕女子的嘴唇保持閉合、嘴不動（口型之後另外做）。鏡頭固定。
+栗色大波浪長髮的年輕女子頭也不回，下巴揚起，嘴角掛著得意的笑，左手往身後的宴會廳一指；戴細框眼鏡的灰髮中年男子從背景快步走近。背景的賓客有細微的動作，換一下重心、手裡的酒杯輕輕晃動，水晶吊燈的光在杯子上微微閃動。栗色大波浪長髮的年輕女子的嘴唇保持閉合、嘴不動（口型之後另外做）。鏡頭固定。除了上面寫到的變化，人物的長相、服裝與背景都和首幀一致。
 ```
 
 首幀圖像提示詞（English）
@@ -404,7 +404,7 @@ Edit the first-frame image of this shot and keep everything not mentioned here u
 影片提示詞（English）
 
 ```text
-Without turning around, the young woman with long chestnut waves lifts her chin with a smug smile and points back over her shoulder toward the hall with her left hand; the grey-haired middle-aged man in thin-framed glasses walks briskly forward from the background. The lips of the young woman with long chestnut waves stay closed and still (lip sync is added later). Static camera.
+Without turning around, the young woman with long chestnut waves lifts her chin with a smug smile and points back over her shoulder toward the hall with her left hand; the grey-haired middle-aged man in thin-framed glasses walks briskly forward from the background. The guests in the background shift their weight and their glasses sway slightly, the chandelier light glints softly on the glasses. The lips of the young woman with long chestnut waves stay closed and still (lip sync is added later). Static camera. Apart from the changes described, faces, outfits and the background stay as in the first frame.
 ```
 
 ### EP01-008
@@ -418,7 +418,7 @@ Without turning around, the young woman with long chestnut waves lifts her chin 
 - 聲線：五十多歲的男聲，沉穩，語速慢
 - 音樂：配樂在這一鏡完全抽空
 - 參考圖（依這個順序上傳，提示詞裡的「圖N」就是第 N 張）：1. C01-b 設定圖；2. C03-a 設定圖；3. C02-a 設定圖；4. S01-A 機位背景圖；5. P01 道具圖・空
-- 驗收重點：手指數量，手上拿的東西沒有變形；人物在畫面的左右位置和分鏡一致（軸線）；背景與光線和 EP01-007 一致；嘴唇閉合（口型之後另外做），頭部動作小
+- 驗收重點：手指數量，手上拿的東西沒有變形；人物在畫面的左右位置和分鏡一致（軸線）；背景與光線和 EP01-007 一致；嘴唇閉合（口型之後另外做），頭部動作小；背景裡的環境在動（雨、光、人群），沒有凍住
 
 首幀圖像提示詞（中文）
 
@@ -435,7 +435,7 @@ Without turning around, the young woman with long chestnut waves lifts her chin 
 影片提示詞（中文）
 
 ```text
-戴細框眼鏡的灰髮中年男子站定，臉朝前景的女子，眼神放低，頭部保持穩定，停一拍之後上半身彎下鞠躬。戴細框眼鏡的灰髮中年男子的嘴唇保持閉合、嘴不動（口型之後另外做）。鏡頭固定。
+戴細框眼鏡的灰髮中年男子站定，臉朝前景的女子，眼神放低，頭部保持穩定，停一拍之後上半身彎下鞠躬。戴細框眼鏡的灰髮中年男子的表情維持首幀的樣子：眼神放低，嘴角帶著客氣的淺笑，嘴唇閉著。背景的賓客有細微的動作，換一下重心、手裡的酒杯輕輕晃動，水晶吊燈的光在杯子上微微閃動。戴細框眼鏡的灰髮中年男子的嘴唇保持閉合、嘴不動（口型之後另外做）。鏡頭固定。除了上面寫到的變化，人物的長相、服裝與背景都和首幀一致。
 ```
 
 首幀圖像提示詞（English）
@@ -453,7 +453,7 @@ Edit the first-frame image of this shot and keep everything not mentioned here u
 影片提示詞（English）
 
 ```text
-The grey-haired middle-aged man in thin-framed glasses stands still facing the woman in the foreground, eyes lowered, head steady, then after a beat bows from the waist. The lips of the grey-haired middle-aged man in thin-framed glasses stay closed and still (lip sync is added later). Static camera.
+The grey-haired middle-aged man in thin-framed glasses stands still facing the woman in the foreground, eyes lowered, head steady, then after a beat bows from the waist. The grey-haired middle-aged man in thin-framed glasses holds the expression from the first frame: eyes lowered politely, a slight courteous smile, lips closed. The guests in the background shift their weight and their glasses sway slightly, the chandelier light glints softly on the glasses. The lips of the grey-haired middle-aged man in thin-framed glasses stay closed and still (lip sync is added later). Static camera. Apart from the changes described, faces, outfits and the background stay as in the first frame.
 ```
 
 ### EP01-009
@@ -482,7 +482,7 @@ The grey-haired middle-aged man in thin-framed glasses stands still facing the w
 影片提示詞（中文）
 
 ```text
-黑色及肩直髮的高瘦女子慢慢抬起下巴，嘴角動了一下。鏡頭固定。
+黑色及肩直髮的高瘦女子慢慢抬起下巴，嘴角動了一下。鏡頭固定。除了上面寫到的變化，人物的長相、服裝與背景都和首幀一致。
 ```
 
 首幀圖像提示詞（English）
@@ -500,7 +500,7 @@ Edit the first-frame image of this shot and keep everything not mentioned here u
 影片提示詞（English）
 
 ```text
-The tall slim woman with straight shoulder-length black hair slowly lifts her chin; the corner of her mouth twitches. Static camera.
+The tall slim woman with straight shoulder-length black hair slowly lifts her chin; the corner of her mouth twitches. Static camera. Apart from the changes described, faces, outfits and the background stay as in the first frame.
 ```
 
 ### EP01-010
@@ -509,7 +509,7 @@ The tall slim woman with straight shoulder-length black hair slowly lifts her ch
 - 機位：S01-A（簽到台旁，越過沈知意的右肩朝宴會廳內拍：許曼正面，在畫面右、看向畫面左；吊燈與宴會廳在背景，光從上方來）；EP01-008 用過這個機位，這一鏡的首幀可以拿它的首幀圖做圖像編輯，背景才會一致
 - 看得到的背景（來自機位）：挑高的宴會廳，水晶吊燈與鋪白色桌布的圓桌，背景虛化
 - 參考圖（依這個順序上傳，提示詞裡的「圖N」就是第 N 張）：1. C02-a 設定圖；2. C02 頭像；3. S01-A 機位背景圖；4. P01 道具圖・空
-- 驗收重點：手指數量，手上拿的東西沒有變形；背景與光線和 EP01-008 一致
+- 驗收重點：手指數量，手上拿的東西沒有變形；背景與光線和 EP01-008 一致；運鏡是「緩慢拉遠」，方向沒有反，人物沒有跟著大動；背景裡的環境在動（雨、光、人群），沒有凍住
 
 首幀圖像提示詞（中文）
 
@@ -520,13 +520,13 @@ The tall slim woman with straight shoulder-length black hair slowly lifts her ch
 尾幀提示詞（拿首幀圖做圖像編輯）（中文）
 
 ```text
-以這一鏡的首幀圖為底圖做圖像編輯，沒有提到的部分保持不變。結束時的畫面：栗色大波浪長髮的年輕女子的手慢慢垂下，空杯放低到腰間，嘴唇閉上。
+以這一鏡的首幀圖為底圖：先向四周擴圖，延伸出「緩慢拉遠」之後才看得到的畫面，原本的畫面內容與位置保持不變；再做圖像編輯，沒有提到的部分保持不變。結束時的畫面：取景拉寬到中景，看得到她身後的賓客都看著她；栗色大波浪長髮的年輕女子的手慢慢垂下，空杯放低到腰間，嘴唇閉上。
 ```
 
 影片提示詞（中文）
 
 ```text
-栗色大波浪長髮的年輕女子臉上的笑一點一點垮下來，舉著杯子的手停在半空，忘了放下。鏡頭固定。
+栗色大波浪長髮的年輕女子臉上的笑一點一點垮下來，舉著杯子的手停在半空，忘了放下。背景的賓客有細微的動作，換一下重心、手裡的酒杯輕輕晃動，水晶吊燈的光在杯子上微微閃動。鏡頭緩慢拉遠。除了上面寫到的變化，人物的長相、服裝與背景都和首幀一致。
 ```
 
 首幀圖像提示詞（English）
@@ -538,13 +538,13 @@ A woman of about twenty-five (as in image 1) (face as in image 2), pointed chin,
 尾幀提示詞（拿首幀圖做圖像編輯）（English）
 
 ```text
-Edit the first-frame image of this shot and keep everything not mentioned here unchanged. End state: the young woman's hand slowly lowers, the empty glass dropping to her waist, her lips closing.
+Outpaint the first-frame image of this shot on all sides to reveal what the camera sees after the move (slow pull-out), keeping the original content and its position unchanged; then edit it, keeping everything not mentioned here unchanged. End state: the framing has widened to a medium shot, showing the guests behind her all watching; the young woman's hand slowly lowers, the empty glass dropping to her waist, her lips closing.
 ```
 
 影片提示詞（English）
 
 ```text
-The smile slowly drains from the face of the young woman with long chestnut waves; the hand holding the glass stays frozen in mid-air. Static camera.
+The smile slowly drains from the face of the young woman with long chestnut waves; the hand holding the glass stays frozen in mid-air. The guests in the background shift their weight and their glasses sway slightly, the chandelier light glints softly on the glasses. Slow pull-out. Apart from the changes described, faces, outfits and the background stay as in the first frame.
 ```
 
 ## 動態分鏡
