@@ -149,7 +149,8 @@ test('正面朝向鏡頭卻看向畫面一側，會提示', (t) => {
 
 test('混合模式（預設）：每個範例的每一鏡，列出的參考圖在首幀提示詞裡都有被指稱', () => {
   for (const ex of ['', 'creature-fx', 'live-action', 'en-action']) {
-    const md = fs.readFileSync(path.join(EXAMPLES, ex, 'out', 'EP01-storyboard.md'), 'utf8');
+    // Windows 的 git 可能把 .md 取出成 CRLF；換回 \n 再切段
+    const md = fs.readFileSync(path.join(EXAMPLES, ex, 'out', 'EP01-storyboard.md'), 'utf8').replace(/\r\n/g, '\n');
     const bible = readJson(path.join(EXAMPLES, ex, 'bible.json'));
     const zh = (bible.project.prompt_langs || ['zh', 'en']).includes('zh');
     for (const sec of md.split('\n### EP').slice(1)) {
