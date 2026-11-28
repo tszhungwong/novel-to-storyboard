@@ -32,7 +32,7 @@
 
 | 編號 | 名稱 | 短稱 | 固定外貌 | 辨識特徵 | 造型變體 | 聲線 |
 |---|---|---|---|---|---|---|
-| C01 | 沈知意 | 黑色及肩直髮的高瘦女子<br>the tall slim woman with straight shoulder-length black hair | 二十八歲左右的女性，鵝蛋臉，黑色及肩直髮別在耳後，眉形平直，眼睛細長，身形高瘦<br>a woman of about twenty-eight, oval face, straight shoulder-length black hair tucked behind her ears, level brows, long narrow eyes, tall slim build | 左眉尾有一顆小痣<br>a small mole at the tail of her left eyebrow | C01-a（白西裝）：白色羊毛西裝外套與同色西裝褲，裡面是黑色絲質上衣，黑色尖頭低跟鞋<br>a white wool suit jacket and matching trousers over a black silk top, black pointed low heels<br>C01-b（被潑酒後）：白色羊毛西裝外套與同色西裝褲，裡面是黑色絲質上衣，黑色尖頭低跟鞋<br>a white wool suit jacket and matching trousers over a black silk top, black pointed low heels；白色西裝的前襟被香檳潑濕，濕透的布料半透明、貼在身上，帶著淡淡的金黃色水痕，一縷濕髮貼在臉頰上<br>the front of the white jacket soaked with champagne, the wet fabric translucent and clinging with a faint golden tinge, a damp strand of hair stuck to her cheek | 二十多歲的女聲，音色偏低，說話慢而穩<br>a low, steady female voice in her late twenties |
+| C01 | 沈知意 | 黑色及肩直髮的高瘦女子<br>the tall slim woman with straight shoulder-length black hair | 二十八歲左右的女性，鵝蛋臉，黑色及肩直髮別在耳後，眉形平直，眼睛細長，身形高瘦<br>a woman of about twenty-eight, oval face, straight shoulder-length black hair tucked behind her ears, level brows, long narrow eyes, tall slim build | 左眉尾有一顆小痣<br>a small mole at the tail of her left eyebrow | C01-a（白西裝）：白色羊毛西裝外套與同色西裝褲，裡面是黑色絲質上衣，黑色尖頭低跟鞋<br>a white wool suit jacket and matching trousers over a black silk top, black pointed low heels<br>C01-b（被潑酒後）：白色羊毛西裝外套與同色西裝褲，裡面是黑色絲質上衣，黑色尖頭低跟鞋<br>a white wool suit jacket and matching trousers over a black silk top, black pointed low heels；白色羊毛西裝外套的翻領到前襟一片顏色變深的濕痕，帶著淡淡的金黃色，布料表面掛著幾顆酒珠<br>a darkened wet patch with a faint golden tinge running from the lapels down the front of the white wool jacket, beads of champagne clinging to the fabric | 二十多歲的女聲，音色偏低，說話慢而穩<br>a low, steady female voice in her late twenties |
 | C02 | 許曼 | 栗色大波浪長髮的年輕女子<br>the young woman with long chestnut waves | 二十五歲左右的女性，尖下巴，栗色大波浪長髮披在背後，濃眉，眼尾上挑，身形纖細<br>a woman of about twenty-five, pointed chin, long chestnut waves falling down her back, thick brows, upswept eyes, slender build | 一對大顆的珍珠耳環<br>a pair of large pearl earrings | C02-a（晚禮服）：香檳色緞面露肩長禮服，銀色細帶高跟鞋<br>a champagne satin off-the-shoulder evening gown, thin-strapped silver heels | 二十出頭的女聲，音調偏高，說話快，尾音上揚<br>a high, quick female voice in her early twenties that lilts up at the end |
 | C03 | 周經理 | 戴細框眼鏡的灰髮中年男子<br>the grey-haired middle-aged man in thin-framed glasses | 五十歲左右的男性，國字臉，灰白短髮梳得整齊，細框眼鏡，身形微胖<br>a man of about fifty, square face, neatly combed short grey hair, thin-framed glasses, slightly heavy build |  | C03-a（制服）：深灰色三件式西裝，白襯衫，深藍色領帶，黑色皮鞋<br>a dark grey three-piece suit, white shirt, navy tie, black leather shoes | 五十多歲的男聲，沉穩，語速慢<br>a calm, unhurried male voice in his fifties |
 
@@ -96,11 +96,11 @@ A woman of about twenty-eight, oval face, straight shoulder-length black hair tu
 ### C01-b　設定圖（由 C01-a 改）（畫幅 16:9）
 
 ```text
-以 C01-a 的定妝照為底圖做圖像編輯，臉、髮型與體型保持不變，造型改成：白色羊毛西裝外套與同色西裝褲，裡面是黑色絲質上衣，黑色尖頭低跟鞋，白色西裝的前襟被香檳潑濕，濕透的布料半透明、貼在身上，帶著淡淡的金黃色水痕，一縷濕髮貼在臉頰上。
+以 C01-a 的定妝照為底圖做圖像編輯，臉、髮型與體型保持不變，造型改成：白色羊毛西裝外套與同色西裝褲，裡面是黑色絲質上衣，黑色尖頭低跟鞋，白色羊毛西裝外套的翻領到前襟一片顏色變深的濕痕，帶著淡淡的金黃色，布料表面掛著幾顆酒珠。
 ```
 
 ```text
-Edit the C01-a costume test photos: keep the face, hairstyle and build unchanged; change the look to: a white wool suit jacket and matching trousers over a black silk top, black pointed low heels, the front of the white jacket soaked with champagne, the wet fabric translucent and clinging with a faint golden tinge, a damp strand of hair stuck to her cheek.
+Edit the C01-a costume test photos: keep the face, hairstyle and build unchanged; change the look to: a white wool suit jacket and matching trousers over a black silk top, black pointed low heels, a darkened wet patch with a faint golden tinge running from the lapels down the front of the white wool jacket, beads of champagne clinging to the fabric.
 ```
 
 ### C01　頭像（畫幅 3:2）

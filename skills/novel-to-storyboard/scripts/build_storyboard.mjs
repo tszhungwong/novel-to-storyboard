@@ -309,7 +309,7 @@ const T = {
     group: (n, pose) => `群體角色設定圖，${n} 個人一組，${pose || `${n} 人並排站立的正面全身圖，另附其中一人的側面與背面全身圖，自然站姿，表情平靜`}，純淺灰背景，均勻柔光`,
     propEdit: (baseId, change) => `以 ${baseId} 的道具圖為底圖做圖像編輯，大小、材質與角度保持不變，改成：${change}`,
     fx: '特效參考圖，單獨呈現，置於畫面中央，純黑背景',
-    variantEdit: (baseId, change) => `以 ${baseId} 的角色設定圖為底圖做圖像編輯，臉、髮型與體型保持不變，造型改成：${change}`,
+    variantEdit: (baseId, change, hair) => `以 ${baseId} 的角色設定圖為底圖做圖像編輯，${hair ? '臉與體型' : '臉、髮型與體型'}保持不變，造型改成：${change}`,
     faces: (expr) => `同一角色的半身表情組圖，相同角度，表情依序是：${expr}，純淺灰背景，均勻柔光`,
     expr: '平靜、微笑、難過、生氣',
     states: (expr) => `同一角色的狀態組圖，相同角度，依序是：${expr}，純淺灰背景，均勻柔光`,
@@ -362,7 +362,7 @@ const T = {
     group: (n, pose) => `group character sheet of ${n} people, ${pose || `the ${n} of them standing side by side in a front full-body view, plus side and back full-body views of one of them, natural standing pose, calm expression`}, plain light grey background, soft even lighting`,
     propEdit: (baseId, change) => `Edit the ${baseId} prop image: keep the size, materials and angle unchanged; change it to: ${change}`,
     fx: 'visual effect reference, shown on its own, centred in frame, plain black background',
-    variantEdit: (baseId, change) => `Edit the ${baseId} character reference sheet: keep the face, hairstyle and build unchanged; change the look to: ${change}`,
+    variantEdit: (baseId, change, hair) => `Edit the ${baseId} character reference sheet: keep the face${hair ? ' and build' : ', hairstyle and build'} unchanged; change the look to: ${change}`,
     faces: (expr) => `expression sheet of the same character, bust view, same angle, expressions in order: ${expr}, plain light grey background, soft even lighting`,
     expr: 'calm, smiling, sad, angry',
     states: (expr) => `state sheet of the same character, same angle, in order: ${expr}, plain light grey background, soft even lighting`,
@@ -391,7 +391,7 @@ if (PHOTO) {
     face: '同一位演員的頭像特寫照，正面與四分之三側面並排，表情平靜，純灰色攝影棚背景，柔和均勻的棚拍光',
     group: (n, pose) => `群體定妝照，${n} 位演員一組，${pose || `${n} 人並排站立的正面全身照，另附其中一人的側面與背面全身照，自然站姿`}，純灰色攝影棚背景，柔和均勻的棚拍光`,
     propEdit: (baseId, change) => `以 ${baseId} 的道具照為底圖做圖像編輯，大小、材質與角度保持不變，改成：${change}`,
-    variantEdit: (baseId, change) => `以 ${baseId} 的定妝照為底圖做圖像編輯，臉、髮型與體型保持不變，造型改成：${change}`,
+    variantEdit: (baseId, change, hair) => `以 ${baseId} 的定妝照為底圖做圖像編輯，${hair ? '臉與體型' : '臉、髮型與體型'}保持不變，造型改成：${change}`,
     faces: (expr) => `同一位演員的胸像表情測試照，相同角度，表情依序是：${expr}，純灰色攝影棚背景，柔和均勻的棚拍光`,
     states: (expr) => `同一角色的狀態參考照，相同角度，依序是：${expr}，純灰色攝影棚背景，柔和均勻的棚拍光`,
     master: '實景勘景照，純場景空鏡，全景，平視',
@@ -405,7 +405,7 @@ if (PHOTO) {
     face: 'headshots of the same actor, front and three-quarter views side by side, neutral expression, plain grey studio backdrop, soft even studio lighting',
     group: (n, pose) => `group costume test photos of ${n} actors, ${pose || `the ${n} of them standing side by side in a front full-body shot, plus side and back full-body photos of one of them, natural standing pose`}, plain grey studio backdrop, soft even studio lighting`,
     propEdit: (baseId, change) => `Edit the ${baseId} prop photo: keep the size, materials and angle unchanged; change it to: ${change}`,
-    variantEdit: (baseId, change) => `Edit the ${baseId} costume test photos: keep the face, hairstyle and build unchanged; change the look to: ${change}`,
+    variantEdit: (baseId, change, hair) => `Edit the ${baseId} costume test photos: keep the face${hair ? ' and build' : ', hairstyle and build'} unchanged; change the look to: ${change}`,
     faces: (expr) => `expression test photos of the same actor, head and shoulders, same angle, expressions in order: ${expr}, plain grey studio backdrop, soft even studio lighting`,
     states: (expr) => `state reference photos of the same character, same angle, in order: ${expr}, plain grey studio backdrop, soft even studio lighting`,
     master: 'location scouting photo, scenery only, unoccupied, wide shot, eye level',
@@ -1092,14 +1092,13 @@ function subject(entry, shot, l, withBlocking = true, tok = null) {
   let base;
   // 只入鏡一部分：直接寫看得到的那一部分。參考圖只借顏色與質感，免得工具照整張設定圖畫出整個人
   const ft = tok && !entry.partial ? tok.get(`face:${c.id}`) : null;
-  if (isPartialText(entry)) base = [strip(pick(entry.partial, l, tok)) + (t ? T[l].refPart(t) : ''), tall];
+  if (isPartialText(entry)) base = [markHead(strip(pick(entry.partial, l, tok)), t ? T[l].refPart(t) : '', l), tall];
   else if (t && REF_MODE) base = [T[l].refWho(t, tagOf(c, v, l) || lookOf(c, v, l)) + (ft ? T[l].refFace(ft) : ''), tall];
   else if (entry.partial === true) base = [tagOf(c, v, l) + (t ? T[l].refSee(t) : ''), tall, outfit]; // 背影、前景虛焦：不寫臉部細節與狀態
   else {
     // 混合模式：參照標在外貌的第一句後面（「五十歲左右的男性（參照圖2），國字臉⋯」），一看就知道整個人對應哪一張，不會像只在說最後那一句
-    const parts = strip(lookOf(c, v, l)).split(l === 'en' ? /,\s*/ : '，');
-    if (t || ft) parts[0] += (t ? T[l].refSee(t) : '') + (ft ? T[l].refFace(ft) : '');
-    base = [parts.join(T[l].sep), tall, outfit, pick(v.state, l), pick(c.marks, l)];
+    const mark = (t ? T[l].refSee(t) : '') + (ft ? T[l].refFace(ft) : '');
+    base = [markHead(strip(lookOf(c, v, l)), mark, l), tall, outfit, pick(v.state, l), pick(c.marks, l)];
   }
   const facing = isPartialText(entry) ? '' : (FACINGS[zhOf(entry.facing)]?.[l] || pick(entry.facing, l));
   // 表情：有表情組圖的指稱就接在後面；中景以內看得清楚臉，表情提前到朝向後面，排在最後容易被工具忽略
@@ -1112,6 +1111,18 @@ function subject(entry, shot, l, withBlocking = true, tok = null) {
       : [facing, pick(entry.pos, l, tok), pick(entry.gaze, l, tok), pick(entry.hands, l, tok), face])
     : [];
   return joinC([...base, ...block], l);
+}
+/**
+ * 把參照標（「（參照圖2）」「（顏色與質感參照圖3）」）放在第一句後面，整個人、整片布料對應哪一張圖一看就知道。
+ * 放在整段最後，讀起來像只在說最後那樣東西（片段以道具結尾時，就像在說那件道具）。
+ * 英文的第一句是「名詞 with 修飾語」時標在 with 前面：修飾語裡可能有逗號（with flawless, perfect features），從逗號切會把片語切斷。
+ */
+function markHead(text, mark, l) {
+  if (!text) return mark;
+  const parts = text.split(l === 'en' ? /,\s*/ : '，');
+  const w = l === 'en' ? parts[0].search(/\swith\s/i) : -1;
+  parts[0] = w > 0 ? parts[0].slice(0, w) + mark + parts[0].slice(w) : parts[0] + mark;
+  return parts.join(T[l].sep);
 }
 const setupOf = (shot) => (shot.setup ? setups.get(shot.setup) : null) || {};
 /** 光線：這一鏡的 light → 機位的 light → 場景的光線；場景的時間與天氣（time）不管光有沒有覆寫都接在後面，熄了燈還是深夜、還在下雨。 */
@@ -1441,6 +1452,7 @@ const assets = []; // {id, kind, lang, prompt}
 // 角色的 detail 寫的是第一個形態的身體；有自己 look 的形態（原形）長得不一樣，只用形態自己的 detail
 const charDetail = (c, v, l) => (pick(v?.look, l) ? '' : pick(c.detail, l));
 // 頭像與表情組圖用不到的身體描述：手、指甲、腳、腰、身形、身高
+const HAIR_CHANGE_RE = /髮|\bhair/i;
 const BODY_ONLY_RE = /手|指甲|手指|指節|腳|腿|腰|臀|膝|身形|身材|體型|身高|個子|胸|手臂|\b(hands?|fingers?|nails?|knuckles?|arms?|legs?|feet|waist|hips?|build|tall|height|chest)\b/i;
 const headOnly = (text, l) => (text ? text.split(l === 'en' ? /,\s*/ : '，').filter((x) => !BODY_ONLY_RE.test(x)).join(T[l].sep) : text);
 // 每類資產圖的建議畫幅：設定圖與組圖要橫幅才放得下並排的幾個角度，道具與特效方形，機位背景圖跟影片一樣
@@ -1453,7 +1465,9 @@ for (const { c, vs } of charList) {
       if (i > 0 && !pick(v.sheet, l) && !pick(v.look, l)) {
         // 第二個以後的造型：從第一個造型的設定圖改，臉才不會變
         const change = joinC([pick(v.outfit, l), pick(v.state, l), pick(v.detail, l)], l);
-        assets.push({ id: v.id, kind: `設定圖（由 ${vs[0].id} 改）`, lang: l, ar: AR.sheet, prompt: T[l].variantEdit(vs[0].id, change) + T[l].stop.trim() });
+        // 造型改到頭髮（濕髮、剪短、盤起來）時，「髮型保持不變」就和改動打架，只留臉與體型
+        const hair = HAIR_CHANGE_RE.test(change);
+        assets.push({ id: v.id, kind: `設定圖（由 ${vs[0].id} 改）`, lang: l, ar: AR.sheet, prompt: T[l].variantEdit(vs[0].id, change, hair) + T[l].stop.trim() });
       } else {
         // 第一個造型，或有自己 look 的形態（原形和人形長得不一樣，不能從人形改）
         const who = joinC([lookOf(c, v, l), pick(c.stature, l), pick(v.outfit, l), pick(v.state, l), pick(c.marks, l), charDetail(c, v, l), pick(v.detail, l)], l);
