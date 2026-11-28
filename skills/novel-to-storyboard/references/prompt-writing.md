@@ -224,7 +224,7 @@ backlighting、side lighting、rim light、high-key、low-key、volumetric light
 
 **朝向用 `facing` 填，不寫在 `pos` 的自由文字裡。** 用詞固定，正反打的兩個人才看得出方向是不是相對（甲半側朝右、乙半側朝左）；同一個機位裡同一個人上一鏡朝左、下一鏡朝右，腳本會提示，多半是越軸。背對鏡頭的人除了 `facing` 填「背面」，還要設 `partial: true`，否則提示詞會寫一整段看不到的臉。
 
-**情緒要寫成看得見的表現。** `face` 只寫「難過」，工具會給一張標準的難過臉；寫出眉、眼、嘴與呼吸，才有表演。只寫一個情緒詞時腳本會提示。下面是常見情緒的寫法，一次挑兩三個部位，不要全部堆上去：
+**情緒要寫成看得見的表現。** `face` 只寫「難過」，工具會給一張標準的難過臉；寫出眉、眼、嘴與呼吸，才有表演。寫了情緒詞（「難過」「神情恭敬」「一臉得意」）腳本會提示；人物完整入鏡、中景以內沒寫 `face` 會警告。影片也一樣：`motion` 只寫身體，影片裡的臉就不會變，看得清楚臉的鏡頭寫一個臉上的變化。下面是常見情緒的寫法，一次挑兩三個部位，不要全部堆上去：
 
 | 情緒 | 眉與眼 | 嘴與下巴 | 身體與呼吸 | 英文 |
 |---|---|---|---|---|
@@ -242,6 +242,10 @@ backlighting、side lighting、rim light、high-key、low-key、volumetric light
 | 懷疑 | 一邊眉毛挑起，眼睛微瞇 | 嘴角一邊往內收 | 頭微側，身體往後靠 | one brow raised, eyes narrowed, head tilted slightly, leaning back |
 | 羞怯 | 視線往下，偶爾抬眼又移開 | 抿著嘴笑 | 頭微低，手指絞在一起 | glancing up then quickly away, a small closed-mouth smile, fingers intertwined |
 | 悲傷 | 眉頭內側上揚，眼神空 | 嘴角往下 | 呼吸沉，動作停住 | inner brows raised, eyes unfocused, corners of the mouth turned down, motionless |
+| 恭敬 | 眼神放低，不直視 | 嘴角帶著客氣的淺笑，嘴唇閉著 | 微微欠身，雙手交疊在身前 | eyes lowered politely, a slight courteous smile, a small bow, hands clasped in front |
+| 得意 | 下巴微抬，眼睛帶笑 | 嘴角上揚，壓不住的笑 | 肩膀放鬆，身體略往後仰 | chin raised, smiling eyes, a smug grin tugging at the mouth, leaning back slightly |
+| 不屑 | 眼皮半垂，從上往下看 | 一邊嘴角往下撇 | 頭微側，雙手抱胸 | heavy-lidded, looking down the nose, one corner of the mouth pulled down, arms folded |
+| 緊張 | 眼睛睜大，視線來回移動 | 嘴唇抿緊，吞嚥 | 肩膀聳起，手指捏著衣角 | wide eyes darting, lips pressed together, swallowing, shoulders raised, fingers twisting the hem |
 
 - 「不完美的細節」比完整的標準表情更像真人：嘴上在笑、眼睛沒笑；強忍時下巴的那一下抖動。一個主表情配一個細節就夠。
 - 情緒強的時刻，身體比臉更好拍、也更穩：背影的肩膀在抖、手把杯子握得指節發白。特寫的臉是生成工具最容易做僵的地方。
@@ -315,6 +319,10 @@ backlighting、side lighting、rim light、high-key、low-key、volumetric light
 
 ## 七、參考圖模式
 
+三種模式：**混合**（預設）把整段外貌寫進每一鏡，再在後面標上參照第幾張圖；**參考圖**把外貌換成「圖1中的…」；**文字**只寫文字、不標編號。
+
+混合模式的寫法：「二十五歲左右的男性，臉型偏長⋯⋯（參照圖1）」「背景是⋯⋯（背景參照圖3）」「一個白色信封（圖4）」；`refs` 加的表情組圖接在那個人的表情後面（「（表情參照圖6）」）。掛了好幾張圖、提示詞卻沒說哪張是誰，工具只能猜，最常見的是把 A 的設定圖套到 B 身上、或兩個人的服裝互換。混合模式在沒掛圖時文字照樣完整，所以工具未定時用它。
+
 文字模式把角色的整段外貌寫進每一鏡，靠文字一字不差來維持一致；參考圖只是加強。現在多數圖像工具能一次掛好幾張參考圖、並在提示詞裡用編號指稱（即夢圖像、FLUX、可靈與即夢的全能參考），這時長相交給參考圖比交給文字穩：文字描述和參考圖有出入時，工具會在兩者之間搖擺，臉反而漂。
 
 `project.ref_mode` 填 `參考圖`，腳本就這樣組合首幀：
@@ -333,7 +341,7 @@ backlighting、side lighting、rim light、high-key、low-key、volumetric light
 - **設定圖的姿勢會被照抄。** 設定圖用自然站姿，`pos` 寫具體的姿勢與朝向，工具才不會把設定圖的站姿直接搬進每一鏡。
 - 影片提示詞（圖生影片）不受影響：首幀圖已經決定了長相，影片提示詞本來就只寫動作與運鏡。`video_mode` 是 `t2v` 時，參考圖模式改作用在影片提示詞，用的是影片工具的參考圖。
 
-不確定工具能不能用編號指稱參考圖時，用文字模式。文字模式在任何工具上都能用，只是長、而且一致性靠文字。
+不確定工具能不能用編號指稱參考圖時，用預設的混合模式：文字完整，編號只是多出來的指引。確定工具不認得編號（Midjourney 這類把參考圖放在介面上的），才改文字模式。
 
 ## 八、真人寫實
 

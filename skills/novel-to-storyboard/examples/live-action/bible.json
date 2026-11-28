@@ -80,11 +80,15 @@
             "en": "a white wool suit jacket over a black silk top"
           },
           "state": {
-            "zh": "白色西裝的前襟被香檳潑濕，深色的酒漬從翻領往下暈開，一縷濕髮貼在臉頰上",
-            "en": "the front of the white jacket soaked with champagne, a dark wet stain spreading down from the lapel, a damp strand of hair stuck to her cheek"
+            "zh": "白色西裝的前襟被香檳潑濕，濕透的布料半透明、貼在身上，帶著淡淡的金黃色水痕，一縷濕髮貼在臉頰上",
+            "en": "the front of the white jacket soaked with champagne, the wet fabric translucent and clinging with a faint golden tinge, a damp strand of hair stuck to her cheek"
           }
         }
-      ]
+      ],
+      "expressions": {
+        "zh": "平靜、眼神不閃躲的冷淡、嘴角微微上揚的不露聲色、眉頭微皺的審視",
+        "en": "calm, a cool unflinching gaze, a barely lifted corner of the mouth, a slight frown of appraisal"
+      }
     },
     {
       "id": "C02",
@@ -130,7 +134,11 @@
             "en": "the satin catching soft highlights, a fluid draped skirt, a tightly fitted waist"
           }
         }
-      ]
+      ],
+      "expressions": {
+        "zh": "一邊嘴角上揚的冷笑、咬著下唇的狠勁、下巴揚起的得意、笑容僵住嘴唇微張",
+        "en": "a one-sided sneer, biting her lower lip in spite, chin raised in triumph, a frozen smile with lips parted"
+      }
     },
     {
       "id": "C03",

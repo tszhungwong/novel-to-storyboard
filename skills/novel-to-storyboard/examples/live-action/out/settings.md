@@ -14,7 +14,7 @@
 | 首尾幀 | 使用 |
 | 聲音方案 | 後配口型 |
 | 提示詞語言 | 中文＋English |
-| 參考圖模式 | 文字（外貌與造型完整寫進每一鏡的提示詞，參考圖是加強） |
+| 參考圖模式 | 混合（外貌照文字完整寫，再標上「（參照圖1）」「(as in image 1)」這類編號；有掛圖就照分鏡表列的順序上傳，沒掛圖文字也完整） |
 | 單次可生成秒數 | 未填 |
 | 配樂方向 | 低沉的弦樂鋪底，打臉的那一刻重拍落下，之後抽空 |
 
@@ -31,7 +31,7 @@
 
 | 編號 | 名稱 | 短稱 | 固定外貌 | 辨識特徵 | 造型變體 | 聲線 |
 |---|---|---|---|---|---|---|
-| C01 | 沈知意 | 黑色及肩直髮的高瘦女子<br>the tall slim woman with straight shoulder-length black hair | 二十八歲左右的女性，鵝蛋臉，黑色及肩直髮別在耳後，眉形平直，眼睛細長，身形高瘦<br>a woman of about twenty-eight, oval face, straight shoulder-length black hair tucked behind her ears, level brows, long narrow eyes, tall slim build | 左眉尾有一顆小痣<br>a small mole at the tail of her left eyebrow | C01-a（白西裝）：白色羊毛西裝外套與同色西裝褲，裡面是黑色絲質上衣，黑色尖頭低跟鞋<br>a white wool suit jacket and matching trousers over a black silk top, black pointed low heels<br>C01-b（被潑酒後）：白色羊毛西裝外套與同色西裝褲，裡面是黑色絲質上衣，黑色尖頭低跟鞋<br>a white wool suit jacket and matching trousers over a black silk top, black pointed low heels；白色西裝的前襟被香檳潑濕，深色的酒漬從翻領往下暈開，一縷濕髮貼在臉頰上<br>the front of the white jacket soaked with champagne, a dark wet stain spreading down from the lapel, a damp strand of hair stuck to her cheek | 二十多歲的女聲，音色偏低，說話慢而穩<br>a low, steady female voice in her late twenties |
+| C01 | 沈知意 | 黑色及肩直髮的高瘦女子<br>the tall slim woman with straight shoulder-length black hair | 二十八歲左右的女性，鵝蛋臉，黑色及肩直髮別在耳後，眉形平直，眼睛細長，身形高瘦<br>a woman of about twenty-eight, oval face, straight shoulder-length black hair tucked behind her ears, level brows, long narrow eyes, tall slim build | 左眉尾有一顆小痣<br>a small mole at the tail of her left eyebrow | C01-a（白西裝）：白色羊毛西裝外套與同色西裝褲，裡面是黑色絲質上衣，黑色尖頭低跟鞋<br>a white wool suit jacket and matching trousers over a black silk top, black pointed low heels<br>C01-b（被潑酒後）：白色羊毛西裝外套與同色西裝褲，裡面是黑色絲質上衣，黑色尖頭低跟鞋<br>a white wool suit jacket and matching trousers over a black silk top, black pointed low heels；白色西裝的前襟被香檳潑濕，濕透的布料半透明、貼在身上，帶著淡淡的金黃色水痕，一縷濕髮貼在臉頰上<br>the front of the white jacket soaked with champagne, the wet fabric translucent and clinging with a faint golden tinge, a damp strand of hair stuck to her cheek | 二十多歲的女聲，音色偏低，說話慢而穩<br>a low, steady female voice in her late twenties |
 | C02 | 許曼 | 栗色大波浪長髮的年輕女子<br>the young woman with long chestnut waves | 二十五歲左右的女性，尖下巴，栗色大波浪長髮披在背後，濃眉，眼尾上挑，身形纖細<br>a woman of about twenty-five, pointed chin, long chestnut waves falling down her back, thick brows, upswept eyes, slender build | 一對大顆的珍珠耳環<br>a pair of large pearl earrings | C02-a（晚禮服）：香檳色緞面露肩長禮服，銀色細帶高跟鞋<br>a champagne satin off-the-shoulder evening gown, thin-strapped silver heels | 二十出頭的女聲，音調偏高，說話快，尾音上揚<br>a high, quick female voice in her early twenties that lilts up at the end |
 | C03 | 周經理 | 戴細框眼鏡的灰髮中年男子<br>the grey-haired middle-aged man in thin-framed glasses | 五十歲左右的男性，國字臉，灰白短髮梳得整齊，細框眼鏡，身形微胖<br>a man of about fifty, square face, neatly combed short grey hair, thin-framed glasses, slightly heavy build |  | C03-a（制服）：深灰色三件式西裝，白襯衫，深藍色領帶，黑色皮鞋<br>a dark grey three-piece suit, white shirt, navy tie, black leather shoes | 五十多歲的男聲，沉穩，語速慢<br>a calm, unhurried male voice in his fifties |
 
@@ -84,31 +84,31 @@ A woman of about twenty-eight, oval face, straight shoulder-length black hair tu
 ### C01-b　設定圖（由 C01-a 改）（畫幅 16:9）
 
 ```text
-以 C01-a 的定妝照為底圖做圖像編輯，臉、髮型與體型保持不變，造型改成：白色羊毛西裝外套與同色西裝褲，裡面是黑色絲質上衣，黑色尖頭低跟鞋，白色西裝的前襟被香檳潑濕，深色的酒漬從翻領往下暈開，一縷濕髮貼在臉頰上。
+以 C01-a 的定妝照為底圖做圖像編輯，臉、髮型與體型保持不變，造型改成：白色羊毛西裝外套與同色西裝褲，裡面是黑色絲質上衣，黑色尖頭低跟鞋，白色西裝的前襟被香檳潑濕，濕透的布料半透明、貼在身上，帶著淡淡的金黃色水痕，一縷濕髮貼在臉頰上。
 ```
 
 ```text
-Edit the C01-a costume test photos: keep the face, hairstyle and build unchanged; change the look to: a white wool suit jacket and matching trousers over a black silk top, black pointed low heels, the front of the white jacket soaked with champagne, a dark wet stain spreading down from the lapel, a damp strand of hair stuck to her cheek.
+Edit the C01-a costume test photos: keep the face, hairstyle and build unchanged; change the look to: a white wool suit jacket and matching trousers over a black silk top, black pointed low heels, the front of the white jacket soaked with champagne, the wet fabric translucent and clinging with a faint golden tinge, a damp strand of hair stuck to her cheek.
 ```
 
 ### C01　頭像（畫幅 3:2）
 
 ```text
-二十八歲左右的女性，鵝蛋臉，黑色及肩直髮別在耳後，眉形平直，眼睛細長，身形高瘦，白色羊毛西裝外套，裡面是黑色絲質上衣，左眉尾有一顆小痣，皮膚白而略乾，看得到細小的毛孔，眼角有很淡的細紋，指甲修短沒有塗色。同一位演員的頭像特寫照，正面與四分之三側面並排，表情平靜，純灰色攝影棚背景，柔和均勻的棚拍光。寫實攝影，數位電影機質感，清晰銳利，中等飽和，輕微顆粒。
+二十八歲左右的女性，鵝蛋臉，黑色及肩直髮別在耳後，眉形平直，眼睛細長，白色羊毛西裝外套，裡面是黑色絲質上衣，左眉尾有一顆小痣，皮膚白而略乾，看得到細小的毛孔，眼角有很淡的細紋。同一位演員的頭像特寫照，正面與四分之三側面並排，表情平靜，純灰色攝影棚背景，柔和均勻的棚拍光。寫實攝影，數位電影機質感，清晰銳利，中等飽和，輕微顆粒。
 ```
 
 ```text
-A woman of about twenty-eight, oval face, straight shoulder-length black hair tucked behind her ears, level brows, long narrow eyes, tall slim build, a white wool suit jacket over a black silk top, a small mole at the tail of her left eyebrow, pale, slightly dry skin with visible fine pores, faint lines at the corners of her eyes, short unpainted nails. Headshots of the same actor, front and three-quarter views side by side, neutral expression, plain grey studio backdrop, soft even studio lighting. Photorealistic, digital cinema camera look, crisp detail, moderate saturation, subtle grain.
+A woman of about twenty-eight, oval face, straight shoulder-length black hair tucked behind her ears, level brows, long narrow eyes, a white wool suit jacket over a black silk top, a small mole at the tail of her left eyebrow, pale, slightly dry skin with visible fine pores, faint lines at the corners of her eyes. Headshots of the same actor, front and three-quarter views side by side, neutral expression, plain grey studio backdrop, soft even studio lighting. Photorealistic, digital cinema camera look, crisp detail, moderate saturation, subtle grain.
 ```
 
 ### C01　表情組圖（畫幅 16:9）
 
 ```text
-二十八歲左右的女性，鵝蛋臉，黑色及肩直髮別在耳後，眉形平直，眼睛細長，身形高瘦，白色羊毛西裝外套，裡面是黑色絲質上衣，左眉尾有一顆小痣，皮膚白而略乾，看得到細小的毛孔，眼角有很淡的細紋，指甲修短沒有塗色。同一位演員的胸像表情測試照，相同角度，表情依序是：平靜、微笑、難過、生氣，純灰色攝影棚背景，柔和均勻的棚拍光。寫實攝影，數位電影機質感，清晰銳利，中等飽和，輕微顆粒。
+二十八歲左右的女性，鵝蛋臉，黑色及肩直髮別在耳後，眉形平直，眼睛細長，白色羊毛西裝外套，裡面是黑色絲質上衣，左眉尾有一顆小痣，皮膚白而略乾，看得到細小的毛孔，眼角有很淡的細紋。同一位演員的胸像表情測試照，相同角度，表情依序是：平靜、眼神不閃躲的冷淡、嘴角微微上揚的不露聲色、眉頭微皺的審視，純灰色攝影棚背景，柔和均勻的棚拍光。寫實攝影，數位電影機質感，清晰銳利，中等飽和，輕微顆粒。
 ```
 
 ```text
-A woman of about twenty-eight, oval face, straight shoulder-length black hair tucked behind her ears, level brows, long narrow eyes, tall slim build, a white wool suit jacket over a black silk top, a small mole at the tail of her left eyebrow, pale, slightly dry skin with visible fine pores, faint lines at the corners of her eyes, short unpainted nails. Expression test photos of the same actor, head and shoulders, same angle, expressions in order: calm, smiling, sad, angry, plain grey studio backdrop, soft even studio lighting. Photorealistic, digital cinema camera look, crisp detail, moderate saturation, subtle grain.
+A woman of about twenty-eight, oval face, straight shoulder-length black hair tucked behind her ears, level brows, long narrow eyes, a white wool suit jacket over a black silk top, a small mole at the tail of her left eyebrow, pale, slightly dry skin with visible fine pores, faint lines at the corners of her eyes. Expression test photos of the same actor, head and shoulders, same angle, expressions in order: calm, a cool unflinching gaze, a barely lifted corner of the mouth, a slight frown of appraisal, plain grey studio backdrop, soft even studio lighting. Photorealistic, digital cinema camera look, crisp detail, moderate saturation, subtle grain.
 ```
 
 ### C02-a　設定圖（畫幅 16:9）
@@ -124,21 +124,21 @@ A woman of about twenty-five, pointed chin, long chestnut waves falling down her
 ### C02　頭像（畫幅 3:2）
 
 ```text
-二十五歲左右的女性，尖下巴，栗色大波浪長髮披在背後，濃眉，眼尾上挑，身形纖細，香檳色緞面露肩禮服，一對大顆的珍珠耳環，妝很完整，粉底略厚，正紅色的唇膏，睫毛刷得很長。同一位演員的頭像特寫照，正面與四分之三側面並排，表情平靜，純灰色攝影棚背景，柔和均勻的棚拍光。寫實攝影，數位電影機質感，清晰銳利，中等飽和，輕微顆粒。
+二十五歲左右的女性，尖下巴，栗色大波浪長髮披在背後，濃眉，眼尾上挑，香檳色緞面露肩禮服，一對大顆的珍珠耳環，妝很完整，粉底略厚，正紅色的唇膏，睫毛刷得很長。同一位演員的頭像特寫照，正面與四分之三側面並排，表情平靜，純灰色攝影棚背景，柔和均勻的棚拍光。寫實攝影，數位電影機質感，清晰銳利，中等飽和，輕微顆粒。
 ```
 
 ```text
-A woman of about twenty-five, pointed chin, long chestnut waves falling down her back, thick brows, upswept eyes, slender build, a champagne satin off-the-shoulder gown, a pair of large pearl earrings, full makeup with slightly heavy foundation, true-red lipstick, long mascaraed lashes. Headshots of the same actor, front and three-quarter views side by side, neutral expression, plain grey studio backdrop, soft even studio lighting. Photorealistic, digital cinema camera look, crisp detail, moderate saturation, subtle grain.
+A woman of about twenty-five, pointed chin, long chestnut waves falling down her back, thick brows, upswept eyes, a champagne satin off-the-shoulder gown, a pair of large pearl earrings, full makeup with slightly heavy foundation, true-red lipstick, long mascaraed lashes. Headshots of the same actor, front and three-quarter views side by side, neutral expression, plain grey studio backdrop, soft even studio lighting. Photorealistic, digital cinema camera look, crisp detail, moderate saturation, subtle grain.
 ```
 
 ### C02　表情組圖（畫幅 16:9）
 
 ```text
-二十五歲左右的女性，尖下巴，栗色大波浪長髮披在背後，濃眉，眼尾上挑，身形纖細，香檳色緞面露肩禮服，一對大顆的珍珠耳環，妝很完整，粉底略厚，正紅色的唇膏，睫毛刷得很長。同一位演員的胸像表情測試照，相同角度，表情依序是：平靜、微笑、難過、生氣，純灰色攝影棚背景，柔和均勻的棚拍光。寫實攝影，數位電影機質感，清晰銳利，中等飽和，輕微顆粒。
+二十五歲左右的女性，尖下巴，栗色大波浪長髮披在背後，濃眉，眼尾上挑，香檳色緞面露肩禮服，一對大顆的珍珠耳環，妝很完整，粉底略厚，正紅色的唇膏，睫毛刷得很長。同一位演員的胸像表情測試照，相同角度，表情依序是：一邊嘴角上揚的冷笑、咬著下唇的狠勁、下巴揚起的得意、笑容僵住嘴唇微張，純灰色攝影棚背景，柔和均勻的棚拍光。寫實攝影，數位電影機質感，清晰銳利，中等飽和，輕微顆粒。
 ```
 
 ```text
-A woman of about twenty-five, pointed chin, long chestnut waves falling down her back, thick brows, upswept eyes, slender build, a champagne satin off-the-shoulder gown, a pair of large pearl earrings, full makeup with slightly heavy foundation, true-red lipstick, long mascaraed lashes. Expression test photos of the same actor, head and shoulders, same angle, expressions in order: calm, smiling, sad, angry, plain grey studio backdrop, soft even studio lighting. Photorealistic, digital cinema camera look, crisp detail, moderate saturation, subtle grain.
+A woman of about twenty-five, pointed chin, long chestnut waves falling down her back, thick brows, upswept eyes, a champagne satin off-the-shoulder gown, a pair of large pearl earrings, full makeup with slightly heavy foundation, true-red lipstick, long mascaraed lashes. Expression test photos of the same actor, head and shoulders, same angle, expressions in order: a one-sided sneer, biting her lower lip in spite, chin raised in triumph, a frozen smile with lips parted, plain grey studio backdrop, soft even studio lighting. Photorealistic, digital cinema camera look, crisp detail, moderate saturation, subtle grain.
 ```
 
 ### C03-a　設定圖（畫幅 16:9）
@@ -154,11 +154,11 @@ A man of about fifty, square face, neatly combed short grey hair, thin-framed gl
 ### C03　頭像（畫幅 3:2）
 
 ```text
-五十歲左右的男性，國字臉，灰白短髮梳得整齊，細框眼鏡，身形微胖，深灰色西裝外套與背心，白襯衫，深藍色領帶。同一位演員的頭像特寫照，正面與四分之三側面並排，表情平靜，純灰色攝影棚背景，柔和均勻的棚拍光。寫實攝影，數位電影機質感，清晰銳利，中等飽和，輕微顆粒。
+五十歲左右的男性，國字臉，灰白短髮梳得整齊，細框眼鏡，深灰色西裝外套與背心，白襯衫，深藍色領帶。同一位演員的頭像特寫照，正面與四分之三側面並排，表情平靜，純灰色攝影棚背景，柔和均勻的棚拍光。寫實攝影，數位電影機質感，清晰銳利，中等飽和，輕微顆粒。
 ```
 
 ```text
-A man of about fifty, square face, neatly combed short grey hair, thin-framed glasses, slightly heavy build, a dark grey suit jacket and waistcoat, white shirt, navy tie. Headshots of the same actor, front and three-quarter views side by side, neutral expression, plain grey studio backdrop, soft even studio lighting. Photorealistic, digital cinema camera look, crisp detail, moderate saturation, subtle grain.
+A man of about fifty, square face, neatly combed short grey hair, thin-framed glasses, a dark grey suit jacket and waistcoat, white shirt, navy tie. Headshots of the same actor, front and three-quarter views side by side, neutral expression, plain grey studio backdrop, soft even studio lighting. Photorealistic, digital cinema camera look, crisp detail, moderate saturation, subtle grain.
 ```
 
 ### S01　場景定稿圖（畫幅 16:9）

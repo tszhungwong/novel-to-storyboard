@@ -42,9 +42,9 @@
 
 ## 道具
 
-| 編號 | 名稱 | 固定描述 |
-|---|---|---|
-| P01 | 鐵盒 | a battered square pale-blue biscuit tin |
+| 編號 | 名稱 | 固定描述 | 狀態 |
+|---|---|---|---|
+| P01 | 鐵盒 | a battered square pale-blue biscuit tin | 凹痕：a freshly dented battered pale-blue biscuit tin |
 
 ## 風格鎖定句
 
@@ -71,13 +71,13 @@ Edit the C01-a character reference sheet: keep the face, hairstyle and build unc
 ### C01　頭像（畫幅 3:2）
 
 ```text
-A girl of about sixteen, round face, chin-length black bob with blunt bangs, large dark eyes, small slim build, an oversized brick-red hooded sweatshirt, a small adhesive bandage on her left cheek, fine strands of hair escaping the bob at the nape, short bitten nails. Head close-up reference of the same character, front and three-quarter views side by side, neutral expression, plain light grey background, soft even lighting. Hand-painted anime film style, clean ink outlines, cel shading with a single shadow tone, high saturation with strong contrast, soft film grain.
+A girl of about sixteen, round face, chin-length black bob with blunt bangs, large dark eyes, an oversized brick-red hooded sweatshirt, a small adhesive bandage on her left cheek, fine strands of hair escaping the bob at the nape. Head close-up reference of the same character, front and three-quarter views side by side, neutral expression, plain light grey background, soft even lighting. Hand-painted anime film style, clean ink outlines, cel shading with a single shadow tone, high saturation with strong contrast, soft film grain.
 ```
 
 ### C01　表情組圖（畫幅 16:9）
 
 ```text
-A girl of about sixteen, round face, chin-length black bob with blunt bangs, large dark eyes, small slim build, an oversized brick-red hooded sweatshirt, a small adhesive bandage on her left cheek, fine strands of hair escaping the bob at the nape, short bitten nails. Expression sheet of the same character, bust view, same angle, expressions in order: calm, frightened, out of breath, relieved, plain light grey background, soft even lighting. Hand-painted anime film style, clean ink outlines, cel shading with a single shadow tone, high saturation with strong contrast, soft film grain.
+A girl of about sixteen, round face, chin-length black bob with blunt bangs, large dark eyes, an oversized brick-red hooded sweatshirt, a small adhesive bandage on her left cheek, fine strands of hair escaping the bob at the nape. Expression sheet of the same character, bust view, same angle, expressions in order: calm, frightened, out of breath, relieved, plain light grey background, soft even lighting. Hand-painted anime film style, clean ink outlines, cel shading with a single shadow tone, high saturation with strong contrast, soft film grain.
 ```
 
 ### C02-a　設定圖（畫幅 16:9）
@@ -89,7 +89,7 @@ A man in his forties, square jaw, short grey-flecked stubble, heavy brows, tall 
 ### C02　頭像（畫幅 3:2）
 
 ```text
-A man in his forties, square jaw, short grey-flecked stubble, heavy brows, tall build with broad shoulders, a long dark green rubber raincoat with the hood up, weathered skin creased deeply at the eyes, thick calloused hands, coarse uneven stubble. Head close-up reference of the same character, front and three-quarter views side by side, neutral expression, plain light grey background, soft even lighting. Hand-painted anime film style, clean ink outlines, cel shading with a single shadow tone, high saturation with strong contrast, soft film grain.
+A man in his forties, square jaw, short grey-flecked stubble, heavy brows, a long dark green rubber raincoat with the hood up, weathered skin creased deeply at the eyes, coarse uneven stubble. Head close-up reference of the same character, front and three-quarter views side by side, neutral expression, plain light grey background, soft even lighting. Hand-painted anime film style, clean ink outlines, cel shading with a single shadow tone, high saturation with strong contrast, soft film grain.
 ```
 
 ### S01　場景定稿圖（畫幅 16:9）
@@ -102,6 +102,12 @@ A narrow night-market lane between two rows of wheeled food carts with canvas aw
 
 ```text
 A battered square pale-blue biscuit tin, about twenty centimetres across, dented at one corner, the paint worn through to bare metal along the edges, a little rust at the seams. A single object centred in frame, plain light grey background, soft even lighting. Hand-painted anime film style, clean ink outlines, cel shading with a single shadow tone, high saturation with strong contrast, soft film grain.
+```
+
+### P01　道具圖・凹痕（畫幅 1:1）
+
+```text
+Edit the P01 prop image: keep the size, materials and angle unchanged; change it to: a freshly dented battered pale-blue biscuit tin.
 ```
 
 ## 進度紀錄

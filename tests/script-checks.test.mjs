@@ -36,8 +36,8 @@ function run(t, { example = '', editBible, editEp, second = 'EP01.json', extra =
 test('#6：這一鏡覆寫了光線，場景的時間與天氣還在', (t) => {
   const r = run(t, { example: 'creature-fx' });
   const md = r.file('EP01-storyboard.md');
-  // creature-fx 的第 005 鏡覆寫了 light；場景的 time 是「深夜，下著小雨」
-  const sec = md.split('### EP01-005')[1].split('### EP01-006')[0];
+  // creature-fx 的第 006 鏡覆寫了 light；場景的 time 是「深夜，下著小雨」
+  const sec = md.split('### EP01-006')[1].split('### EP01-007')[0];
   assert.match(sec, /吊燈的暖光[^\n]*深夜，下著小雨/);
 });
 
@@ -88,7 +88,7 @@ test('#13：line 寫成字串要警告', (t) => {
 });
 
 test('#14：沒換掉的 {p01}、{P01:} 要警告', (t) => {
-  const r = run(t, { editEp: (e) => { e.shots[0].cast[0].hands = '右手握著{p01}，左手拿著{P01:}'; } });
+  const r = run(t, { editEp: (e) => { e.shots[1].cast[0].hands = '右手握著{p01}，左手拿著{P01:}'; } });
   assert.match(r.checks, /有沒換掉的 \{p01\}、\{P01:\}/);
 });
 
@@ -99,8 +99,8 @@ test('#15：清單寫成物件、混了 null，不會當掉', (t) => {
       b.characters = Object.fromEntries(b.characters.map((c) => [c.id, c]));
     },
     editEp: (e) => {
-      e.shots[0].cast = e.shots[0].cast[0]; // 一個人寫成物件
-      e.shots[1].cast.push(null);
+      e.shots[1].cast = e.shots[1].cast[0]; // 一個人寫成物件
+      e.shots[2].cast.push(null);
       e.shots.push(null);
       e.plan.push(null);
       e.setups.push(null);
@@ -129,7 +129,7 @@ test('#15：腳本停下來時，hook 會把原因回報給模型（這裡用寫
 test('#16：「男子宿舍」「洗臉台」不算寫到人；「宛如前世」不算指代', (t) => {
   const r = run(t, {
     editBible: (b) => { b.scenes[0].space = `男子宿舍的公用浴室，牆邊一排洗臉台，${b.scenes[0].space}`; },
-    editEp: (e) => { e.shots[0].motion = `宛如前世的記憶，${e.shots[0].motion}`; },
+    editEp: (e) => { e.shots[1].motion = `宛如前世的記憶，${e.shots[1].motion}`; },
   });
   assert.doesNotMatch(r.checks, /寫到了人/);
   assert.doesNotMatch(r.checks, /同上／如前/);
@@ -172,8 +172,18 @@ test('#18：卡點的問句要在最後；119.6 秒印成 2 分 0 秒', (t) => {
 });
 
 test('#19：分集劇本的台詞遠少於單集長度時要提示', (t) => {
-  const r = spawnSync(process.execPath, [SCRIPT, path.join(OUTLINE, 'bible.json'), path.join(OUTLINE, 'EP01-script.md')], { encoding: 'utf8' });
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'storyboard-script-'));
+  t.after(() => fs.rmSync(dir, { recursive: true, force: true }));
+  fs.copyFileSync(path.join(OUTLINE, 'bible.json'), path.join(dir, 'bible.json'));
+  fs.writeFileSync(path.join(dir, 'EP01-script.md'), [
+    '# EP01　開張', '', '- 鉤子：玻璃珠裡的人影', '- 爽點：黑貓開口', '- 卡點：收還是不收？', '',
+    '## 第 1 場　當鋪店內・下午　日　內', '', '△ 木格櫃裡的玻璃珠。', '旁白：外婆走了七天。', '沈小禾（小聲）：……一定是我太累了。', '',
+  ].join('\n'));
+  const r = spawnSync(process.execPath, [SCRIPT, path.join(dir, 'bible.json'), path.join(dir, 'EP01-script.md')], { encoding: 'utf8' });
   assert.match(r.stdout, /\[提示\] 劇本：台詞與旁白約 \d+ 秒，單集至少 60 秒/);
+  // 範例的劇本夠長，不該有這個提示
+  const ok = spawnSync(process.execPath, [SCRIPT, path.join(OUTLINE, 'bible.json'), path.join(OUTLINE, 'EP01-script.md')], { encoding: 'utf8' });
+  assert.doesNotMatch(ok.stdout, /台詞大約要佔單集的四分之三/);
 });
 
 test('範例都還是乾淨的（0 錯誤、0 警告）', () => {

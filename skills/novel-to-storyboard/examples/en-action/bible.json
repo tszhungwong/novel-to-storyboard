@@ -92,7 +92,10 @@
       "id": "P01",
       "name": "鐵盒",
       "desc": "a battered square pale-blue biscuit tin",
-      "detail": "about twenty centimetres across, dented at one corner, the paint worn through to bare metal along the edges, a little rust at the seams"
+      "detail": "about twenty centimetres across, dented at one corner, the paint worn through to bare metal along the edges, a little rust at the seams",
+      "states": {
+        "凹痕": "a freshly dented battered pale-blue biscuit tin"
+      }
     }
   ],
   "pending": [
